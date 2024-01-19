@@ -29,8 +29,7 @@
         fun();
         echo $b; // output 30
         
-        */
-
+        
         // generally a varible inside a function is deleted after it's use but static keyword is used when we want to use the variable further ahead
         function test(){
             $a = 0;
@@ -43,7 +42,7 @@
         test(); // output 0
         test(); // output 0
         test(); // output 0
-
+        
         function test1(){
             static $a = 0;
             echo $a; 
@@ -53,6 +52,31 @@
         test1(); // output 1
         test1(); // output 2
         test1(); // output 3
+        
+        */
+        
+
+        // echo and print
+        echo "Hello World!";
+        echo ("Soham Bharti<br>");
+
+        print "Hello World!";
+        print ("Soham Bharti<br>");
+        echo "<br>";
+
+        var_dump(10>5); // output bool(true)
+        print 10>5; // output 1
+        echo "<br>";
+        
+        var_dump(10<5); // output bool(false)
+        print 10<5; // output NOTHING
+        echo "<br>";
+
+        var_dump(10==10); // output bool(true)
+        print 10==10; // output 1
+        
+
+
 
 
     ?>
