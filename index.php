@@ -2,7 +2,8 @@
 <html lang="en">
 <body>
     <?php
-
+        echo "Welcome to php...<br>";
+        echo "All is well when lara-vel";
         /*
         // declare variables and printing
     
@@ -53,17 +54,16 @@
         test1(); // output 2
         test1(); // output 3
         
-        */
         
-
+        
         // echo and print
         echo "Hello World!";
         echo ("Soham Bharti<br>");
-
+        
         print "Hello World!";
         print ("Soham Bharti<br>");
         echo "<br>";
-
+        
         var_dump(10>5); // output bool(true)
         print 10>5; // output 1
         echo "<br>";
@@ -71,13 +71,13 @@
         var_dump(10<5); // output bool(false)
         print 10<5; // output NOTHING
         echo "<br>";
-
+        
         var_dump(10==10); // output bool(true)
         print 10==10; // output 1
         
-
-
-
+        */
+        
+        
 
     ?>
 </body>
