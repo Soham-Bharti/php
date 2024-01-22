@@ -17,3 +17,5 @@ echo join('/', $strArray) . "<br>"; // This/is/soham/at/your/service.
 echo join('*', $strArray) . "<br>"; // This*is*soham*at*your*service.
 echo join('..', $strArray) . "<br>"; // This..is..soham..at..your..service.
 
+$arr2 = array(2, "+", "2", '=', 4);
+echo join(' ', $arr2) . "<br>"; 
