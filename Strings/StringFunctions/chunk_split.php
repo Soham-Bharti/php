@@ -29,4 +29,4 @@ $name = "Soham Bhar";
 echo chunk_split($name, 3, " - ") . "<br>"; // Soh - am - Bha - r -
 
 $str = "Hello world!";
-echo chunk_split($str,6,"..."); // $str = "Hello world!";
+echo chunk_split($str,6,"..."); // Hello ...world!...
