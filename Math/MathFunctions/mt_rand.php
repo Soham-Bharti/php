@@ -1,0 +1,9 @@
+<?php
+
+
+// PHP mt_rand() Function
+// The mt_rand() function generates a random integer using the Mersenne Twister algorithm.
+
+echo (mt_rand() . "<br>"); // 545178375, 439804551, etc...
+echo (mt_rand() . "<br>"); // 2134531590, 960386043 etc...
+echo (mt_rand(10, 100)); // 89, 35, etc...
