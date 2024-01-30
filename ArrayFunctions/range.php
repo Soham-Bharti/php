@@ -34,13 +34,13 @@ $letter = range(true, false);
 print_r($letter); // Array ( [0] => 1 [1] => 0 )
 echo "<br>";
 
-$letter = range(true, NULL);
-print_r($letter); // Array ( [0] => 1 [1] => 0 )
-echo "<br>";
+// $letter = range(true, NULL); // No error ust a warning by extension
+// print_r($letter); // Array ( [0] => 1 [1] => 0 )
+// echo "<br>";
 
-$letter = range(false, NULL);
-print_r($letter); // Array ( [0] => 0 )
-echo "<br>";
+// $letter = range(false, NULL); // // No error ust a warning by extension
+// print_r($letter); // Array ( [0] => 0 )
+// echo "<br>";
 
 $letter = range("a", "d");
 print_r($letter); // Array ( [0] => a [1] => b [2] => c [3] => d )
