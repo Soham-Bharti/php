@@ -26,4 +26,22 @@ echo "<br>";
 
 $a = array("a" => "red", "b" => "green");
 array_push($a, "blue", "yellow");
-print_r($a); // v
+print_r($a); // Array ( [a] => red [b] => green [0] => blue [1] => yellow )
+
+echo "<br>";
+
+// Trying with Multidimensional array
+echo "Trying with Multidimensional array.. <br>";
+$userDetails = array('mumbai' => array('u1', 'u2', 'u3'), 'delhi' => array('u1', 'u2'), 'bihar' => array('u1', 'u2', 'u3', 'u4'),);
+
+$upPeople = array('u1', 'u2', 'u3', 'u4');
+
+array_push($userDetails, $upPeople);
+print_r($userDetails); // Array ( [mumbai] => Array ( [0] => u1 [1] => u2 [2] => u3 ) [delhi] => Array ( [0] => u1 [1] => u2 ) [bihar] => Array ( [0] => u1 [1] => u2 [2] => u3 [3] => u4 ) [0] => Array ( [up] => Array ( [0] => u1 [1] => u2 [2] => u3 [3] => u4 ) ) )
+
+
+// [0] => Array ( [up] => Array ( [0] => u1 [1] => u2 [2] => u3 [3] => u4 ) ) )
+echo "<br>";
+
+$userDetails['keralaPeople'] = array('u1');
+print_r($userDetails); // ... [0] => Array ( [0] => u1 [1] => u2 [2] => u3 [3] => u4 ) [keralaPeople] => Array ( [0] => u1 ) )
