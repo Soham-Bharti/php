@@ -18,3 +18,16 @@ echo preg_match_all($pattern, $statement) . "<br>"; // 1
 $statement = "My name is SOHAM BHARTI";
 $pattern = "/am/i";
 echo preg_match_all($pattern, $statement) . "<br>"; // 2
+
+$statement = "My name is SOHAM BHARTI";
+$pattern = "//";
+echo preg_match_all($pattern, $statement) . "<br>"; // 24
+
+
+$num = 12345678;
+$pattern = '/ /';
+echo preg_match_all($pattern, $num) . "<br>"; // 0
+
+$num = 12345678;
+$pattern = '//';
+echo preg_match_all($pattern, $num) . "<br>"; // 9
