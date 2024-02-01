@@ -34,3 +34,12 @@ print_r(preg_filter('/[0]+/', '($0)', $str, -1, $count)); // This is my 2(0)th s
 echo " and count is $count <br>"; // and count is 2
 
 var_dump(preg_filter('/[3]+/', '($0)', $str, -1, $count)); // NULL
+
+echo "<br>";
+
+$statement = "It's my #1st Anniversary!. Please. wish me and @wife - \$luck for future...";
+echo "$statement <br>";
+print_r(preg_filter(["/[^A-z. 0-9]/","/\./"], '/', $statement));
+// $pattern = ["/[^A-z. 0-9]/", "/\./"];
+// print_r(preg_filter($pattern, '/', $statement));
+// print_r(preg_filter("/\./", '/', $statement));
