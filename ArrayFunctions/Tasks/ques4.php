@@ -20,4 +20,18 @@ foreach ($userActivity as $key => $value) {
         $reqUser = $key;
     }
 };
-echo "User with highest total activity is $reqUser and his activity is " . $highestSum;
+echo "User with highest total activity is $reqUser and his activity is " . $highestSum . "<br>";
+
+
+// Alternatively
+$reqUser = '';
+$highestSum = 0;
+foreach ($userActivity as $key => $value) {
+    $sum = array_sum(array_values($value));
+    global $highestSum;
+    if ($sum > $highestSum) {
+        $highestSum = $sum;
+        $reqUser = $key;
+    }
+};
+echo "User with highest total activity is $reqUser and his activity is " . $highestSum . "<br>";
