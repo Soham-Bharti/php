@@ -20,3 +20,19 @@ $arr = array(2, 1, 3, 3, 21, 3, 3, 2, 4, 1, 2, 24, 1, 2, 3, 1, 3, 4, 2, 14, 4, 2
 print_r(array_unique($arr)); // Array ( [0] => 2 [1] => 1 [2] => 3 [4] => 21 [8] => 4 [11] => 24 [19] => 14 [21] => 23 [29] => 11 [33] => 12 )
 echo "<br>";
 // print_r(array_count_values($arr)); // Array ( [2] => 10 [1] => 6 [3] => 9 [21] => 2 [4] => 3 [24] => 1 [14] => 1 [23] => 1 [soham] => 1 [11] => 1 [12] => 1 )
+
+
+
+$userDetails = array('soham' => array('id' => 1, 'amount' => 28999,), 'amaresh' => array('id' => 2, 'amount' => 786679,), 'monu' => array('id' => 3, 'amount' => 90987));
+
+print_r(array_unique($userDetails['soham'])); // Array ( [id] => 1 [amount] => 28999 )
+
+echo "<br>";
+
+$userDetails = array('soham' => array('id' => 28999, 'amount' => 28999,), 'amaresh' => array('id' => 2, 'amount' => 786679,), 'monu' => array('id' => 3, 'amount' => 90987));
+
+print_r(array_unique($userDetails['soham'])); // Array ( [id] => 28999 )
+
+echo "<br>";
+
+print_r(array_unique($userDetails['amaresh'])); // Array ( [id] => 28999 )
