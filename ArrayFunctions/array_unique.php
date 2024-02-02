@@ -36,3 +36,7 @@ print_r(array_unique($userDetails['soham'])); // Array ( [id] => 28999 )
 echo "<br>";
 
 print_r(array_unique($userDetails['amaresh'])); // Array ( [id] => 28999 )
+echo "<br> Ans for unique VALUES of a multidimensional array... <br>";
+foreach ($userDetails as $user => $details) {
+    print_r(array_unique($details));
+}
