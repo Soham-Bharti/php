@@ -36,7 +36,31 @@ $outputArr = (array_filter($arr, function ($order) {
     return $order == $GLOBALS['highestOrder'];
 }));
 
+// echo "Order/s with highest cost is: ";
+// print_r($outputArr);
+// print_r("and it's cost is $highestOrder");
+
+echo "<br>";
+
+// calculate the total cost of each order (Quantity \* Price), and then find the order with the highest total cost.
+// Alternatively -> use array_product() and add the result(order cost) to the original array
+
+$highestOrder = 0;
+
+foreach ($orderDetails as $key => $value) {
+    // var_dump(array_product($value)); // int(0)
+    $costOfOrder = (array_product(array_slice($value, 1, 2, true)));
+    $orderDetails[$key]['totalCost'] = $costOfOrder;
+    if ($costOfOrder > $highestOrder) $highestOrder = $costOfOrder;
+}
+// echo $highestOrder . "<br>";
+// print_r($orderDetails);
+$outputArr = array_keys(array_filter($orderDetails, function ($orders) {
+    // print_r($orders);
+    if ($orders['totalCost'] == $GLOBALS['highestOrder']) {
+        return key($orders);
+    }
+}));
 echo "Order/s with highest cost is: ";
 print_r($outputArr);
 print_r("and it's cost is $highestOrder");
-
