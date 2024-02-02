@@ -6,4 +6,9 @@
 $email = 'anant@gmail.com';
 
 
-echo strchr($email, '@', true);
+echo strchr($email, '@', true) . "<br>";
+
+$pos = strpos($email, '@');
+// echo "$pos <br>";
+$userName = substr($email, 0, $pos);
+echo $userName;
