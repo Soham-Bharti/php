@@ -1,65 +1,99 @@
 <?php
 $name = $contact = $email = $dob = $city = $state = $gender = $address = "";
 $emailErr = $contactErr = $dobErr = $nameErr = "";
-
-
+$userSkills = [];
+global $flag;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+    $flag = true;
     // validation for name 
     if (empty($_POST['name'])) {
         $nameErr = "Name required";
+        $name = "";
+        $flag = false;
     } else {
-        $name = $_POST['name'];
+        if ($flag) $name = $_POST['name'];
         // regex matching for name validation
         if (!preg_match("/^[A-z- ]*$/", $name)) {
             $nameErr = "Invalid name";
+            $name = "";
+            $flag = false;
         }
     }
 
     // validation for email
     if (empty($_POST['email'])) {
         $emailErr = "Email Required";
+        $email = "";
+        $flag = false;
     } else {
         $email = $_POST['email'];
         // regex matching for email validation
         if (!preg_match("/[a-z0-9]+@[a-z]+\.[a-z]+/", $email)) {
             $emailErr = "Invalid email";
+            $email = "";
+            $flag = false;
         }
     }
 
     // validation for contact
     if (empty($_POST['contact'])) {
         $contactErr = "Contact Required";
+        $contact = "";
+        $flag = false;
     } else {
         $contact = $_POST['contact'];
         // regex matching for contact validation
-        if (!preg_match("/^\+91[0-9]{10,10}$/", $contact)) {
+        if (!preg_match("/^\+91[6-9][0-9]{9,9}$/", $contact)) {
             $contactErr = "Invalid contact";
+            $contact = "";
+            $flag = false;
         }
     }
 
     // validation for dob
-    if (empty($$_POST['dob'])) {
+    if (empty($_POST['dob'])) {
         $dobErr = "DoB Required";
+        $dob = null;
+        $flag = false;
     } else {
         $dob = $_POST['dob'];
         // regex matching for contact validation
         if (!preg_match("/^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}$/", $dob)) {
             $dobErr = "Invalid DoB";
+            $dob = null;
+            $flag = false;
         }
     }
 
     if (isset($_POST['city'])) {
         $city = $_POST['city'];
+    } else {
+        $city = "";
+        $flag = false;
     }
     if (isset($_POST['state'])) {
         $state = $_POST['state'];
+    } else {
+        $state = "";
+        $flag = false;
     }
-    if (isset($_POST['state'])) {
+    if (isset($_POST['gender'])) {
         $gender = $_POST['gender'];
+    } else {
+        $gender = "";
+        $flag = false;
     }
     if (isset($_POST['address'])) {
         $address = $_POST['address'];
+    } else {
+        $address = "";
+        $flag = false;
+    }
+
+    if (!empty($_POST['skills'])) {
+        foreach ($_POST['skills'] as $x) {
+            array_push($userSkills, $x);
+        }
     }
 }
 
@@ -75,10 +109,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        form {
-            /* width: 260px; */
-        }
-
         .red {
             color: red;
         }
@@ -125,11 +155,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="">select</option>
                 <option value="Bhopal">Bhopal</option>
                 <option value="Patna">Patna</option>
-                <option value="Ahemdabad">GAhemdabadujrat</option>
+                <option value="Ahemdabad">Ahemdabadujrat</option>
                 <option value="Dispur">Dispur</option>
             </select>
         </div>
         <br>
+        <div>
+            Skills:
+            <input type="checkbox" name="skills[]" value="Java"> Java
+            <input type="checkbox" name="skills[]" value="PHP"> PHP
+            <input type="checkbox" name="skills[]" value="MySQL"> MySQL
+            <input type="checkbox" name="skills[]" value="Python"> Python
+        </div>
         <input type="submit">
     </form>
 </body>
@@ -137,13 +174,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </html>
 
 <?php
-echo "<hr><b>Output</b><br>";
-echo $name . "<br>";
-echo $address . "<br>";
-echo $gender . "<br>";
-echo $email . "<br>";
-echo $contact . "<br>";
-echo $dob . "<br>";
-echo $state . "<br>";
-echo $city . "<br>";
+if ($flag) {
+    echo "<hr><b>Output</b><br>";
+    echo $name . "<br>";
+    echo $address . "<br>";
+    echo $gender . "<br>";
+    echo $email . "<br>";
+    echo $contact . "<br>";
+    echo $dob . "<br>";
+    echo $state . "<br>";
+    echo $city . "<br>";
+    echo "Skills: ";
+    if (!empty($userSkills)) {
+        print_r($userSkills);
+    }
+}
 ?>
