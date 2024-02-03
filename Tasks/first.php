@@ -28,7 +28,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $email = $_POST['email'];
         // regex matching for email validation
-        if (!preg_match("/[a-z0-9]+@[a-z]+\.[a-z]+/", $email)) {
+        // if (!preg_match("/[a-z0-9]+@[a-z]+\.[a-z]+/", $email)) {
+        //     $emailErr = "Invalid email";
+        //     $email = "";
+        //     $flag = false;
+        // }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $emailErr = "Invalid email";
             $email = "";
             $flag = false;
@@ -43,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $contact = $_POST['contact'];
         // regex matching for contact validation
-        if (!preg_match("/^\+91[6-9][0-9]{9,9}$/", $contact)) {
+        if (!preg_match("/^\+91[6-9][0-9]{9}$/", $contact)) {
             $contactErr = "Invalid contact";
             $contact = "";
             $flag = false;
@@ -58,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $dob = $_POST['dob'];
         // regex matching for contact validation
-        if (!preg_match("/^[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}$/", $dob)) {
+        if (!preg_match("/^[0-9]{4}-(0[1-9])|([1][1,2])-[0-9]{2}$/", $dob)) {
             $dobErr = "Invalid DoB";
             $dob = null;
             $flag = false;
@@ -96,7 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-
 ?>
 
 
@@ -107,39 +111,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        .red {
-            color: red;
-        }
-    </style>
+    <title>Janganna</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h3>This is my first HTML Form Making.</h3>
     <form method="POST" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>">
-        Name: <input type="text" name="name">
+        <h2>आयें जंगन्ना करें</h2>
+        <b>Name</b> <input type="text" name="name">
         <span class="red">*<?php echo $nameErr; ?></span>
-        <br>
-        Address: <input type="text" name="address">
-        <br>
-        <div>
-            Gender:
-            Male <input type="radio" name="gender" value="male">
-            Female <input type="radio" name="gender" value="female">
-        </div>
 
-        Email: <input type="text" name="email">
+        <b>Email</b> <input type="text" name="email">
         <span class="red">*<?php echo $emailErr; ?></span>
-        <br>
-        Contact: <input type="text" name="contact">
+
+        <div class="justify">
+            <b>Gender</b>
+            Male<input type="radio" name="gender" value="male">
+            Female <input type="radio" name="gender" value="female">
+            Prefer not to say<input type="radio" name="gender" value="n/a">
+        </div><br>
+        <b>Address</b> <input type="text" name="address"><br>
+        <b>Contact</b> <input type="text" name="contact">
         <span class="red">*<?php echo $contactErr; ?></span>
-        <br>
-        DoB: <input type="text" name="dob">
+        <b>DoB</b> <input type="text" name="dob">
         <span class="red">*<?php echo $dobErr; ?></span>
-        <br>
         <div>
-            Please select your state:
+            <b>Please select your state</b>
             <select name="state">
                 <option value="">select</option>
                 <option value="Madhya Pradesh">Madhya Pradesh</option>
@@ -150,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <br>
         <div>
-            Please select your city:
+            <b>Please select your city</b>
             <select name="city">
                 <option value="">select</option>
                 <option value="Bhopal">Bhopal</option>
@@ -160,14 +157,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </select>
         </div>
         <br>
-        <div>
-            Skills:
+        <div class="justify">
+            <b>Skills</b>
             <input type="checkbox" name="skills[]" value="Java"> Java
             <input type="checkbox" name="skills[]" value="PHP"> PHP
             <input type="checkbox" name="skills[]" value="MySQL"> MySQL
             <input type="checkbox" name="skills[]" value="Python"> Python
+            <input type="checkbox" name="skills[]" value="Cpp"> C++
         </div>
-        <input type="submit">
+        <br>
+        <div class="buttons">
+            <input type="submit" class="button">
+            <input type="reset" class="button">
+        </div>
     </form>
 </body>
 
