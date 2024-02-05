@@ -52,7 +52,11 @@ x+	Creates a new file for read/write. Returns FALSE and an error if file already
 
 // $myFile = fopen('demo.txt', 'x+') or die('Can not recreate existing file'); // Can not recreate existing file
 $myFile = fopen('soham.txt', 'x+') or die('Can not recreate existing file'); // Can not recreate existing file
+
 echo fwrite($myFile, "This is a text on new file created using x+"); // 43
-// $my2File = fopen('soham.txt', 'r');
-// echo fread($my2file, filesize("soham.txt")) . "<br>"; // doubt!!!!!
+fseek($myFile, 0);
+// fclose($myFile);
+// $file = fopen('soham.txt', 'x+') or die('msg');
+
+echo fread($myFile, filesize("soham.txt")) . "<br>"; // doubt!!!!!
 fclose($myFile);
