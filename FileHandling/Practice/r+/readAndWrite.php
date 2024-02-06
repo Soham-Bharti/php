@@ -38,3 +38,13 @@ fclose($myFile);
 
 // Output
 // Hey there, I am already existing text!I am written text by server
+
+$file = fopen('newFile.txt', 'r+') or die("Couldn't open file");
+echo fwrite($file, "Written text...") . "<br>";
+fseek($file, 0);
+echo fread($file, filesize('newFile.txt'));
+fclose($file);
+
+// Output
+// 15
+// Written text...onidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuonidfhwehoi woeuo
