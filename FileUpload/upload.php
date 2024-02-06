@@ -13,9 +13,8 @@
 
 // Another way...
 if (isset($_POST["submit"])) {
-    echo "File uploading...<br>";
     $file = $_FILES['myFile'];
-    print_r($file); // Array ( [name] => S7.jpeg [full_path] => S7.jpeg [type] => image/jpeg [tmp_name] => D:\Software\XAMPP\tmp\php57A9.tmp [error] => 0 [size] => 28655 )
+    // print_r($file); // Array ( [name] => S7.jpeg [full_path] => S7.jpeg [type] => image/jpeg [tmp_name] => D:\Software\XAMPP\tmp\php57A9.tmp [error] => 0 [size] => 28655 )
 
     $fileName = $_FILES['myFile']['name'];
     $fileTmpName = $_FILES['myFile']['tmp_name'];
@@ -30,23 +29,27 @@ if (isset($_POST["submit"])) {
     $allow = array('jpeg', 'jpg', 'png', 'pdf');
     if (in_array($fileActualExtension, $allow)) {
         if ($fileError === 0) {
-            if ($fileSize < 500000) { // 500000kb = 500mb
+            if ($fileSize < 500000) { // 500kb =  500000b 
                 $fileNameNew = uniqid('', true) . "." . $fileActualExtension; // new unique name for the uploaded file (eg. 65c1d7b3ba4477.76805219.jpg)
 
                 $fileDestination = 'uploads/' . $fileNameNew;
-                // $fileName = 'uploads/'."$fileName"; // file upload with same nmae
+                // $fileName = 'uploads/' . "$fileName"; // file upload with same nmae
 
-                if (move_uploaded_file(
-                    $fileTmpName,
-                    $fileName
-                )) {
-                    echo "Successfully uploaded your image";
-                    header("Location: index.html ? upload successful");
+                if (!file_exists($fileName)) {
+                    if (move_uploaded_file(
+                        $fileTmpName,
+                        $fileDestination
+                    )) {
+                        echo "Successfully uploaded your image";
+                        header("Location: index.html ? upload successful");
+                    } else {
+                        echo "Failed to upload your image";
+                    }
                 } else {
-                    echo "Failed to upload your image";
+                    echo "File already exists!";
                 }
             } else {
-                echo "Can't Too large file!";
+                echo "Can't upload, Too large file!";
             }
         } else {
             echo "There was an error uploading the file";
