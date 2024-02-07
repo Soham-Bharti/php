@@ -1,8 +1,13 @@
 <?php
 // include 'index.php';
 // var_dump($flag);
+$txt = $_SERVER['REQUEST_URI'];
+$userData = explode("?", $txt);
+array_shift($userData);
 date_default_timezone_set("Asia/Kolkata");
-echo "You data... <br>";
+echo "Your data... <br>";
+print_r($userData);
+
 if (isset($_POST['submit'])) {
     $name = $_POST['userName'];
     $email = $_POST['userEmail'];

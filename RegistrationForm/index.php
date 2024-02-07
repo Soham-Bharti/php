@@ -20,57 +20,57 @@ function test_input($data)
 
 $flag = true;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    echo "Inside validation..";
+
     if (empty($_POST["userName"])) {
         // already validated by form
     } else {
         $name = test_input($_POST["userName"]);
-        echo "before valdation: $name<br>";
+
         // check if name only contains letters and whitespace
         if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
             $nameErr = "Only letters and white space allowed";
 
-            echo "validatnig...$name<br>";
+
             $flag = false;
         }
     }
-    echo "after valdation: $name<br>";
+
 
     if (empty($_POST["userEmail"])) {
         // already validated by form
     } else {
         $email = test_input($_POST["userEmail"]);
-        echo "before valdation: $email<br>";
+
         // check if e-mail address is well-formed
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $emailErr = "Invalid email format";
             $flag = false;
         }
     }
-    echo "after valdation: $email<br>";
+
 
     if (empty($_POST["userDoB"])) {
         // already validated by form
     } else {
 
         $dob = test_input($_POST["userDoB"]);
-        echo "before valdation: $dob<br>";
+
         // check if dob is before 2015
         $year = explode('-', $dob);
         if ($year[0] > 2015) {
             $dobErr = 'Choose a DoB before 2015';
-            echo $dobErr;
+
 
             $flag = false;
         }
     }
-    echo "after valdation: $dob<br>";
+
 
     if (empty($_POST['userPassword'])) {
         // already handled by form
     } else {
         $pass = test_input($_POST['userPassword']);
-        echo "before valdation: $pass<br>";
+
         $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
         if (!preg_match($password_regex, $pass)) {
             $passErr = "cheks that a password:<br>
@@ -82,41 +82,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $flag = false;
         }
     }
-    echo "after valdation: $pass<br>";
+
 
     if (empty($_POST['userReEnteredPassword'])) {
         // already validated by form
     } else {
         // check if re-entered password is same as before one
         $pass2 = test_input($_POST['userReEnteredPassword']);
-        echo "before valdation: $pass2<br>";
         if ($pass2 !== $pass) {
             $pass2Err = "Password missmatch!";
             $flag = false;
         }
     }
-    echo "after valdation: $pass2<br>";
+
 
     if (empty($_POST["userGender"])) {
         // already validated by form
     } else {
         $gender = test_input($_POST["userGender"]);
     }
-    echo "after valdation: $gender<br>";
+
 
     if (empty($_POST["userMobile"])) {
         // already validated by form
     } else {
         $mobile = test_input($_POST["userMobile"]);
-        echo "before valdation: $mobile<br>";
+
         if (!preg_match("/^[6-9]{3}\d{7}$/", $mobile)) {
             $mobileErr = "Invalid mobile number";
             $flag = false;
         }
     }
-    echo "after valdation: $mobile<br>";
+    var_dump($flag);
+    $skills = $_POST['userSkills'];
+    if ($flag) {
+        $txt = "output.php?$name?$email?$dob?$pass?$pass2?$gender?$mobile";
+        foreach ($skills as $s) {
+            $txt .= "?$s";
+        }
+        header("Location: " . $txt);
+    }
 }
-
 
 ?>
 
@@ -134,7 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h2>Hey, Wassup!</h2>
         <?php echo "Flag is " . $flag; ?>
-        <form action="<?php echo $flag ? 'output.php' : $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
             <div>
                 Name: <input type="text" name="userName" placeholder="John Banega Don" required value="<?php echo $name ?>" />
                 <span>* <?php echo $nameErr ?></span>
