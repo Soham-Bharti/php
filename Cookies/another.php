@@ -26,6 +26,6 @@ print_r($_COOKIE); // Array ( [soham_ki_cookie] => soham ke cookie ki value ki j
 echo "<br>";
 $cookie_name = "user44";
 $cookie_value = "val44";
-setcookie($cookie_name, $cookie_value, time() + 50, '/');
+setcookie($cookie_name, $cookie_value, time() + 50, '/', '', true);
 print_r($_COOKIE); // Array ( [soham_ki_cookie] => soham ke cookie ki value ki jai [user1] => val2 )
 echo "<br>";
