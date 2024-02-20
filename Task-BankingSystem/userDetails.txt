@@ -1,8 +1,0 @@
-
-"Name: Rohit , Password: vsdvsd , Mobile Number: 53453 , Account Number: 65d47ec9e8648"
-"Name: soham bharti , Password: Soham@1234 , Mobile Number:  , Account Number: 65d47f596d6a1"
-"Name: Rohit , Password: asdas , Mobile Number: 8989898989 , Account Number: 65d4801377fdf"
-"Name: lalan , Password: lalan , Mobile Number: 445645 , Account Number: 65d483eaaf1ad"
-"Name: scs , Password: bvbb , Mobile Number: 465416469 , Account Number: 65d485bc9e72c"
-"Name: ss , Password: ss , Mobile Number: 423423 , Account Number: 65d487d139c82"
-"Name: amit , Password: amit , Mobile Number: 6544846 , Account Number: 65d48892162fa"
