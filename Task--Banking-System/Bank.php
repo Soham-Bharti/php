@@ -25,6 +25,8 @@ $bankObj = new Bank('65d48892162fa');
 $bankObj->checkBalance('65d48892162fa');
 echo "<br>";
 $bankObj->debitAmount('65d48892162fa', 100);
+echo "<br>";
 $bankObj->checkBalance('65d48892162fa');
+echo "<br>";
 $bankObj->creditAmounT('65d48892162fa', 10000);
 $bankObj->checkBalance('65d48892162fa');
