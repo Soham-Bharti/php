@@ -76,6 +76,49 @@ class Student
     {
         echo "English Marks: " . $this->engMarks . "\nHindi Marks: " . $this->hinMarks . "\nMaths Marks: " . $this->mathsMarks . "<br>";
     }
+
+    // adding method to see full marks
+    function showTotalMarks()
+    {
+        $totalmarks = $this->engMarks + $this->hinMarks + $this->mathsMarks;
+        echo "Your total marks = $totalmarks";
+    }
+
+    function showPercentage()
+    {
+        $percentage = number_format(((($this->engMarks + $this->hinMarks + $this->mathsMarks) / 300) * 100),2);
+        echo "Your percentage is = $percentage %";
+    }
+
+    function showGrade()
+    {
+        $percentage =  (($this->engMarks + $this->hinMarks + $this->mathsMarks) / 300) * 100;
+        echo "Your grade is ";
+        switch ($percentage) {
+            case $percentage > 95: {
+                    echo "A+";
+                    break;
+                }
+            case $percentage <= 95 && $percentage > 90: {
+                    echo "A";
+                    break;
+                }
+            case $percentage <= 90 && $percentage > 80: {
+                    echo "B";
+                    break;
+                }
+            case $percentage <= 80 && $percentage > 70: {
+                    echo "C";
+                    break;
+                }
+            case $percentage <= 70 && $percentage > 60: {
+                    echo "D";
+                    break;
+                }
+            default:
+                echo "F";
+        }
+    }
 }
 
 if (isset($_REQUEST['submit'])) {
@@ -99,5 +142,8 @@ if (isset($_REQUEST['submit'])) {
     $studentObject->setMarks($englishMarks, $hindiMarks, $mathsMarks);
     $studentObject->showDetails();
     $studentObject->showMarks();
+    $studentObject->showTotalMarks();
+    $studentObject->showPercentage();
+    $studentObject->showGrade();
 }
 ?>
