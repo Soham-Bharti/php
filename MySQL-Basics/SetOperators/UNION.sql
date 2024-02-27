@@ -120,3 +120,30 @@ order by 2
 -- Gerard Bondur	Employee
 -- Anthony Bow	Employee
 -- ...
+
+SELECT 
+   firstName, lastName, officeCode
+from employees
+UNION
+select
+	contactFirstName, contactLastName
+from customers
+-- Error Code: 1222. The used SELECT statements have a different number of columns
+
+SELECT 
+    firstName, lastName, officeCode
+from employees
+UNION
+select
+    contactFirstName, contactLastName, postalCode
+from customers
+-- firstName lastName officeCode
+-- Diane	Murphy	1
+-- Mary	Patterson	1
+-- Jeff	Firrelli	1
+-- William	Patterson	6
+-- Gerard	Bondur	4
+-- Anthony	Bow	1
+-- Leslie	Jennings	1
+-- Leslie	Thompson	1
+-- Julie	Firrelli	2
