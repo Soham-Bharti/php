@@ -417,7 +417,7 @@ ORDER BY
     subtotal DESC;
 
 + -------------+-----------------+-----------------------------+
--- | orderNumber | orderLinenumber | quantityOrdered * priceEach |
+-- | orderNumber | orderLinenumber |                    subtotal |
 -- +-------------+-----------------+-----------------------------+
 -- |       10403 |               9 |                    11503.14 |
 -- |       10405 |               5 |                    11170.52 |
