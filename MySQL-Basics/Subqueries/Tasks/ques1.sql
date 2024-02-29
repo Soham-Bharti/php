@@ -85,6 +85,7 @@ WHERE
 			AVG(priceeach)  * 2
 		FROM
 			orderdetails
+        where o.orderNumber = orderNumber
 	);
 -- S10_1949	214.30
 -- S12_1108	205.72
@@ -150,30 +151,26 @@ WHERE
 -- example 3
 use classicmodels;
 SELECT
-	productcode,
-	priceeach
+    od.productcode,
+    od.priceeach
 FROM
-	(
-		select 
-			productcode, priceeach
-		from 
-			orderdetails
-		inner join orders
-        using (orderNumber)
-        where status = 'On Hold'
-    ) as blah_blah
+    orderdetails od
+INNER JOIN orders o ON od.orderNumber = o.orderNumber
 WHERE
-	priceeach > (
-		SELECT
-			AVG(priceeach) 
-		FROM
-			orderdetails
-	);
+    o.status = 'On Hold'
+    AND od.priceeach > (
+        SELECT AVG(od_inner.priceeach)
+        FROM orderdetails od_inner
+        WHERE od_inner.orderNumber = od.orderNumber
+    );
+
 -- S10_4962	130.01
--- S18_2319	108.00
 -- S18_3232	147.33
--- S18_4600	101.71
 -- S24_2300	117.57
+-- S18_2581	75.19
+-- S24_1785	87.54
+-- S32_1374	81.91
+-- S700_1691	77.64
 -- S700_2466	98.72
 -- S700_2834	96.11
 -- S18_1589	114.48
@@ -184,4 +181,8 @@ WHERE
 -- S24_3432	101.73
 -- S10_4757	114.24
 -- S18_3140	128.39
+-- S18_3259	85.71
+-- S18_4522	83.38
 -- S24_2011	108.14
+-- S700_3505	84.14
+-- S700_3962	84.41
