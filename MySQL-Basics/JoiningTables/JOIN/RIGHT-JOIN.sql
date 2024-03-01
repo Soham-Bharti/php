@@ -63,3 +63,25 @@ WHERE
 -- |      NULL | NULL        |            4 | Joe            |
 -- +-----------+-------------+--------------+----------------+
 -- 1 row in set (0.00 sec)
+
+use classicmodels;
+SELECT
+	employeeNumber,
+    customerNumber,
+    territory
+from 
+	customers
+right join employees
+	on employeeNumber = salesRepEmployeeNumber
+right join offices
+	using(officeCode)
+where customerNumber is null
+order by employeeNumber;
+-- 1002		NA
+-- 1056		NA
+-- 1076		NA
+-- 1088		APAC
+-- 1102		EMEA
+-- 1143		NA
+-- 1619		APAC
+-- 1625		Japan

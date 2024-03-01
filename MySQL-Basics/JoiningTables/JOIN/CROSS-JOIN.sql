@@ -38,3 +38,23 @@ FROM
 -- |         5 | Amaresh |            1 | Soham     |
 -- +-----------+---------+--------------+-----------+
 -- 20 rows in set (0.00 sec)
+SELECT
+    o.city,
+    c.city
+from
+    offices o
+    cross join customers c
+where
+    c.state is not null;
+
+-- London	Las Vegas
+-- Sydney	Las Vegas
+-- Tokyo	Las Vegas
+-- Paris	Las Vegas
+-- NYC	Las Vegas
+-- Boston	Las Vegas
+-- San Francisco	Las Vegas
+-- London	Melbourne
+-- Sydney	Melbourne
+-- Tokyo	Melbourne
+-- ...
