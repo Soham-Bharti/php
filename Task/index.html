@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form</title>
+  </head>
+  <body>
+    <form action="index.php" method="post" enctype="multipart/form-data">
+      Name: <input type="text" name="name" required /> Email:
+      <input type="email" name="email" required /> Date Of Birth:
+      <input type="date" name="dob" required /> Profile Pic:
+      <input type="file" name="myFile[]" multiple />
+      Gender: <input type="radio" name="gender" value="male" /> male
+      <input type="radio" name="gender" value="female" /> female
+      <input type="radio" name="gender" value="others" /> others
+
+      <input type="checkbox" name="skills[]" value="Java" /> Java
+      <input type="checkbox" name="skills[]" value="PHP" /> PHP
+      <input type="checkbox" name="skills[]" value="Laravel" /> Laravel
+      <input type="submit" value="submit" name="submit" />
+    </form>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+
+Name: Soham Bharti 
+Email: sohamom2730@gmail.com 
+DoB: 2002-07-27 
+Gender: male 
+ProfileDir: profiles/65c47389085522.87182260.jpg 
+Country: india 
+Mobile: 8987656565 
+Password: ABhi@12345
+Skills: java, reactJS, nodeJS
+#######################################
