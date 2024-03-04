@@ -1,0 +1,104 @@
+-- Generate a list of customers with their product details for orders that have been shipped
+select customerNumber, productCode, productName, orderNumber, status
+from customers
+join orders using(customerNumber)
+join orderdetails using(orderNumber)
+join products using(productCode)
+where status = 'Shipped';
+
+-- 363	S18_1749	1917 Grand Touring Sedan	10100	Shipped
+-- 363	S18_2248	1911 Ford Town Car	10100	Shipped
+-- 363	S18_4409	1932 Alfa Romeo 8C2300 Spider Sport	10100	Shipped
+-- 363	S24_3969	1936 Mercedes Benz 500k Roadster	10100	Shipped
+-- 128	S18_2325	1932 Model A Ford J-Coupe	10101	Shipped
+-- 128	S18_2795	1928 Mercedes-Benz SSK	10101	Shipped
+-- 128	S24_1937	1939 Chevrolet Deluxe Coupe	10101	Shipped
+-- 128	S24_2022	1938 Cadillac V-16 Presidential Limousine	10101	Shipped
+-- 181	S18_1342	1937 Lincoln Berline	10102	Shipped
+-- 181	S18_1367	1936 Mercedes-Benz 500K Special Roadster	10102	Shipped
+-- 121	S10_1949	1952 Alpine Renault 1300	10103	Shipped
+-- 121	S10_4962	1962 LanciaA Delta 16V	10103	Shipped
+-- 121	S12_1666	1958 Setra Bus	10103	Shipped
+-- 121	S18_1097	1940 Ford Pickup Truck	10103	Shipped
+-- 121	S18_2432	1926 Ford Fire Engine	10103	Shipped
+-- 121	S18_2949	1913 Ford Model T Speedster	10103	Shipped
+-- 121	S18_2957	1934 Ford V8 Coupe	10103	Shipped
+-- 121	S18_3136	18th Century Vintage Horse Carriage	10103	Shipped
+-- 121	S18_3320	1917 Maxwell Touring Car	10103	Shipped
+-- 121	S18_4600	1940s Ford truck	10103	Shipped
+-- 121	S18_4668	1939 Cadillac Limousine	10103	Shipped
+-- 121	S24_2300	1962 Volkswagen Microbus	10103	Shipped
+-- 121	S24_4258	1936 Chrysler Airflow	10103	Shipped
+-- 121	S32_1268	1980ÔÇÖs GM Manhattan Express	10103	Shipped
+-- 121	S32_3522	1996 Peterbilt 379 Stake Bed with Outrigger	10103	Shipped
+-- 121	S700_2824	1982 Camaro Z28	10103	Shipped
+-- 141	S12_3148	1969 Corvair Monza	10104	Shipped
+-- 141	S12_4473	1957 Chevy Pickup	10104	Shipped
+-- 141	S18_2238	1998 Chrysler Plymouth Prowler	10104	Shipped
+-- 141	S18_2319	1964 Mercedes Tour Bus	10104	Shipped
+-- 141	S18_3232	1992 Ferrari 360 Spider red	10104	Shipped
+-- 141	S18_4027	1970 Triumph Spitfire	10104	Shipped
+-- 141	S24_1444	1970 Dodge Coronet	10104	Shipped
+-- 141	S24_2840	1958 Chevy Corvette Limited Edition	10104	Shipped
+-- 141	S24_4048	1992 Porsche Cayenne Turbo Silver	10104	Shipped
+-- 141	S32_2509	1954 Greyhound Scenicruiser	10104	Shipped
+-- 141	S32_3207	1950's Chicago Surface Lines Streetcar	10104	Shipped
+-- 141	S50_1392	Diamond T620 Semi-Skirted Tanker	10104	Shipped
+-- 141	S50_1514	1962 City of Detroit Streetcar	10104	Shipped
+-- 145	S10_4757	1972 Alfa Romeo GTA	10105	Shipped
+-- 145	S12_1108	2001 Ferrari Enzo	10105	Shipped
+-- 145	S12_3891	1969 Ford Falcon	10105	Shipped
+-- 145	S18_3140	1903 Ford Model A	10105	Shipped
+-- 145	S18_3259	Collectable Wooden Train	10105	Shipped
+-- 145	S18_4522	1904 Buick Runabout	10105	Shipped
+-- 145	S24_2011	18th century schooner	10105	Shipped
+-- 145	S24_3151	1912 Ford Model T Delivery Wagon	10105	Shipped
+-- 145	S24_3816	1940 Ford Delivery Sedan	10105	Shipped
+-- 145	S700_1138	The Schooner Bluenose	10105	Shipped
+-- 145	S700_1938	The Mayflower	10105	Shipped
+-- 145	S700_2610	The USS Constitution Ship	10105	Shipped
+-- 145	S700_3505	The Titanic	10105	Shipped
+-- 145	S700_3962	The Queen Mary	10105	Shipped
+-- 145	S72_3212	Pont Yacht	10105	Shipped
+-- 278	S18_1662	1980s Black Hawk Helicopter	10106	Shipped
+-- 278	S18_2581	P-51-D Mustang	10106	Shipped
+-- 278	S18_3029	1999 Yamaha Speed Boat	10106	Shipped
+-- 278	S18_3856	1941 Chevrolet Special Deluxe Cabriolet	10106	Shipped
+-- 278	S24_1785	1928 British Royal Navy Airplane	10106	Shipped
+-- 278	S24_2841	1900s Vintage Bi-Plane	10106	Shipped
+-- 278	S24_3420	1937 Horch 930V Limousine	10106	Shipped
+-- 278	S24_3949	Corsair F4U ( Bird Cage)	10106	Shipped
+-- 278	S24_4278	1900s Vintage Tri-Plane	10106	Shipped
+-- 278	S32_4289	1928 Ford Phaeton Deluxe	10106	Shipped
+-- 278	S50_1341	1930 Buick Marquette Phaeton	10106	Shipped
+-- 278	S700_1691	American Airlines: B767-300	10106	Shipped
+-- 278	S700_2047	HMS Bounty	10106	Shipped
+-- 278	S700_2466	America West Airlines B757-200	10106	Shipped
+-- 278	S700_2834	ATA: B757-300	10106	Shipped
+-- 278	S700_3167	F/A 18 Hornet 1/72	10106	Shipped
+-- 278	S700_4002	American Airlines: MD-11S	10106	Shipped
+-- 278	S72_1253	Boeing X-32A JSF	10106	Shipped
+-- 131	S10_1678	1969 Harley Davidson Ultimate Chopper	10107	Shipped
+-- 131	S10_2016	1996 Moto Guzzi 1100i	10107	Shipped
+-- 131	S10_4698	2003 Harley-Davidson Eagle Drag Bike	10107	Shipped
+-- 131	S12_2823	2002 Suzuki XREO	10107	Shipped
+-- 131	S18_2625	1936 Harley Davidson El Knucklehead	10107	Shipped
+-- 131	S24_1578	1997 BMW R 1100 S	10107	Shipped
+-- 131	S24_2000	1960 BSA Gold Star DBD34	10107	Shipped
+-- 131	S32_1374	1997 BMW F650 ST	10107	Shipped
+-- 385	S12_1099	1968 Ford Mustang	10108	Shipped
+-- 385	S12_3380	1968 Dodge Charger	10108	Shipped
+-- 385	S12_3990	1970 Plymouth Hemi Cuda	10108	Shipped
+-- 385	S12_4675	1969 Dodge Charger	10108	Shipped
+-- 385	S18_1889	1948 Porsche 356-A Roadster	10108	Shipped
+-- 385	S18_3278	1969 Dodge Super Bee	10108	Shipped
+-- 385	S18_3482	1976 Ford Gran Torino	10108	Shipped
+-- 385	S18_3782	1957 Vespa GS150	10108	Shipped
+-- 385	S18_4721	1957 Corvette Convertible	10108	Shipped
+-- 385	S24_2360	1982 Ducati 900 Monster	10108	Shipped
+-- 385	S24_3371	1971 Alpine Renault 1600s	10108	Shipped
+-- 385	S24_3856	1956 Porsche 356A Coupe	10108	Shipped
+-- 385	S24_4620	1961 Chevrolet Impala	10108	Shipped
+-- 385	S32_2206	1982 Ducati 996 R	10108	Shipped
+-- 385	S32_4485	1974 Ducati 350 Mk3 Desmo	10108	Shipped
+-- ...

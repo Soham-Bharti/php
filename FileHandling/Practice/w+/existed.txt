@@ -1,0 +1,1 @@
+I am the new text in the created file after deleting the original content
