@@ -144,50 +144,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $profileErr = "Please select a profile picture";
         $flag = false;
     } else {
-        // print_r($_FILES);
-        $fileName = $_FILES['userProfile']['name'];
-        $fileTmpName = $_FILES['userProfile']['tmp_name'];
-        $fileSize = $_FILES['userProfile']['size'];
-        $fileError = $_FILES['userProfile']['error'];
-        $fileType = $_FILES['userProfile']['type'];
+        if ($flag) {
+            // print_r($_FILES);
+            $fileName = $_FILES['userProfile']['name'];
+            $fileTmpName = $_FILES['userProfile']['tmp_name'];
+            $fileSize = $_FILES['userProfile']['size'];
+            $fileError = $_FILES['userProfile']['error'];
+            $fileType = $_FILES['userProfile']['type'];
 
 
-        $fileExtension = explode('.', $fileName);
-        $fileActualExtension = strtolower(end($fileExtension)); // jpeg
+            $fileExtension = explode('.', $fileName);
+            $fileActualExtension = strtolower(end($fileExtension)); // jpeg
 
-        $allow = array('jpeg', 'jpg', 'png');
-        if (in_array($fileActualExtension, $allow)) {
-            if ($fileError === 0) {
-                if ($fileSize < 50000000000) { // 500kb =  500000b 
-                    $fileNameNew = uniqid('', true) . "." . $fileActualExtension; // new unique name for the uploaded file (eg. 65c1d7b3ba4477.76805219.jpg)
+            $allow = array('jpeg', 'jpg', 'png');
+            if (in_array($fileActualExtension, $allow)) {
+                if ($fileError === 0) {
+                    if ($fileSize < 50000000000) { // 500kb =  500000b 
+                        $fileNameNew = uniqid('', true) . "." . $fileActualExtension; // new unique name for the uploaded file (eg. 65c1d7b3ba4477.76805219.jpg)
 
-                    $fileDestination = 'profiles/' . $fileNameNew;
+                        $fileDestination = 'profiles/' . $fileNameNew;
 
-                    if (!file_exists($fileName)) {
-                        if (move_uploaded_file(
-                            $fileTmpName,
-                            $fileDestination
-                        )) {
-                            // echo "Successfully uploaded your image";
+                        if (!file_exists($fileName)) {
+                            if (move_uploaded_file(
+                                $fileTmpName,
+                                $fileDestination
+                            )) {
+                                // echo "Successfully uploaded your image";
+                            } else {
+                                $profileErr =  "Failed to upload your image";
+                                $flag = false;
+                            }
                         } else {
-                            $profileErr =  "Failed to upload your image";
+                            $profileErr = "File already exists!";
                             $flag = false;
                         }
                     } else {
-                        $profileErr = "File already exists!";
+                        $profileErr =  "Can't upload, Too large file!";
                         $flag = false;
                     }
                 } else {
-                    $profileErr =  "Can't upload, Too large file!";
+                    $profileErr =  "There was an error uploading the file";
                     $flag = false;
                 }
             } else {
-                $profileErr =  "There was an error uploading the file";
+                $profileErr =  "Only .jpg, .jpeg and .png files are allowed";
                 $flag = false;
             }
         } else {
-            $profileErr =  "Only .jpg, .jpeg and .png files are allowed";
-            $flag = false;
+            $profileErr = "Error found, upload profile again";
         }
     }
 
@@ -196,8 +200,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // var_dump($flag);
     if (!empty($_POST['userSkills'])) $skills = $_POST['userSkills'];
-    $profile = $fileDestination;
     if ($flag) {
+        $profile = $fileDestination;
         $txt = "output.php?$name?$email?$dob?$pass?$pass2?$gender?$country?$mobile?$profile";
         foreach ($skills as $s) {
             $txt .= "?$s";
@@ -294,7 +298,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <span>* <?php echo $pass2Err ?></span>
             </div>
             <div>
-                Above informations are correct to the best of my knowledge. <input type="checkbox" name="userAgreement" /> I Agree
+                Above informations are correct to the best of my knowledge. <input type="checkbox" required name="userAgreement" /> I Agree
             </div>
             <div class="buttons">
                 <input type="submit" name="submit" class="btn">
