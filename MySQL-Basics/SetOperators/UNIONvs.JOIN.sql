@@ -1,0 +1,1 @@
+-- A JOIN combines result sets horizontally, a UNION appends result set vertically. The following picture illustrates the difference between UNION and JOIN
