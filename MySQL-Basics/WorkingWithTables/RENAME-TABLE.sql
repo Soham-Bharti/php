@@ -129,9 +129,9 @@ select * from last_names;
 -- Jane
 -- Josh
 -- More
-RENAME TABLE lastnames TO unique_lastnames;
+RENAME TABLE last_names TO unique_lastnames;
 -- Error Code: 1146. Table 'hr.lastnames' doesn't exist
-alter table lastnames RENAME  TO unique_lastnames;
+alter table last_names RENAME  TO unique_lastnames;
 -- done
 select * from unique_lastnames;
 -- lastName
