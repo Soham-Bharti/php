@@ -2,7 +2,7 @@
 require '../Credentials/cred.php';
 
 try {
-    $conn = new PDO("mysql:host=$serverName;dbName=$dbName", $userName, $password);
+    $conn = new PDO("mysql:host=$serverName;dbname=$dbName", $userName, $password);
     // setting PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connection successful";
