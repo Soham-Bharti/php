@@ -1,18 +1,13 @@
-<?php
-session_start();
-// print_r($_SESSION);
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Success Message</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body><nav class="navbar navbar-expand-lg bg-body-tertiary">
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="https://soham-bharti.netlify.app/" target="_blank">Employee Tracker WebApp</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,7 +20,10 @@ session_start();
                         <!-- <a class="nav-link" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a> -->
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">Logout</a>
+                        <a class="nav-link" href="home.php">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminDashboard.php">Dashboard</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -36,7 +34,6 @@ session_start();
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center">Welcome to the dashboard</h2>
-    
+    <h3 class='text-center  mt-5'>User <span class='text-info'>Registered</span> Successfully!</h3>
 </body>
 </html>

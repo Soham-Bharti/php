@@ -5,7 +5,7 @@ $_SESSION['username']  =  '';
 $_SESSION['loggedIn']  =  false;
 
 $email = $password = "";
-$emailErr = $passwordErr = $invalidCredentialsErr ="";
+$emailErr = $passwordErr = $invalidCredentialsErr = "";
 function test_input($data)
 {
     $data = trim($data);
@@ -35,23 +35,22 @@ if (isset($_POST['submit'])) {
         $flag = false;
     }
 
-    if($flag){
-        $sql = "SELECT * from users where email='$email' and password='$password'";
+    if ($flag) {
+        $sql = "SELECT * from users where email='$email' and password='$password' and role = 'admin'";
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) === 1) {
             // echo "Login success";
-            while($row = mysqli_fetch_assoc($result)){
+            while ($row = mysqli_fetch_assoc($result)) {
                 $userName = $row['name'];
             }
             $_SESSION['username']  =  $userName;
             $_SESSION['loggedIn']  =  true;
-            header('Location: dashboard.php');
-        }else{
+            header('Location: adminDashboard.php');
+        } else {
             $invalidCredentialsErr = 'Invalid credentials';
         }
     }
-
 }
 
 ?>
@@ -93,7 +92,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">Welcome back</h2>
+    <h2 class="text-center mt-2">Welcome back | Admin Login</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <span><?php echo $invalidCredentialsErr ?></span>

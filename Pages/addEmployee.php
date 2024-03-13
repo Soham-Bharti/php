@@ -185,7 +185,7 @@ if (isset($_POST['submit'])) {
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page
-        header("Location: login.php");
+        header("Location: successRegister.php");
     }
 }
 
@@ -199,8 +199,8 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
-    <link rel="stylesheet" href="register.css">
+    <title>New Employee Registration</title>
+    <link rel="stylesheet" href="addEmployee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -215,10 +215,10 @@ if (isset($_POST['submit'])) {
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <a class="nav-link" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a>
+                        <a class="nav-link" aria-current="page" href="home.php">Logout</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo "http://localhost/php_training/Pages/login.php" ?>">Login</a>
+                        <a class="nav-link" href="adminDashboard.php">Back</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -229,7 +229,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
         <!-- nav ends -->
-    <h2 class="text-center mt-2">New User Registration</h2>
+    <h2 class="text-center mt-2">New <span class='text-info'>Employee</span> Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
