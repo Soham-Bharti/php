@@ -4,25 +4,3 @@
   padding: 0;
   margin: 0;
 }
-.container{
-    width: 500px;
-    margin: 5% auto;
-    /* border: 1px solid gray; */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.marquee{
-    font-size: 40px;
-}
-
-input{
-    background-color: black;
-    color: white;
-    border: 0;
-    font-size: 30px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-}

@@ -1,7 +1,8 @@
 <?php
+require '../config/dbConnect.php';
 
-$name = $email = $dob = $confirm_password = $password = $gender = $mobile = $image = "";
-$nameErr = $emailErr = $dobErr = $confirm_passwordErr = $passwordErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = "";
+$name = $email = $dob = $confirm_password = $password = $gender = $mobile = $image = $address = "";
+$nameErr = $emailErr = $dobErr = $confirm_passwordErr = $passwordErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
 
 function test_input($data)
 {
@@ -16,7 +17,8 @@ if (isset($_POST['submit'])) {
     $name = test_input($_POST['name']);
     $email = test_input($_POST['email']);
     $dob = test_input($_POST['dob']);
-    $role = test_input($_POST['role']);
+    // $role = test_input($_POST['role']);
+    $role = 'employee';
     $password = test_input($_POST['password']);
     $confirm_password = test_input($_POST['confirm_password']);
     $gender = test_input($_POST['gender']);
@@ -117,9 +119,74 @@ if (isset($_POST['submit'])) {
         }
     }
 
+    if (empty($address)) {
+        $addressErr = 'Required';
+        $flag = false;
+    }
+
+    if (empty($_FILES['image'])) {
+        $imageErr =  "Required";
+        $flag = false;
+    } else {
+        if ($flag) {
+            $fileName = $_FILES['image']['name'];
+            $fileTmpName = $_FILES['image']['tmp_name'];
+            $fileSize = $_FILES['image']['size'];
+            $fileError = $_FILES['image']['error'];
+            $fileType = $_FILES['image']['type'];
+            $fileExtension = explode('.', $fileName);
+            $fileActualExtension = strtolower(end($fileExtension)); // jpeg
+
+            $allowed = array('jpeg', 'jpg', 'png');
+
+            if (in_array($fileActualExtension, $allowed)) {
+                if ($fileError === 0) {
+                    if ($fileSize < 50000000000) { // 500kb =  500000b 
+                        $fileNameNew = uniqid('', true) . "." . $fileActualExtension;
+                        $fileDestination = 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/profiles/' . $fileNameNew;
+                        if (!file_exists($fileName)) {
+                            if (move_uploaded_file(
+                                $fileTmpName,
+                                $fileDestination
+                            )) {
+                                // echo "Successfully uploaded your image";
+                            } else {
+                                $imageErr =  "Failed to upload your image";
+                                $flag = false;
+                            }
+                        } else {
+                            $imageErr = "File already exists!";
+                            $flag = false;
+                        }
+                    } else {
+                        $imageErr = "FILE  TOO LARGE!";
+                        $flag = false;
+                    }
+                } else {
+                    $imageErr = "There was file error";
+                    $flag = false;
+                }
+            } else {
+                $imageErr = "Only .png, .jpg, .jpeg supported";
+                $flag = false;
+            }
+        }
+    }
+
     // print_r($_POST);
 
-    if ($flag) header("Location: login.php");
+    if ($flag) {
+        // sending data to data base
+        $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_image)
+                values('$role', '$name','$email', '$password', '$gender', '$mobile', '$dob', '$address', '$city', '$state', LOAD_FILE('$fileDestination'))";
+
+        if (mysqli_query($conn, $sql)) {
+            // echo "<br>New record inserted successfully<br>";
+        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+        mysqli_close($conn);
+        // if everthing if well then redirecting the user to login page
+        header("Location: login.php");
+    }
 }
 
 ?>
@@ -140,17 +207,18 @@ if (isset($_POST['submit'])) {
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Employee Tracker WebApp</a>
+            <a class="navbar-brand" href="https://soham-bharti.netlify.app/" target="_blank">Employee Tracker WebApp</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?php ?>">Home</a>
+                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
+                        <a class="nav-link" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                        <a class="nav-link" href="<?php echo "http://localhost/php_training/Pages/login.php" ?>">Login</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -160,6 +228,7 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </nav>
+        <!-- nav ends -->
     <h2 class="text-center mt-2">New User Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">
@@ -217,7 +286,7 @@ if (isset($_POST['submit'])) {
 
                 <div class="mb-3">
                     <label class="form-label">Mobile <span>* <?php echo $mobileErr ?></span></label>
-                    <input type="tel" name="mobile" class="form-control" placeholder="9876543210">
+                    <input type="tel" name="mobile" class="form-control" placeholder="9876543210" maxlength="10">
                 </div>
 
                 <div class="mb-3">
@@ -225,11 +294,11 @@ if (isset($_POST['submit'])) {
                     <input type="date" class="form-control" name="dob">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Profile Piture</label>
+                    <label class="form-label">Profile Piture <span>* <?php echo $imageErr ?></span></label>
                     <input class="form-control" type="file" name="image">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Address</label>
+                    <label class="form-label">Address <span>* <?php echo $addressErr ?></span></label>
                     <input type="text" class="form-control" name="address" placeholder="628 Iskon Emporio">
                 </div>
                 <div class="mb-3">
