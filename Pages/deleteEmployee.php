@@ -2,8 +2,8 @@
 session_start();
 require '../config/dbConnect.php';
 
-if (isset($_SESSION['userId'])) {
-    $desiredUserId = $_SESSION['userId'];
+if (isset($_SESSION['empUserId'])) {
+    $desiredUserId = $_SESSION['empUserId'];
     $sql = "DELETE from users where id = '$desiredUserId'";
     $result = mysqli_query($conn, $sql);
     if ($result) {

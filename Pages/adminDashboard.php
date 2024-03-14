@@ -1,16 +1,22 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-
+unset($_SESSION['empUserId']);   
+// print_r($_SESSION);
 if (isset($_GET['update'])) {
-    $_SESSION['userId'] = $_GET['id'];
+    $_SESSION['empUserId'] = $_GET['id'];
     header("Location: updateEmployee.php");
-    // echo $_SESSION['userId'];
+    // print_r($_SESSION);
+}
+if (isset($_GET['track'])) {
+    $_SESSION['empUserId'] = $_GET['id'];
+    header("Location: trackEmployee.php");
+    // echo $_SESSION['empUserId'];
 }
 if (isset($_GET['delete'])) {
-    $_SESSION['userId'] = $_GET['id'];
+    $_SESSION['empUserId'] = $_GET['id'];
     header("Location: deleteEmployee.php");
-    // echo $_SESSION['userId'];
+    // echo $_SESSION['empUserId'];
 }
 
 ?>
@@ -92,7 +98,7 @@ if (isset($_GET['delete'])) {
                 <?php
                 if (isset($_SESSION['adminName'])) {
                     $user = $_SESSION['adminName'];
-                    echo "Admin Name: " . ucwords($user);
+                    echo "Admin Name: <b>" . ucwords($user) ."</b>";
                 } else echo "Session expired - login again to see your details";
                 ?>
             </div>
@@ -103,7 +109,7 @@ if (isset($_GET['delete'])) {
             </div>
         </div>
         <h2 class="text-center mt-5">Showing <span class='text-primary'>employees'</span> details</h2>
-        <div class="mt-3 ">
+        <div class="mt-3">
             <table>
                 <tr>
                     <th>ID</th>
@@ -112,6 +118,7 @@ if (isset($_GET['delete'])) {
                     <th>Gender</th>
                     <th>Mobile</th>
                     <th>Date of Birth</th>
+                    <th>Action</th>
                     <th>Action</th>
                     <th>Action</th>
                 </tr>
@@ -132,14 +139,18 @@ if (isset($_GET['delete'])) {
                             <td>
                                 <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
-                                    <?php $_SESSION['usedId'] = $row["id"]; ?>
                                     <input type="submit" name='update' class="btn btn-primary btn-sm" value='Update' />
                                 </form>
                             </td>
                             <td>
                                 <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
-                                    <?php $_SESSION['usedId'] = $row["id"]; ?>
+                                    <input type="submit" name='track' class="btn btn-warning text-muted btn-sm" value='Track' />
+                                </form>
+                            </td>
+                            <td>
+                                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
+                                    <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
                                     <input type="submit" name='delete' class="btn btn-danger btn-sm" value='Delete' />
                                 </form>
                             </td>

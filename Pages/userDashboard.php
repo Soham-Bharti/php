@@ -1,7 +1,20 @@
 <?php
 session_start();
+require '../config/dbConnect.php';
 // print_r($_SESSION);
 
+$desiredUserId = $_SESSION['empUserId'];
+
+
+if (isset($_POST['check-in-submit'])) {
+    echo 'check-in-submit clicked';
+    header('Location: check-in.php');
+    // print_r($_SESSION);
+}
+if (isset($_POST['check-out-submit'])) {
+    echo 'check-out-submit clicked';
+    header('Location: check-out.php');
+}
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +23,8 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard | <?php echo $_SESSION['userName']; ?> </title>
+    <link rel="stylesheet" href="userdashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -39,19 +53,88 @@ session_start();
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to the dashboard</h2>
+    <h2 class="text-center mt-3">Welcome to the <span class='text-info'>User</span> dashboard</h2>
+    <?php
+    $sql = "SELECT status from trackingdetails where user_id = '$desiredUserId' order by created_at desc";
+    $result = mysqli_query($conn, $sql);
+    if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $showStatus = $row['status'];
+            break;
+        }
+    } else $showStatus = null;
+    ?>
+    <?php
+    if ($showStatus === 'check-in') {
+    ?>
+        <h4 class="text-center mt-3">You are currently <span class='text-success'><?php echo $showStatus ?></span></h4>
+    <?php } else if ($showStatus === 'check-out') {
+    ?>
+        <h4 class="text-center mt-3">You are currently <span class='text-danger'><?php echo $showStatus ?></span></h4>
+    <?php } else { ?>
+        <h4 class="text-center mt-3">Do your <span class='text-warning'>FIRST</span> check-in!</h4>
+    <?php } ?>
+
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
                 <?php
-                $user = $_SESSION['username'];
-                echo "User: " . $user;
+                $user = $_SESSION['userName'];
+                $userId = $_SESSION['empUserId'];
+                echo "Emp Id: " . $userId . " | " . $user;
                 ?>
             </div>
-            <div class="buttons w-25 d-flex justify-content-between align-items-center">
-                <input type="submit" name="check-in-submit" class="btn btn-primary btn-lg" value="Check-in">
-                <input type="submit" name="check-out-submit" class="btn btn-danger btn-lg" value='Check-out'>
+            <div class="buttons d-flex justify-content-between align-items-center">
+                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
+                    <input type="submit" name="check-in-submit" class="btn btn-primary btn-lg <?php echo $showStatus === 'check-in' ? "disabled cursor-not-allowed" : '' ?>" value="Check-in">
+                    <input type="submit" name="check-out-submit" class="btn btn-danger btn-lg <?php echo $showStatus === 'check-in' ? '' : "disabled cursor-not-allowed" ?>" value='Check-out'>
+                </form>
             </div>
+        </div>
+        <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
+        <div class="mt-3">
+            <table>
+                <tr>
+                    <th>S.Number</th>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Check In Time</th>
+                    <th>Check Out Time</th>
+                </tr>
+                <?php
+                $sql = "SELECT status, created_at from trackingDetails where user_id = $desiredUserId order by created_at desc limit 10";
+                $result = mysqli_query($conn, $sql);
+                $seialNumber = 1;
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $flag = false;
+                ?>
+                        <?php
+                        $time = strtotime($row["created_at"]);
+
+                        ?>
+                        <tr>
+                            <td><?php echo $seialNumber++ ?></td>
+                            <td><?php
+                                echo date('d M Y', $time);
+                                ?></td>
+                            <td><?php
+                                echo date('l', $time);
+                                ?></td> 
+                            <!-- setting as per check in or check out -->
+                            <?php if ($row["status"] === 'check-in') { ?>
+                                <td><?php echo $row["created_at"] ?></td>
+                                <td></td>
+                            <?php }     else { ?>
+                                <td></td>
+                                <td><?php echo $row["created_at"] ?></td>
+                            <?php } ?>
+                        </tr>
+                <?php
+                    }
+                }
+                ?>
+            </table>
         </div>
     </div>
 </body>

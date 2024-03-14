@@ -1,8 +1,11 @@
 <?php
 session_start();
 require_once '../config/dbConnect.php';
-$_SESSION['username']  =  '';
-$_SESSION['loggedIn']  =  false;
+$_SESSION['userName']  =  '';
+$_SESSION['adminLoggedIn']  =  false;
+$_SESSION['userLoggedIn']  =  false;
+$_SESSION['empUserId'] = '';
+$_SESSION['adminUserId'] = '';
 
 $email = $password = "";
 $emailErr = $passwordErr = $invalidCredentialsErr = "";
@@ -36,17 +39,30 @@ if (isset($_POST['submit'])) {
     }
 
     if ($flag) {
-        $sql = "SELECT * from users where email='$email' and password='$password' and role = 'admin'";
+        $hashedPassword = md5(
+            $password
+        );
+        $sql = "SELECT * from users where email='$email' and password='$hashedPassword'";
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) === 1) {
             // echo "Login success";
             while ($row = mysqli_fetch_assoc($result)) {
                 $userName = $row['name'];
+                $role = $row['role'];
+                $userId = $row['id'];
             }
-            $_SESSION['adminName']  =  $userName;
-            $_SESSION['loggedIn']  =  true;
-            header('Location: adminDashboard.php');
+            if ($role == 'admin') {
+                $_SESSION['adminName']  =  $userName;
+                $_SESSION['adminLoggedIn']  =  true;
+                $_SESSION['adminUserId']     =  $userId;
+                header('Location: adminDashboard.php');
+            } else {
+                $_SESSION['userName']   =  $userName;
+                $_SESSION['empUserId']     =  $userId;
+                $_SESSION['userLoggedIn']  =  true;
+                header('Location: userDashboard.php');
+            }
         } else {
             $invalidCredentialsErr = 'Invalid credentials';
         }
@@ -92,7 +108,7 @@ if (isset($_POST['submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2">Welcome back | Admin Login</h2>
+    <h2 class="text-center mt-2">Welcome back</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <span><?php echo $invalidCredentialsErr ?></span>

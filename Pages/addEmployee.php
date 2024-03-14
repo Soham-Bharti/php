@@ -51,18 +51,19 @@ if (isset($_POST['submit'])) {
     if (empty($password)) {
         $passwordErr = 'Required';
         $flag = false;
-    } else {
-        $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
-        if (!preg_match($password_regex, $password)) {
-            $passwordErr = "Check that a password:<br>
-            Has minimum 8 characters in length<br>
-            At least one uppercase English letter<br>
-            At least one lowercase English letter<br>
-            At least one digit<br>
-            At least one special character";
-            $flag = false;
-        }
-    }
+    } 
+    // else {
+    //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
+    //     if (!preg_match($password_regex, $password)) {
+    //         $passwordErr = "Check that a password:<br>
+    //         Has minimum 8 characters in length<br>
+    //         At least one uppercase English letter<br>
+    //         At least one lowercase English letter<br>
+    //         At least one digit<br>
+    //         At least one special character";
+    //         $flag = false;
+    //     }
+    // }
 
     if (empty($confirm_password)) {
         $confirm_passwordErr = 'Required';
@@ -178,8 +179,9 @@ if (isset($_POST['submit'])) {
 
     if ($flag) {
         // sending data to data base
+        $hashedPassword = md5($password); 
         $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_image)
-                values('$role', '$name','$email', '$password', '$gender', '$mobile', '$dob', '$address', '$city', '$state', LOAD_FILE('$fileDestination'))";
+                values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', LOAD_FILE('$fileDestination'))";
 
         if (mysqli_query($conn, $sql)) {
             // echo "<br>New record inserted successfully<br>";
@@ -188,7 +190,7 @@ if (isset($_POST['submit'])) {
         // if everthing if well then redirecting the user to login page
         $_SESSION['AddStatus'] = 'success';
         header("Location: adminDashboard.php");
-    }
+    }else echo "THERE WAS AN ERROR adding new employee";
 }
 
 ?>

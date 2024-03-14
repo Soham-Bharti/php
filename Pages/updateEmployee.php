@@ -1,10 +1,10 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-
+print_r($_SESSION);
 $nameErr = $emailErr = $dobErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
-if (isset($_SESSION['userId'])) {
-    $desiredUserId = $_SESSION['userId'];
+if (isset($_SESSION['empUserId'])) {
+    $desiredUserId = $_SESSION['empUserId'];
     $sql = "SELECT name, email, gender, mobile, date_of_birth, address, city, state from users where id = '$desiredUserId'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -20,7 +20,7 @@ if (isset($_SESSION['userId'])) {
         }
     }
 } else {
-    echo "ID parameter is missing - check your session";
+    echo "Emp User ID parameter is missing - check your session";
 }
 
 
