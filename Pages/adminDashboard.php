@@ -1,7 +1,17 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-// print_r($_SESSION);
+
+if (isset($_GET['update'])) {
+    $_SESSION['userId'] = $_GET['id'];
+    header("Location: updateEmployee.php");
+    // echo $_SESSION['userId'];
+}
+if (isset($_GET['delete'])) {
+    $_SESSION['userId'] = $_GET['id'];
+    header("Location: deleteEmployee.php");
+    // echo $_SESSION['userId'];
+}
 
 ?>
 
@@ -13,7 +23,9 @@ require '../config/dbConnect.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Dashboard</title>
     <link rel="stylesheet" href="adminDashboard.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -42,12 +54,46 @@ require '../config/dbConnect.php';
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to the <span class='text-info'>admin</span> dashboard</h2>
+    
+    <!-- toast after successful added -->
+    <?php if ($_SESSION['AddStatus'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-success text-white ">
+                <strong class="me-auto">Record added successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['AddStatus'] = '' ?>
+    <!-- toast after successful update -->
+    <?php if ($_SESSION['UpdateStatus'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-warning text-white">
+                <strong class="me-auto">Record updated successfully!</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['UpdateStatus'] = '' ?>
+    <!-- toast after successful delete -->
+    <?php if ($_SESSION['DeleteStatus'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-danger text-white ">
+                <strong class="me-auto">Record deleted successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['DeleteStatus'] = '' ?>
+
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
                 <?php
-                $user = $_SESSION['username'];
-                echo "Admin Name: " . ucwords($user);
+                if (isset($_SESSION['adminName'])) {
+                    $user = $_SESSION['adminName'];
+                    echo "Admin Name: " . ucwords($user);
+                } else echo "Session expired - login again to see your details";
                 ?>
             </div>
             <div class="buttons d-flex justify-content-between align-items-center">
@@ -84,15 +130,17 @@ require '../config/dbConnect.php';
                             <td><?php echo $row["mobile"] ?></td>
                             <td><?php echo $row["date_of_birth"] ?></td>
                             <td>
-                                <form action="updateEmployee.php" method="get">
+                                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
-                                    <input type="submit" class="btn btn-primary btn-sm" value='Update'/>
+                                    <?php $_SESSION['usedId'] = $row["id"]; ?>
+                                    <input type="submit" name='update' class="btn btn-primary btn-sm" value='Update' />
                                 </form>
                             </td>
                             <td>
-                                <form action="deleteEmployee.php" method="get">
+                                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
-                                    <input type="submit" class="btn btn-danger btn-sm" value='Delete'/>
+                                    <?php $_SESSION['usedId'] = $row["id"]; ?>
+                                    <input type="submit" name='delete' class="btn btn-danger btn-sm" value='Delete' />
                                 </form>
                             </td>
                         </tr>
@@ -104,6 +152,7 @@ require '../config/dbConnect.php';
         </div>
 
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

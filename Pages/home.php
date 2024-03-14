@@ -22,10 +22,9 @@ if($_SESSION['loggedIn']) $flag = true;
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
+                    <!-- <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a>
-                    </li>
+                    </li> -->
                     <!-- <li class="nav-item">
                         <a class="nav-link" href="register.php">Register</a>
                     </li> -->

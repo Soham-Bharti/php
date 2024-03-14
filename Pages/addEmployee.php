@@ -1,4 +1,5 @@
 <?php
+session_start();
 require '../config/dbConnect.php';
 
 $name = $email = $dob = $confirm_password = $password = $gender = $mobile = $image = $address = "";
@@ -185,7 +186,8 @@ if (isset($_POST['submit'])) {
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page
-        header("Location: successRegister.php");
+        $_SESSION['AddStatus'] = 'success';
+        header("Location: adminDashboard.php");
     }
 }
 

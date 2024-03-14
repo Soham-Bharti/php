@@ -1,9 +1,10 @@
 <?php
+session_start();
 require '../config/dbConnect.php';
 
 $nameErr = $emailErr = $dobErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
-if (isset($_GET['id'])) {
-    $desiredUserId = $_GET['id'];
+if (isset($_SESSION['userId'])) {
+    $desiredUserId = $_SESSION['userId'];
     $sql = "SELECT name, email, gender, mobile, date_of_birth, address, city, state from users where id = '$desiredUserId'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -19,9 +20,8 @@ if (isset($_GET['id'])) {
         }
     }
 } else {
-    echo "ID parameter is missing";
+    echo "ID parameter is missing - check your session";
 }
-
 
 
 function test_input($data)
@@ -175,8 +175,9 @@ if (isset($_POST['submit'])) {
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page
-        // header("Location: successRegister.php");
-        echo "Successfully updated";
+        $_SESSION['UpdateStatus'] = 'success'; 
+        header("Location: adminDashboard.php");
+        // echo "Successfully updated";
     }
 }
 

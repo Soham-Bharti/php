@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $userName = $row['name'];
             }
-            $_SESSION['username']  =  $userName;
+            $_SESSION['adminName']  =  $userName;
             $_SESSION['loggedIn']  =  true;
             header('Location: adminDashboard.php');
         } else {
@@ -78,10 +78,10 @@ if (isset($_POST['submit'])) {
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <a class="nav-link" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a>
+                        <a class="nav-link" aria-current="page" href="home.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo "http://localhost/php_training/Pages/register.php" ?>">Register</a>
+                        <a class="nav-link" href="home.php">Back</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
