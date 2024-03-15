@@ -1,22 +1,19 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-unset($_SESSION['empUserId']);   
+ 
 // print_r($_SESSION);
 if (isset($_GET['update'])) {
-    $_SESSION['empUserId'] = $_GET['id'];
+    $_SESSION['id'] = $_GET['id'];
     header("Location: updateEmployee.php");
-    // print_r($_SESSION);
 }
 if (isset($_GET['track'])) {
-    $_SESSION['empUserId'] = $_GET['id'];
+    $_SESSION['id'] = $_GET['id'];
     header("Location: trackEmployee.php");
-    // echo $_SESSION['empUserId'];
 }
 if (isset($_GET['delete'])) {
-    $_SESSION['empUserId'] = $_GET['id'];
+    $_SESSION['id'] = $_GET['id'];
     header("Location: deleteEmployee.php");
-    // echo $_SESSION['empUserId'];
 }
 
 ?>
@@ -28,7 +25,7 @@ if (isset($_GET['delete'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Dashboard</title>
-    <link rel="stylesheet" href="./Styles/adminDashboard.css">
+    <link rel="stylesheet" href="../Styles/adminDashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -96,16 +93,17 @@ if (isset($_GET['delete'])) {
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
                 <?php
-                if (isset($_SESSION['adminName'])) {
-                    $user = $_SESSION['adminName'];
+                if (isset($_SESSION['userName'])) {
+                    $user = $_SESSION['userName'];
                     echo "Admin Name: <b>" . ucwords($user) ."</b>";
                 } else echo "Session expired - login again to see your details";
                 ?>
             </div>
             <div class="buttons d-flex justify-content-between align-items-center">
-                <form action="addEmployee.php" method="POST">
+                <!-- <form action="addEmployee.php" method="POST">
                     <input type="submit" name="add-submit" class="btn btn-success btn-lg" value="Add Employee">
-                </form>
+                </form> -->
+                <a href="addEmployee.php" class="btn btn-success btn-lg">Add Employee</a>
             </div>
         </div>
         <h2 class="text-center mt-5">Showing <span class='text-primary'>employees'</span> details</h2>
@@ -137,22 +135,25 @@ if (isset($_GET['delete'])) {
                             <td><?php echo $row["mobile"] ?></td>
                             <td><?php echo $row["date_of_birth"] ?></td>
                             <td>
-                                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
+                                <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
                                     <input type="submit" name='update' class="btn btn-primary btn-sm" value='Update' />
-                                </form>
+                                </form> -->
+                                <a href="updateEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-primary btn-sm">Update</a>
                             </td>
                             <td>
-                                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
+                                <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
                                     <input type="submit" name='track' class="btn btn-warning text-muted btn-sm" value='Track' />
-                                </form>
+                                </form> -->
+                                <a href="trackEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-warning text-muted btn-sm">Track</a>
                             </td>
                             <td>
-                                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
+                                <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
                                     <input type="submit" name='delete' class="btn btn-danger btn-sm" value='Delete' />
-                                </form>
+                                </form> -->
+                                <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                 <?php

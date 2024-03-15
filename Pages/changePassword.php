@@ -2,10 +2,11 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
+
 $confirmNewPassword = $newPassword = $oldPassword =  "";
 $confirmNewPasswordErr = $newPasswordErr = $oldPasswordErr = "";
 
-$desiredUserId = $_SESSION['empUserId'];
+$desiredUserId = $_SESSION['id'];
 function test_input($data)
 {
     $data = trim($data);
@@ -94,8 +95,8 @@ if (isset($_POST['change'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Employee</title>
-    <link rel="stylesheet" href="./Styles/updateemployee.css">
+    <title>Changing Password...</title>
+    <link rel="stylesheet" href="../Styles/updateemployee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 

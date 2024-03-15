@@ -2,10 +2,7 @@
 session_start();
 require_once '../config/dbConnect.php';
 $_SESSION['userName']  =  '';
-$_SESSION['adminLoggedIn']  =  false;
-$_SESSION['userLoggedIn']  =  false;
-$_SESSION['empUserId'] = '';
-$_SESSION['adminUserId'] = '';
+$_SESSION['id'] = '';
 
 $email = $password = "";
 $emailErr = $passwordErr = $invalidCredentialsErr = "";
@@ -52,13 +49,13 @@ if (isset($_POST['submit'])) {
                 $role = $row['role'];
                 $userId = $row['id'];
             }
+            $_SESSION['userName']   =  $userName;
+            $_SESSION['id']     =  $userId;
             if ($role == 'admin') {
-                $_SESSION['adminName']  =  $userName;
-                $_SESSION['adminUserId']     =  $userId;
+                $_SESSION['role']     =  'admin';
                 header('Location: adminDashboard.php');
             } else {
-                $_SESSION['userName']   =  $userName;
-                $_SESSION['empUserId']     =  $userId;
+                $_SESSION['role']     =  'emp';
                 header('Location: userDashboard.php');
             }
         } else {
@@ -77,7 +74,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | Login</title>
-    <link rel="stylesheet" href="./Styles/login.css">
+    <link rel="stylesheet" href="../Styles/login.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
