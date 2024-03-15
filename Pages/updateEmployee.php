@@ -1,13 +1,13 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-print_r($_SESSION);
+// print_r($_SESSION);
 $nameErr = $emailErr = $dobErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
 if (isset($_SESSION['empUserId'])) {
     $desiredUserId = $_SESSION['empUserId'];
-    $sql = "SELECT name, email, gender, mobile, date_of_birth, address, city, state from users where id = '$desiredUserId'";
+    $sql = "SELECT name, email, gender, mobile, date_of_birth, address, city, state, profile_url from users where id = '$desiredUserId' and deleted_at is null";
     $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result) > 0) {
+    if (mysqli_num_rows($result) == 1) {
         while ($row = mysqli_fetch_assoc($result)) {
             $name = $row['name'];
             $email = $row['email'];
@@ -17,6 +17,7 @@ if (isset($_SESSION['empUserId'])) {
             $address = $row['address'];
             $city = $row['city'];
             $state = $row['state'];
+            $profile = $row['profile_url'];
         }
     }
 } else {
@@ -115,8 +116,9 @@ if (isset($_POST['submit'])) {
         $flag = false;
     }
 
-    if (isset($_FILES['image'])) {
-        if ($flag) {
+// print_r($_FILES['image']);
+        if ($flag && $_FILES['image']['name'] !== '') {
+            // echo 'Inside';
             $fileName = $_FILES['image']['name'];
             $fileTmpName = $_FILES['image']['tmp_name'];
             $fileSize = $_FILES['image']['size'];
@@ -130,8 +132,10 @@ if (isset($_POST['submit'])) {
             if (in_array($fileActualExtension, $allowed)) {
                 if ($fileError === 0) {
                     if ($fileSize < 50000000000) { // 500kb =  500000b 
-                        $fileNameNew = uniqid('', true) . "." . $fileActualExtension;
-                        $fileDestination = 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/profiles/' . $fileNameNew;
+                        $nameArr = explode(' ', $name);
+                        $fileNameNew = strtolower($nameArr[0]) . "_" . uniqid('', true) . "." . $fileActualExtension;
+                        $fileDestination = './Images/' . $fileNameNew;
+                        // echo "LOCATION___" . $fileDestination;
                         if (!file_exists($fileName)) {
                             if (move_uploaded_file(
                                 $fileTmpName,
@@ -158,24 +162,31 @@ if (isset($_POST['submit'])) {
                 $imageErr = "Only .png, .jpg, .jpeg supported";
                 $flag = false;
             }
-        }
+        
     }
 
     // print_r($_POST);
 
     if ($flag) {
         // sending data to data base  except LOAD_FILE('$fileDestination')
-        $sql = "UPDATE users
-                SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state'
-                where id = '$desiredUserId'
-                ";
+        if (empty($fileDestination)) {
+            $sql = "UPDATE users
+            SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', updated_at = now()
+            where id = '$desiredUserId'
+            ";
+        } else {
+            $sql = "UPDATE users
+            SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', profile_url = '$fileNameNew', updated_at = now()
+            where id = '$desiredUserId'
+            ";
+        }
 
         if (mysqli_query($conn, $sql)) {
             echo "<br>Record updated successfully<br>";
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page
-        $_SESSION['UpdateStatus'] = 'success'; 
+        $_SESSION['UpdateStatus'] = 'success';
         header("Location: adminDashboard.php");
         // echo "Successfully updated";
     }
@@ -190,7 +201,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Employee</title>
-    <link rel="stylesheet" href="addEmployee.css">
+    <link rel="stylesheet" href="./Styles/updateemployee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -222,7 +233,7 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employee Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
-            <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
+            <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
 
                 <div class="mb-3">
                     <label class="col-form-label">Name <span>* <?php echo $nameErr ?></span></label>
@@ -264,6 +275,14 @@ if (isset($_POST['submit'])) {
                     <label class="form-label">Date of Birth <span>* <?php echo $dobErr ?></span></label>
                     <input type="date" class="form-control" name="dob" value='<?php echo $dob ?>'>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label">Profile Picture <span>* (displaying your current profile, CHOOSE only if you want to change) <?php echo $imageErr ?></span></label>
+                    <div class="d-inline-block profile-img w-25">
+                        <img src="<?php echo "./Images/".$profile ?>" alt="No profile to show" class="img-thumbnail object-fit-contain border rounded-circle  mb-2">
+                    </div>
+                    <input class="form-control" type="file" name="image">
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label">Address <span>* <?php echo $addressErr ?></span></label>
                     <input type="text" class="form-control" name="address" placeholder="628 Iskon Emporio" value='<?php echo $address ?>'>

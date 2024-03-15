@@ -51,7 +51,7 @@ if (isset($_POST['submit'])) {
     if (empty($password)) {
         $passwordErr = 'Required';
         $flag = false;
-    } 
+    }
     // else {
     //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
     //     if (!preg_match($password_regex, $password)) {
@@ -144,8 +144,9 @@ if (isset($_POST['submit'])) {
             if (in_array($fileActualExtension, $allowed)) {
                 if ($fileError === 0) {
                     if ($fileSize < 50000000000) { // 500kb =  500000b 
-                        $fileNameNew = uniqid('', true) . "." . $fileActualExtension;
-                        $fileDestination = 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/profiles/' . $fileNameNew;
+                        $nameArr = explode(' ', $name);
+                        $fileNameNew = strtolower($nameArr[0])."_" . uniqid('', true) . "." . $fileActualExtension;
+                        $fileDestination = './Images/' . $fileNameNew;
                         if (!file_exists($fileName)) {
                             if (move_uploaded_file(
                                 $fileTmpName,
@@ -179,9 +180,9 @@ if (isset($_POST['submit'])) {
 
     if ($flag) {
         // sending data to data base
-        $hashedPassword = md5($password); 
-        $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_image)
-                values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', LOAD_FILE('$fileDestination'))";
+        $hashedPassword = md5($password);
+        $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_url)
+                values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', '$fileNameNew')";
 
         if (mysqli_query($conn, $sql)) {
             // echo "<br>New record inserted successfully<br>";
@@ -190,7 +191,7 @@ if (isset($_POST['submit'])) {
         // if everthing if well then redirecting the user to login page
         $_SESSION['AddStatus'] = 'success';
         header("Location: adminDashboard.php");
-    }else echo "THERE WAS AN ERROR adding new employee";
+    } else echo "THERE WAS AN ERROR adding new employee";
 }
 
 ?>
@@ -204,7 +205,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Employee Registration</title>
-    <link rel="stylesheet" href="addEmployee.css">
+    <link rel="stylesheet" href="./Styles/addEmployee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -232,7 +233,7 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </nav>
-        <!-- nav ends -->
+    <!-- nav ends -->
     <h2 class="text-center mt-2">New <span class='text-info'>Employee</span> Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">

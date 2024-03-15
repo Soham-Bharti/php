@@ -28,7 +28,7 @@ if (isset($_GET['delete'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Dashboard</title>
-    <link rel="stylesheet" href="adminDashboard.css">
+    <link rel="stylesheet" href="./Styles/adminDashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -123,7 +123,7 @@ if (isset($_GET['delete'])) {
                     <th>Action</th>
                 </tr>
                 <?php
-                $sql = "SELECT id, name, email, gender, mobile, date_of_birth from users where role = 'employee' order by id";
+                $sql = "SELECT id, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {

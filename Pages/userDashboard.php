@@ -24,8 +24,10 @@ if (isset($_POST['check-out-submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | <?php echo $_SESSION['userName']; ?> </title>
-    <link rel="stylesheet" href="userdashboard.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./Styles/userdashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
 </head>
 
 <body>
@@ -43,6 +45,9 @@ if (isset($_POST['check-out-submit'])) {
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="login.php">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="changePassword.php">Change Password</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -91,6 +96,17 @@ if (isset($_POST['check-out-submit'])) {
                 </form>
             </div>
         </div>
+        <!-- toast after successful change of password -->
+        <!-- <?php if ($_SESSION['userChangePasswordStatus'] == 'success') { ?> -->
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-success text-white ">
+                    <strong class="me-auto">Password changed successfully!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <!-- <?php }
+        $_SESSION['userChangePasswordStatus'] = '' ?> -->
+        <!-- toast ends -->
         <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
         <div class="mt-3">
             <table>
@@ -120,19 +136,19 @@ if (isset($_POST['check-out-submit'])) {
                                 ?></td>
                             <td><?php
                                 echo date('l', $time);
-                                ?></td> 
+                                ?></td>
                             <!-- setting as per check in or check out -->
                             <?php if ($row["status"] === 'check-in') { ?>
                                 <td><?php echo $row["created_at"] ?></td>
                                 <td></td>
-                            <?php }     else { ?>
+                            <?php } else { ?>
                                 <td></td>
                                 <td><?php echo $row["created_at"] ?></td>
                             <?php } ?>
                         </tr>
                 <?php
                     }
-                }
+                } else echo "Oops! No Record found.";
                 ?>
             </table>
         </div>
