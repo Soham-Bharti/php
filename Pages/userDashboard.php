@@ -27,7 +27,7 @@ if (isset($_POST['check-out-submit'])) {
     <link rel="stylesheet" href="../Styles/userdashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -60,14 +60,15 @@ if (isset($_POST['check-out-submit'])) {
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to the <span class='text-info'>User</span> dashboard</h2>
     <?php
-    $sql = "SELECT status from trackingdetails where user_id = '$desiredUserId' order by created_at desc";
+    $showStatus ='';
+    $sql = "SELECT check_out_time from employeeTrackingDetails where user_id = '$desiredUserId' order by created_at desc limit 1";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            $showStatus = $row['status'];
-            break;
+            $checkOut = $row["check_out_time"];
+            is_null($checkOut) ? $showStatus = 'check-in' : $showStatus = 'check-out';
         }
-    } else $showStatus = null;
+    }
     ?>
     <?php
     if ($showStatus === 'check-in') {
@@ -98,14 +99,14 @@ if (isset($_POST['check-out-submit'])) {
         </div>
         <!-- toast after successful change of password -->
         <!-- <?php if ($_SESSION['userChangePasswordStatus'] == 'success') { ?> -->
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-success text-white ">
-                    <strong class="me-auto">Password changed successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-success text-white ">
+                <strong class="me-auto">Password changed successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
+        </div>
         <!-- <?php }
-        $_SESSION['userChangePasswordStatus'] = '' ?> -->
+                $_SESSION['userChangePasswordStatus'] = '' ?> -->
         <!-- toast ends -->
         <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
         <div class="mt-3">
@@ -118,16 +119,23 @@ if (isset($_POST['check-out-submit'])) {
                     <th>Check Out Time</th>
                 </tr>
                 <?php
-                $sql = "SELECT status, created_at from trackingDetails where user_id = $desiredUserId order by created_at desc limit 10";
+                $sql = "SELECT created_at, check_in_time, check_out_time from employeeTrackingDetails where user_id = $desiredUserId order by created_at desc limit 10";
                 $result = mysqli_query($conn, $sql);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $flag = false;
+                        $checkOut = $row["check_out_time"];
                 ?>
                         <?php
                         $time = strtotime($row["created_at"]);
-
+                        $checkInTime = strtotime($row["check_in_time"]);
+                        if (is_null($checkOut)) {
+                            $checkOutIsNull = true;
+                        } else {
+                            $checkOutTime = strtotime($row["check_out_time"]);
+                            $checkOutIsNull = false;
+                        };
                         ?>
                         <tr>
                             <td><?php echo $seialNumber++ ?></td>
@@ -136,19 +144,29 @@ if (isset($_POST['check-out-submit'])) {
                                 ?></td>
                             <td><?php
                                 echo date('l', $time);
-                                ?></td>
-                            <!-- setting as per check in or check out -->
-                            <?php if ($row["status"] === 'check-in') { ?>
-                                <td><?php echo $row["created_at"] ?></td>
-                                <td></td>
-                            <?php } else { ?>
-                                <td></td>
-                                <td><?php echo $row["created_at"] ?></td>
-                            <?php } ?>
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                echo date('H:i:s', $checkInTime);
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                  if ($checkOutIsNull) {
+                                    echo " -- ";
+                                  }
+                                else {
+                                echo date('H:i:s', $checkOutTime);
+                                }
+                                ?>
+                            </td>
                         </tr>
-                <?php
+                    <?php
                     }
-                } else echo "Oops! No Record found.";
+                } else { ?>
+                    <h2 class="text-center mt-5">Oops! <span class='text-danger text-center'>NO</span> track found!</h2>
+                <?php }
                 ?>
             </table>
         </div>

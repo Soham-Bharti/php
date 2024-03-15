@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
- 
+
 // print_r($_SESSION);
 if (isset($_GET['update'])) {
     $_SESSION['id'] = $_GET['id'];
@@ -57,7 +57,7 @@ if (isset($_GET['delete'])) {
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to the <span class='text-info'>admin</span> dashboard</h2>
-    
+
     <!-- toast after successful added -->
     <?php if ($_SESSION['AddStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -95,7 +95,7 @@ if (isset($_GET['delete'])) {
                 <?php
                 if (isset($_SESSION['userName'])) {
                     $user = $_SESSION['userName'];
-                    echo "Admin Name: <b>" . ucwords($user) ."</b>";
+                    echo "Admin Name: <b>" . ucwords($user) . "</b>";
                 } else echo "Session expired - login again to see your details";
                 ?>
             </div>
@@ -109,8 +109,9 @@ if (isset($_GET['delete'])) {
         <h2 class="text-center mt-5">Showing <span class='text-primary'>employees'</span> details</h2>
         <div class="mt-3">
             <table>
-                <tr>
+                <tr class="text-dark">
                     <th>ID</th>
+                    <th>Profile</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Gender</th>
@@ -121,7 +122,7 @@ if (isset($_GET['delete'])) {
                     <th>Action</th>
                 </tr>
                 <?php
-                $sql = "SELECT id, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
+                $sql = "SELECT id, profile_url, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -129,6 +130,9 @@ if (isset($_GET['delete'])) {
                 ?>
                         <tr>
                             <td><?php echo $row["id"] ?></td>
+                            <td class="w-25">
+                                <img src="<?php echo $row["profile_url"] ? "../Images/" . $row["profile_url"] : "../Images/defaultImg.webp" ?>" alt="No profile to show" class="d-inline-block w-50 img-thumbnail object-fit-contain border rounded-circle ">
+                            </td>
                             <td><?php echo $row["name"] ?></td>
                             <td><?php echo $row["email"] ?></td>
                             <td><?php echo $row["gender"] ?></td>
