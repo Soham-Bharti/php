@@ -77,13 +77,13 @@ require '../config/dbConnect.php';
     <?php }
     $_SESSION['DeleteStatus'] = '' ?>
 
-    <div class="container mt-5">
+    <div class="container mt-5 px-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
                 <?php
                 if (isset($_SESSION['userName'])) {
                     $user = $_SESSION['userName'];
-                    echo "Admin Name: <b>" . ucwords($user) . "</b>";
+                    echo "Admin: <b>" . ucwords($user) . "</b>";
                 } else echo "Session expired - login again to see your details";
                 ?>
             </div>
@@ -108,6 +108,7 @@ require '../config/dbConnect.php';
                     <th>Action</th>
                     <th>Action</th>
                     <th>Action</th>
+                    <th>Action</th>
                 </tr>
                 <?php
                 $sql = "SELECT id, profile_url, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
@@ -121,11 +122,11 @@ require '../config/dbConnect.php';
                             <td class="w-25">
                                 <img src="<?php echo $row["profile_url"] ? "../Images/" . $row["profile_url"] : "../Images/defaultImg.webp" ?>" alt="No profile to show" class="d-inline-block w-50 img-thumbnail object-fit-contain border rounded-circle ">
                             </td>
-                            <td><?php echo $row["name"] ?></td>
+                            <td class='w-25'><?php echo $row["name"] ?></td>
                             <td><?php echo $row["email"] ?></td>
                             <td><?php echo $row["gender"] ?></td>
                             <td><?php echo $row["mobile"] ?></td>
-                            <td><?php echo $row["date_of_birth"] ?></td>
+                            <td class='w-25'><?php echo $row["date_of_birth"] ?></td>
                             <td>
                                 <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
@@ -139,6 +140,9 @@ require '../config/dbConnect.php';
                                     <input type="submit" name='track' class="btn btn-warning text-muted btn-sm" value='Track' />
                                 </form> -->
                                 <a href="trackEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-warning text-muted btn-sm">Track</a>
+                            </td>
+                            <td>
+                                <a href="workingHourEmployeeDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-success btn-sm">Working</a>
                             </td>
                             <td>
                                 <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
@@ -157,6 +161,24 @@ require '../config/dbConnect.php';
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+   
+        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+
+            <a href="home.php" class="col-1 svg">
+                <img src="../Images/emp.svg" alt='svg here'>
+            </a>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+            </ul>
+        </footer>
+
+
 </body>
 
 </html>

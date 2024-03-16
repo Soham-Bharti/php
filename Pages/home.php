@@ -5,10 +5,11 @@ if (isset($_SESSION['adminLoggedIn']) || isset($_SESSION['adminLoggedIn'])) {
     $_SESSION['userLoggedIn'] = false;
 }
 $_SESSION['userName']  =  '';
-$_SESSION['id'] = '';  
+$_SESSION['id'] = '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,6 +45,22 @@ $_SESSION['id'] = '';
         </div>
     </nav>
     <marquee direction="left" class='marquee display-5'>Welcome to Web Employee Tracker</marquee>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+
+            <a href="home.php" class="col-1 svg">
+                <img src="../Images/emp.svg" alt='svg here'>
+            </a>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+            </ul>
+        </footer>
+  
 </body>
 
 </html>

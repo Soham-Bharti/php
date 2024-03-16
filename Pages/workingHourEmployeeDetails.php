@@ -5,15 +5,6 @@ require '../config/dbConnect.php';
 
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
-if (isset($_GET['editEmpCheckIn'])) {
-    echo 'editEmpCheckIn clicked';
-    // header('Location: check-in.php');
-    // print_r($_SESSION);
-}
-if (isset($_POST['check-out-submit'])) {
-    echo 'check-out-submit clicked';
-    // header('Location: check-out.php');
-}
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +13,7 @@ if (isset($_POST['check-out-submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emplpoyee Track | Admin</title>
+    <title>Emplpoyee Working | Admin</title>
     <link rel="stylesheet" href="../Styles/userdashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -45,9 +36,6 @@ if (isset($_POST['check-out-submit'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="adminDashboard.php">Back</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="addTrackEmployee.php?id=<?php echo $desiredUserId ?>">Add Track</a>
-                    </li>
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -57,7 +45,7 @@ if (isset($_POST['check-out-submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Employee <span class='text-info'>Tracking</span> dashboard</h2>
+    <h2 class="text-center mt-3">Employee <span class='text-info'>Working Hours'</span> dashboard</h2>
 
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
@@ -98,29 +86,6 @@ if (isset($_POST['check-out-submit'])) {
             </div>
         </div>
 
-        <!-- toast after successful added -->
-        <?php if (isset($_SESSION['UpdateEmpTrackStatus']) && $_SESSION['UpdateEmpTrackStatus'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-warning text-muted ">
-                    <strong class="me-auto">Track updated successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php }
-        $_SESSION['UpdateEmpTrackStatus'] = '' ?>
-        <!-- toast ends -->
-        <!-- toast after successful added -->
-        <?php if (isset($_SESSION['AddEmpTrackStatus']) && $_SESSION['AddEmpTrackStatus'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-success text-white ">
-                    <strong class="me-auto">Track added successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php }
-        $_SESSION['AddEmpTrackStatus'] = '' ?>
-        <!-- toast ends -->
-
         <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
         <div class="mt-3">
             <table>
@@ -128,29 +93,35 @@ if (isset($_POST['check-out-submit'])) {
                     <th>S.Number</th>
                     <th>Date</th>
                     <th>Day</th>
-                    <th>Check In Time</th>
-                    <th>Check Out Time</th>
-                    <th>Action</th>
+                    <th>Working Hours</th>
                 </tr>
                 <?php
-                $sql = "SELECT check_in_time, check_out_time, id from employeeTrackingDetails where user_id = $desiredUserId order by check_in_time desc limit 10";
+                $sql = "SELECT
+                DATE(check_in_time) AS date,
+                SUM(TIMESTAMPDIFF(SECOND, check_in_time, check_out_time)) AS total_seconds
+            FROM
+                employeeTrackingDetails
+            WHERE
+                user_id = '$desiredUserId' and deleted_at is null
+            GROUP BY
+                DATE(check_in_time)
+            ORDER BY
+                DATE(check_in_time) DESC;
+            ";
                 $result = mysqli_query($conn, $sql);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
-                        $flag = false;
-                        $checkOut = $row["check_out_time"];
-                        $trackId = $row['id'];
+                        $dateTime = $row["date"];
+                        $time = strtotime($dateTime);
+                        $total_seconds = $row['total_seconds'];
                 ?>
                         <?php
-                        $time = strtotime($row["check_in_time"]);
-                        $checkInTime = strtotime($row["check_in_time"]);
-                        if (is_null($checkOut)) {
-                            $checkOutIsNull = true;
-                        } else {
-                            $checkOutTime = strtotime($row["check_out_time"]);
-                            $checkOutIsNull = false;
-                        };
+                        // seconds to hours, minutes and seconds
+                        $hours = floor($total_seconds / 3600);
+                        $minutes = floor(($total_seconds % 3600) / 60);
+                        $seconds = $total_seconds % 60;
+                        $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
                         ?>
                         <tr>
                             <td><?php echo $seialNumber++ ?></td>
@@ -161,22 +132,10 @@ if (isset($_POST['check-out-submit'])) {
                                 echo date('l', $time);
                                 ?>
                             </td>
-                            <td>
+                            <td class='fw-bold <?php echo $formatted_time > '08:45:00' ? 'text-success' : 'text-danger' ?>'>
                                 <?php
-                                echo date('H:i:s', $checkInTime);
+                                echo "$formatted_time";
                                 ?>
-                            </td>
-                            <td>
-                                <?php
-                                if ($checkOutIsNull) {
-                                    echo " -- ";
-                                } else {
-                                    echo date('H:i:s', $checkOutTime);
-                                }
-                                ?>
-                            </td>
-                            <td>
-                                <a href="updateTrackEmployeeDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-primary">Edit</a>
                             </td>
                         </tr>
                     <?php

@@ -127,59 +127,59 @@ if (isset($_POST['submit'])) {
     }
 
     if ($flag && $_FILES['image']['name'] !== '') {
-            $fileName = $_FILES['image']['name'];
-            $fileTmpName = $_FILES['image']['tmp_name'];
-            $fileSize = $_FILES['image']['size'];
-            $fileError = $_FILES['image']['error'];
-            $fileType = $_FILES['image']['type'];
-            $fileExtension = explode('.', $fileName);
-            $fileActualExtension = strtolower(end($fileExtension)); // jpeg
+        $fileName = $_FILES['image']['name'];
+        $fileTmpName = $_FILES['image']['tmp_name'];
+        $fileSize = $_FILES['image']['size'];
+        $fileError = $_FILES['image']['error'];
+        $fileType = $_FILES['image']['type'];
+        $fileExtension = explode('.', $fileName);
+        $fileActualExtension = strtolower(end($fileExtension)); // jpeg
 
-            $allowed = array('jpeg', 'jpg', 'png');
+        $allowed = array('jpeg', 'jpg', 'png');
 
-            if (in_array($fileActualExtension, $allowed)) {
-                if ($fileError === 0) {
-                    if ($fileSize < 50000000000) { // 500kb =  500000b 
-                        $nameArr = explode(' ', $name);
-                        $fileNameNew = strtolower($nameArr[0])."_" . uniqid('', true) . "." . $fileActualExtension;
-                        $fileDestination = '../Images/' . $fileNameNew;
-                        if (!file_exists($fileName)) {
-                            if (move_uploaded_file(
-                                $fileTmpName,
-                                $fileDestination
-                            )) {
-                                // echo "Successfully uploaded your image";
-                            } else {
-                                $imageErr =  "Failed to upload your image";
-                                $flag = false;
-                            }
+        if (in_array($fileActualExtension, $allowed)) {
+            if ($fileError === 0) {
+                if ($fileSize < 50000000000) { // 500kb =  500000b 
+                    $nameArr = explode(' ', $name);
+                    $fileNameNew = strtolower($nameArr[0]) . "_" . uniqid('', true) . "." . $fileActualExtension;
+                    $fileDestination = '../Images/' . $fileNameNew;
+                    if (!file_exists($fileName)) {
+                        if (move_uploaded_file(
+                            $fileTmpName,
+                            $fileDestination
+                        )) {
+                            // echo "Successfully uploaded your image";
                         } else {
-                            $imageErr = "File already exists!";
+                            $imageErr =  "Failed to upload your image";
                             $flag = false;
                         }
                     } else {
-                        $imageErr = "FILE  TOO LARGE!";
+                        $imageErr = "File already exists!";
                         $flag = false;
                     }
                 } else {
-                    $imageErr = "There was file error";
+                    $imageErr = "FILE  TOO LARGE!";
                     $flag = false;
                 }
             } else {
-                $imageErr = "Only .png, .jpg, .jpeg supported";
+                $imageErr = "There was file error";
                 $flag = false;
             }
+        } else {
+            $imageErr = "Only .png, .jpg, .jpeg supported";
+            $flag = false;
+        }
     }
 
     // print_r($_POST);
-  
+
     if ($flag) {
         // sending data to data base
         $hashedPassword = md5($password);
         if (isset($_FILES['image'])) {
-        $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_url)
+            $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_url)
                 values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', '$fileNameNew')";
-        }else {
+        } else {
             $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state)
                 values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state')";
         }
@@ -322,6 +322,22 @@ if (isset($_POST['submit'])) {
             </form>
         </div>
     </div>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+
+            <a href="home.php" class="col-1 svg">
+                <img src="../Images/emp.svg" alt='svg here'>
+            </a>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+            </ul>
+        </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

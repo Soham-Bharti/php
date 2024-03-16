@@ -21,27 +21,27 @@ if (isset($_POST['change'])) {
     $newPassword = test_input($_POST['newPassword']);
     $confirmNewPassword = test_input($_POST['confirmNewPassword']);
 
-    if(empty($oldPassword)){
+    if (empty($oldPassword)) {
         $oldPasswordErr = 'Required';
         $flag = false;
-    }else{
+    } else {
         $hashedPassword = md5($oldPassword);
     }
 
-    if(empty($newPassword)){
+    if (empty($newPassword)) {
         $newPasswordErr = 'Required';
         $flag = false;
-    }else{
-    //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
-    //     if (!preg_match($password_regex, $password)) {
-    //         $passwordErr = "Check that a password:<br>
-    //         Has minimum 8 characters in length<br>
-    //         At least one uppercase English letter<br>
-    //         At least one lowercase English letter<br>
-    //         At least one digit<br>
-    //         At least one special character";
-    //         $flag = false;
-    //     }
+    } else {
+        //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
+        //     if (!preg_match($password_regex, $password)) {
+        //         $passwordErr = "Check that a password:<br>
+        //         Has minimum 8 characters in length<br>
+        //         At least one uppercase English letter<br>
+        //         At least one lowercase English letter<br>
+        //         At least one digit<br>
+        //         At least one special character";
+        //         $flag = false;
+        //     }
 
     }
 
@@ -57,31 +57,31 @@ if (isset($_POST['change'])) {
 
     if ($flag) {
         $sql = "SELECT password from users where id = '$desiredUserId' and deleted_at is null";
-        $result = mysqli_query($conn,$sql);
-        if(mysqli_num_rows($result) == 1){
-            while($row = mysqli_fetch_assoc( $result )){
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) == 1) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 $userOldHashedPassword = $row['password'];
             }
         }
-        if($hashedPassword == $userOldHashedPassword){
+        if ($hashedPassword == $userOldHashedPassword) {
             // echo 'Password matched';
             $newHashedPassword = md5($newPassword);
-            if($newHashedPassword == $userOldHashedPassword){
+            if ($newHashedPassword == $userOldHashedPassword) {
                 $newPasswordErr = "New password can not be same as old password!";
-            }else{
+            } else {
                 $sql2 = "UPDATE users set password = '$newHashedPassword', updated_at = now() where id = '$desiredUserId'";
-                if(mysqli_query($conn, $sql2)){
+                if (mysqli_query($conn, $sql2)) {
                     echo "Password changed successfully!";
                     mysqli_close($conn);
                     $_SESSION['userChangePasswordStatus'] = 'success';
                     header("Location: userDashboard.php");
-                }else{
+                } else {
                     $newPasswordErr =  "There was some Database Issue while updating your password!";
                     $oldPasswordErr =  "There was some Database Issue while updating your password!";
                     $confirmNewPasswordErr =  "There was some Database Issue while updating your password!";
                 }
             }
-        }else{
+        } else {
             $oldPasswordErr = "Password doesn't match";
         }
     }
@@ -160,6 +160,22 @@ if (isset($_POST['change'])) {
             </form>
         </div>
     </div>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+
+            <a href="home.php" class="col-1 svg">
+                <img src="../Images/emp.svg" alt='svg here'>
+            </a>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+            </ul>
+        </footer>
+    
 </body>
 
 </html>

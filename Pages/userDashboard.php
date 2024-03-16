@@ -2,9 +2,9 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
-if(isset($_SESSION['id'])){
-$desiredUserId = $_SESSION['id'];
-}else header('Location: home.php');
+if (isset($_SESSION['id'])) {
+    $desiredUserId = $_SESSION['id'];
+} else header('Location: home.php');
 
 if (isset($_POST['check-in-submit'])) {
     echo 'check-in-submit clicked';
@@ -49,6 +49,9 @@ if (isset($_POST['check-out-submit'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="changePassword.php">Change Password</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="workingHours.php?id=<?php echo $desiredUserId ?>" class="nav-link">Working Track</a>
+                    </li>
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -60,7 +63,7 @@ if (isset($_POST['check-out-submit'])) {
     <!-- nav ends -->
     <h2 class="text-center mt-3">Welcome to the <span class='text-info'>User</span> dashboard</h2>
     <?php
-    $showStatus ='';
+    $showStatus = '';
     $sql = "SELECT check_out_time from employeeTrackingDetails where user_id = '$desiredUserId' order by check_in_time desc limit 1";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
@@ -87,7 +90,7 @@ if (isset($_POST['check-out-submit'])) {
                 <?php
                 $user = $_SESSION['userName'];
                 $userId = $_SESSION['id'];
-                echo "Emp Id: " . $userId . " | " . $user;
+                echo "Emp Id: <b>" . $userId . "</b> | " . $user;
                 ?>
             </div>
             <div class="buttons d-flex justify-content-between align-items-center">
@@ -152,12 +155,11 @@ if (isset($_POST['check-out-submit'])) {
                                 ?>
                             </td>
                             <td>
-                                <?php 
-                                  if ($checkOutIsNull) {
+                                <?php
+                                if ($checkOutIsNull) {
                                     echo " -- ";
-                                  }
-                                else {
-                                echo date('H:i:s', $checkOutTime);
+                                } else {
+                                    echo date('H:i:s', $checkOutTime);
                                 }
                                 ?>
                             </td>
@@ -171,6 +173,22 @@ if (isset($_POST['check-out-submit'])) {
             </table>
         </div>
     </div>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+
+            <a href="home.php" class="col-1 svg">
+                <img src="../Images/emp.svg" alt='svg here'>
+            </a>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+            </ul>
+        </footer>
+
 </body>
 
 </html>

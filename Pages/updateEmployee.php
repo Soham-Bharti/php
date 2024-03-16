@@ -3,7 +3,7 @@ session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
 $nameErr = $emailErr = $dobErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
-if(isset($_GET['id'])) $desiredUserId = $_GET['id'];
+if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 if (isset($desiredUserId)) {
     $sql = "SELECT name, email, gender, mobile, date_of_birth, address, city, state, profile_url from users where id = '$desiredUserId' and deleted_at is null";
     $result = mysqli_query($conn, $sql);
@@ -44,6 +44,7 @@ if (isset($_POST['submit'])) {
     $address = test_input($_POST['address']);
     $city = test_input($_POST['city']);
     $state = test_input($_POST['state']);
+    $id = test_input($_POST['id']);
 
     if (empty($name)) {
         $nameErr = 'Required';
@@ -116,53 +117,52 @@ if (isset($_POST['submit'])) {
         $flag = false;
     }
 
-// print_r($_FILES['image']);
-        if ($flag && $_FILES['image']['name'] !== '') {
-            // echo 'Inside';
-            $fileName = $_FILES['image']['name'];
-            $fileTmpName = $_FILES['image']['tmp_name'];
-            $fileSize = $_FILES['image']['size'];
-            $fileError = $_FILES['image']['error'];
-            $fileType = $_FILES['image']['type'];
-            $fileExtension = explode('.', $fileName);
-            $fileActualExtension = strtolower(end($fileExtension)); // jpeg
+    // print_r($_FILES['image']);
+    if ($flag && $_FILES['image']['name'] !== '') {
+        // echo 'Inside';
+        $fileName = $_FILES['image']['name'];
+        $fileTmpName = $_FILES['image']['tmp_name'];
+        $fileSize = $_FILES['image']['size'];
+        $fileError = $_FILES['image']['error'];
+        $fileType = $_FILES['image']['type'];
+        $fileExtension = explode('.', $fileName);
+        $fileActualExtension = strtolower(end($fileExtension)); // jpeg
 
-            $allowed = array('jpeg', 'jpg', 'png');
+        $allowed = array('jpeg', 'jpg', 'png');
 
-            if (in_array($fileActualExtension, $allowed)) {
-                if ($fileError === 0) {
-                    if ($fileSize < 50000000000) { // 500kb =  500000b 
-                        $nameArr = explode(' ', $name);
-                        $fileNameNew = strtolower($nameArr[0]) . "_" . uniqid('', true) . "." . $fileActualExtension;
-                        $fileDestination = '../Images/' . $fileNameNew;
-                        // echo "LOCATION___" . $fileDestination;
-                        if (!file_exists($fileName)) {
-                            if (move_uploaded_file(
-                                $fileTmpName,
-                                $fileDestination
-                            )) {
-                                // echo "Successfully uploaded your image";
-                            } else {
-                                $imageErr =  "Failed to upload your image";
-                                $flag = false;
-                            }
+        if (in_array($fileActualExtension, $allowed)) {
+            if ($fileError === 0) {
+                if ($fileSize < 50000000000) { // 500kb =  500000b 
+                    $nameArr = explode(' ', $name);
+                    $fileNameNew = strtolower($nameArr[0]) . "_" . uniqid('', true) . "." . $fileActualExtension;
+                    $fileDestination = '../Images/' . $fileNameNew;
+                    // echo "LOCATION___" . $fileDestination;
+                    if (!file_exists($fileName)) {
+                        if (move_uploaded_file(
+                            $fileTmpName,
+                            $fileDestination
+                        )) {
+                            // echo "Successfully uploaded your image";
                         } else {
-                            $imageErr = "File already exists!";
+                            $imageErr =  "Failed to upload your image";
                             $flag = false;
                         }
                     } else {
-                        $imageErr = "FILE  TOO LARGE!";
+                        $imageErr = "File already exists!";
                         $flag = false;
                     }
                 } else {
-                    $imageErr = "There was file error";
+                    $imageErr = "FILE  TOO LARGE!";
                     $flag = false;
                 }
             } else {
-                $imageErr = "Only .png, .jpg, .jpeg supported";
+                $imageErr = "There was file error";
                 $flag = false;
             }
-        
+        } else {
+            $imageErr = "Only .png, .jpg, .jpeg supported";
+            $flag = false;
+        }
     }
 
     // print_r($_POST);
@@ -172,12 +172,12 @@ if (isset($_POST['submit'])) {
         if (empty($fileDestination)) {
             $sql = "UPDATE users
             SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', updated_at = now()
-            where id = '$desiredUserId'
+            where id = '$id'
             ";
         } else {
             $sql = "UPDATE users
             SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', profile_url = '$fileNameNew', updated_at = now()
-            where id = '$desiredUserId'
+            where id = '$id'
             ";
         }
 
@@ -278,7 +278,7 @@ if (isset($_POST['submit'])) {
                 <div class="mb-3">
                     <label class="form-label">Profile Picture <span>* (displaying your current profile, CHOOSE only if you want to change) <?php echo $imageErr ?></span></label>
                     <div class="d-inline-block profile-img w-25">
-                        <img src="<?php echo "../Images/".$profile ?>" alt="No profile to show" class="img-thumbnail object-fit-contain border rounded-circle  mb-2">
+                        <img src="<?php echo "../Images/" . $profile ?>" alt="No profile to show" class="img-thumbnail object-fit-contain border rounded-circle  mb-2">
                     </div>
                     <input class="form-control" type="file" name="image">
                 </div>
@@ -295,6 +295,9 @@ if (isset($_POST['submit'])) {
                     <label class="form-label">State <span>* <?php echo $stateErr ?></span></label>
                     <input type="text" class="form-control" name="state" placeholder="Gujarat" value='<?php echo $state ?>'>
                 </div>
+                <div class="mb-3">
+                    <input type="hidden" class="form-control" name="id" value='<?php echo $desiredUserId ?>'>
+                </div>
 
                 <div class="buttons">
                     <input type="submit" name="submit" class="btn btn-dark btn-lg" value="Save">
@@ -304,6 +307,22 @@ if (isset($_POST['submit'])) {
             </form>
         </div>
     </div>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+
+            <a href="home.php" class="col-1 svg">
+                <img src="../Images/emp.svg" alt='svg here'>
+            </a>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+            </ul>
+        </footer>
+ 
 </body>
 
 </html>
