@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="buttons">
                     <input type="submit" name="submit" class="btn btn-dark btn-lg" value="Login">
-                    <input type="reset" name="reset" class="btn btn-dark btn-lg">
+                    <input type="reset" name="reset" class="btn btn-dark btn-lg" value="Clear">
                 </div>
             </form>
         </div>

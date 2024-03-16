@@ -155,7 +155,7 @@ if (isset($_POST['change'])) {
                 </div>
                 <div class="buttons">
                     <input type="submit" name="change" class="btn btn-dark btn-lg" value="Confirm">
-                    <input type="reset" name="reset" class="btn btn-dark btn-lg">
+                    <input type="reset" name="reset" class="btn btn-dark btn-lg" value="Clear">
                 </div>
             </form>
         </div>

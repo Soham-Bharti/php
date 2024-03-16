@@ -2,9 +2,9 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
-
+if(isset($_SESSION['id'])){
 $desiredUserId = $_SESSION['id'];
-
+}else header('Location: home.php');
 
 if (isset($_POST['check-in-submit'])) {
     echo 'check-in-submit clicked';
@@ -61,7 +61,7 @@ if (isset($_POST['check-out-submit'])) {
     <h2 class="text-center mt-3">Welcome to the <span class='text-info'>User</span> dashboard</h2>
     <?php
     $showStatus ='';
-    $sql = "SELECT check_out_time from employeeTrackingDetails where user_id = '$desiredUserId' order by created_at desc limit 1";
+    $sql = "SELECT check_out_time from employeeTrackingDetails where user_id = '$desiredUserId' order by check_in_time desc limit 1";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
@@ -119,7 +119,7 @@ if (isset($_POST['check-out-submit'])) {
                     <th>Check Out Time</th>
                 </tr>
                 <?php
-                $sql = "SELECT created_at, check_in_time, check_out_time from employeeTrackingDetails where user_id = $desiredUserId order by created_at desc limit 10";
+                $sql = "SELECT check_in_time, check_out_time from employeeTrackingDetails where user_id = $desiredUserId order by check_in_time desc limit 10";
                 $result = mysqli_query($conn, $sql);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
@@ -128,7 +128,7 @@ if (isset($_POST['check-out-submit'])) {
                         $checkOut = $row["check_out_time"];
                 ?>
                         <?php
-                        $time = strtotime($row["created_at"]);
+                        $time = strtotime($row["check_in_time"]);
                         $checkInTime = strtotime($row["check_in_time"]);
                         if (is_null($checkOut)) {
                             $checkOutIsNull = true;

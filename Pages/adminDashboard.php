@@ -3,18 +3,6 @@ session_start();
 require '../config/dbConnect.php';
 
 // print_r($_SESSION);
-if (isset($_GET['update'])) {
-    $_SESSION['id'] = $_GET['id'];
-    header("Location: updateEmployee.php");
-}
-if (isset($_GET['track'])) {
-    $_SESSION['id'] = $_GET['id'];
-    header("Location: trackEmployee.php");
-}
-if (isset($_GET['delete'])) {
-    $_SESSION['id'] = $_GET['id'];
-    header("Location: deleteEmployee.php");
-}
 
 ?>
 
@@ -59,7 +47,7 @@ if (isset($_GET['delete'])) {
     <h2 class="text-center mt-3">Welcome to the <span class='text-info'>admin</span> dashboard</h2>
 
     <!-- toast after successful added -->
-    <?php if ($_SESSION['AddStatus'] == 'success') { ?>
+    <?php if (isset($_SESSION['AddStatus']) && $_SESSION['AddStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
             <div class="toast-header bg-success text-white ">
                 <strong class="me-auto">Record added successfully!</strong>
@@ -69,7 +57,7 @@ if (isset($_GET['delete'])) {
     <?php }
     $_SESSION['AddStatus'] = '' ?>
     <!-- toast after successful update -->
-    <?php if ($_SESSION['UpdateStatus'] == 'success') { ?>
+    <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
             <div class="toast-header bg-warning text-white">
                 <strong class="me-auto">Record updated successfully!</strong>
@@ -79,7 +67,7 @@ if (isset($_GET['delete'])) {
     <?php }
     $_SESSION['UpdateStatus'] = '' ?>
     <!-- toast after successful delete -->
-    <?php if ($_SESSION['DeleteStatus'] == 'success') { ?>
+    <?php if (isset($_SESSION['DeleteStatus']) && $_SESSION['DeleteStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
             <div class="toast-header bg-danger text-white ">
                 <strong class="me-auto">Record deleted successfully!</strong>
@@ -109,7 +97,7 @@ if (isset($_GET['delete'])) {
         <h2 class="text-center mt-5">Showing <span class='text-primary'>employees'</span> details</h2>
         <div class="mt-3">
             <table>
-                <tr class="text-dark">
+                <tr>
                     <th>ID</th>
                     <th>Profile</th>
                     <th>Name</th>

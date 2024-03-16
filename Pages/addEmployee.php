@@ -126,11 +126,7 @@ if (isset($_POST['submit'])) {
         $flag = false;
     }
 
-    if (empty($_FILES['image'])) {
-        $imageErr =  "Required";
-        $flag = false;
-    } else {
-        if ($flag) {
+    if ($flag && $_FILES['image']['name'] !== '') {
             $fileName = $_FILES['image']['name'];
             $fileTmpName = $_FILES['image']['tmp_name'];
             $fileSize = $_FILES['image']['size'];
@@ -173,17 +169,20 @@ if (isset($_POST['submit'])) {
                 $imageErr = "Only .png, .jpg, .jpeg supported";
                 $flag = false;
             }
-        }
     }
 
     // print_r($_POST);
-
+  
     if ($flag) {
         // sending data to data base
         $hashedPassword = md5($password);
+        if (isset($_FILES['image'])) {
         $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_url)
                 values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', '$fileNameNew')";
-
+        }else {
+            $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state)
+                values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state')";
+        }
         if (mysqli_query($conn, $sql)) {
             // echo "<br>New record inserted successfully<br>";
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
