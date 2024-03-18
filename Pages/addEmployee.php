@@ -1,7 +1,9 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+}
 $name = $email = $dob = $confirm_password = $password = $gender = $mobile = $image = $address = "";
 $nameErr = $emailErr = $dobErr = $confirm_passwordErr = $passwordErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
 

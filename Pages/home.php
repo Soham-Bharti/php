@@ -4,9 +4,9 @@ if (isset($_SESSION['adminLoggedIn'])) {
     $_SESSION['adminLoggedIn'] = false;
     $_SESSION['userLoggedIn'] = false;
 }
-$_SESSION['userName']  =  '';
-$_SESSION['id'] = '';
-$_SESSION['role'] = '';
+unset($_SESSION['userName']);
+unset($_SESSION['id']);
+unset($_SESSION['role']);
 ?>
 <!DOCTYPE html>
 <html lang="en">

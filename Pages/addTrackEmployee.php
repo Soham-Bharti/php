@@ -1,6 +1,9 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+}
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
 $checkInTime = $date = $day = "";

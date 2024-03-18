@@ -1,9 +1,9 @@
 <?php
 session_start();
 require_once '../config/dbConnect.php';
-$_SESSION['userName']  =  '';
-$_SESSION['id'] = '';
-$_SESSION['role'] = '';
+unset($_SESSION['userName']);
+unset($_SESSION['id']);
+unset($_SESSION['role']);
 
 $email = $password = "";
 $emailErr = $passwordErr = $invalidCredentialsErr = "";
@@ -52,7 +52,7 @@ if (isset($_POST['submit'])) {
             }
             $_SESSION['userName']   =  $userName;
             $_SESSION['id']     =  $userId;
-            if ($role == 'admin') {
+            if ($role === 'admin') {
                 $_SESSION['role']     =  'admin';
                 header('Location: adminDashboard.php');
             } else {

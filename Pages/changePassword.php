@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-print_r($_SESSION);
+// print_r($_SESSION);
 if($_SESSION['role'] !== "emp"){
     header("Location: login.php");
 }
