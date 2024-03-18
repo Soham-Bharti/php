@@ -2,18 +2,11 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
-
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+}
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
-if (isset($_GET['editEmpCheckIn'])) {
-    echo 'editEmpCheckIn clicked';
-    // header('Location: check-in.php');
-    // print_r($_SESSION);
-}
-if (isset($_POST['check-out-submit'])) {
-    echo 'check-out-submit clicked';
-    // header('Location: check-out.php');
-}
 ?>
 
 <!DOCTYPE html>
@@ -189,20 +182,20 @@ if (isset($_POST['check-out-submit'])) {
         </div>
     </div>
 
-        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
-            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+        <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
 
-            <a href="home.php" class="col-1 svg">
-                <img src="../Images/emp.svg" alt='svg here'>
-            </a>
+        <a href="home.php" class="col-1 svg">
+            <img src="../Images/emp.svg" alt='svg here'>
+        </a>
 
-            <ul class="nav col-md-4 justify-content-end">
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-            </ul>
-        </footer>
+        <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+        </ul>
+    </footer>
 
 </body>
 

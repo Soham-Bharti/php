@@ -3,6 +3,7 @@ session_start();
 require_once '../config/dbConnect.php';
 $_SESSION['userName']  =  '';
 $_SESSION['id'] = '';
+$_SESSION['role'] = '';
 
 $email = $password = "";
 $emailErr = $passwordErr = $invalidCredentialsErr = "";

@@ -2,6 +2,9 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+}
 $nameErr = $emailErr = $dobErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 if (isset($desiredUserId)) {
@@ -233,7 +236,7 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employee Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
 
                 <div class="mb-3">
                     <label class="col-form-label">Name <span>* <?php echo $nameErr ?></span></label>

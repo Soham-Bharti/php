@@ -2,7 +2,9 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
-
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+}
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 if (isset($_GET['trackId'])) $desiredTrackId = $_GET['trackId'];
 
@@ -102,8 +104,7 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employee Tracking Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
-            <form action="" method="post" enctype="multipart/form-data">
-
+            <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
                 <div class="mb-3">
                     <label class="col-form-label">Date</label>
                     <div class="mb-3">

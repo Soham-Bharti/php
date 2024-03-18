@@ -2,7 +2,7 @@
 session_start();
 require '../config/dbConnect.php';
 
-// print_r($_SESSION);
+print_r($_SESSION);
 
 ?>
 
@@ -84,7 +84,10 @@ require '../config/dbConnect.php';
                 if (isset($_SESSION['userName'])) {
                     $user = $_SESSION['userName'];
                     echo "Admin: <b>" . ucwords($user) . "</b>";
-                } else echo "Session expired - login again to see your details";
+                } else {
+                    echo "Session expired - login again to see your details";
+                    header("Location: login.php");
+                }
                 ?>
             </div>
             <div class="buttons d-flex justify-content-between align-items-center">
@@ -162,21 +165,21 @@ require '../config/dbConnect.php';
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-   
-        <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
-            <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
 
-            <a href="home.php" class="col-1 svg">
-                <img src="../Images/emp.svg" alt='svg here'>
-            </a>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+        <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
 
-            <ul class="nav col-md-4 justify-content-end">
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-                <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-            </ul>
-        </footer>
+        <a href="home.php" class="col-1 svg">
+            <img src="../Images/emp.svg" alt='svg here'>
+        </a>
+
+        <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
+        </ul>
+    </footer>
 
 
 </body>

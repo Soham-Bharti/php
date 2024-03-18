@@ -1,11 +1,12 @@
 <?php
 session_start();
-if (isset($_SESSION['adminLoggedIn']) || isset($_SESSION['adminLoggedIn'])) {
+if (isset($_SESSION['adminLoggedIn'])) {
     $_SESSION['adminLoggedIn'] = false;
     $_SESSION['userLoggedIn'] = false;
 }
 $_SESSION['userName']  =  '';
 $_SESSION['id'] = '';
+$_SESSION['role'] = '';
 ?>
 <!DOCTYPE html>
 <html lang="en">

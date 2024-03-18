@@ -2,6 +2,9 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
+if ($_SESSION['role'] !== 'emp') {
+    header('Location: login.php');
+}
 if (isset($_SESSION['id'])) {
     $desiredUserId = $_SESSION['id'];
 } else header('Location: home.php');
