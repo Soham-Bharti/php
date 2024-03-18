@@ -21,12 +21,14 @@ unset($_SESSION['role']);
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="https://soham-bharti.netlify.app/" target="_blank">Employee Tracker WebApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+            <div class='col-md-2'>
+                <a href="home.php" class="svg text-decoration-none d-flex align-items-center">
+                    <img src="../Images/emp.svg" alt='svg here' class='w-25'>
+                    <span class='text-success fw-bold'>EmployeeTracker.com</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse mx-1">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a>

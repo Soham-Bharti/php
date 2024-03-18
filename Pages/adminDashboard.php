@@ -24,13 +24,13 @@ if ($_SESSION['role'] !== 'admin') {
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="https://soham-bharti.netlify.app/" target="_blank">Employee Tracker WebApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+                <img src="../Images/emp.svg" alt='svg here' class='w-25'>
+                <span class=' fw-bold'>EmployeeTracker.com</span>
+            </a>
+
+                <ul class="navbar-nav mb-2 me-auto mb-lg-0">
                     <li class="nav-item">
                         <!-- Here http://localhost/php_training/Pages is static for the moment -->
                         <!-- <a class="nav-link" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a> -->
@@ -43,6 +43,7 @@ if ($_SESSION['role'] !== 'admin') {
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
+         
             </div>
         </div>
     </nav>
@@ -170,18 +171,14 @@ if ($_SESSION['role'] !== 'admin') {
 
 
     <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
-        <p class="col-md-4 mb-0 text-body-secondary">&copy; 2023 - <?php echo date("Y") ?> Made with ❤️ - <span class='fw-bold'>Soham Bharti</span></p>
+        <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
         <a href="home.php" class="col-1 svg">
             <img src="../Images/emp.svg" alt='svg here'>
         </a>
 
-        <ul class="nav col-md-4 justify-content-end">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
-        </ul>
+        <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
+
     </footer>
 
 
