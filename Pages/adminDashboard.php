@@ -80,6 +80,26 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
     <?php }
     $_SESSION['DeleteStatus'] = '' ?>
+    <!-- toast after successful addEmployeeInfo professional -->
+    <?php if (isset($_SESSION['addEmployeeInfoStatus']) && $_SESSION['addEmployeeInfoStatus'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-success text-white ">
+                <strong class="me-auto">Info added successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['addEmployeeInfoStatus'] = '' ?>
+    <!-- toast after successful updateEmployeeInfo professional -->
+    <?php if (isset($_SESSION['updateEmployeeInfoStatus']) && $_SESSION['updateEmployeeInfoStatus'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-info text-white ">
+                <strong class="me-auto">Info updated successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['updateEmployeeInfoStatus'] = '' ?>
 
     <div class="container mt-5 px-5">
         <div class="d-flex justify-content-between align-items-center">
@@ -94,7 +114,7 @@ if ($_SESSION['role'] !== 'admin') {
                 }
                 ?>
             </div>
-            <div class="buttons d-flex justify-content-between align-items-center">
+            <div class="buttons d-flex justify-content-between gap-3 align-items-center">
                 <!-- <form action="addEmployee.php" method="POST">
                     <input type="submit" name="add-submit" class="btn btn-success btn-lg" value="Add Employee">
                 </form> -->
@@ -111,7 +131,8 @@ if ($_SESSION['role'] !== 'admin') {
                     <th>Email</th>
                     <th>Gender</th>
                     <th>Mobile</th>
-                    <th>Date of Birth</th>
+                    <!-- <th>Date of Birth</th> -->
+                    <th>Action</th>
                     <th>Action</th>
                     <th>Action</th>
                     <th>Action</th>
@@ -133,7 +154,7 @@ if ($_SESSION['role'] !== 'admin') {
                             <td><?php echo $row["email"] ?></td>
                             <td><?php echo $row["gender"] ?></td>
                             <td><?php echo $row["mobile"] ?></td>
-                            <td class='w-25'><?php echo $row["date_of_birth"] ?></td>
+                            <!-- <td class='w-25'><?php echo $row["date_of_birth"] ?></td> -->
                             <td>
                                 <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
@@ -142,20 +163,15 @@ if ($_SESSION['role'] !== 'admin') {
                                 <a href="updateEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-primary btn-sm">Update</a>
                             </td>
                             <td>
-                                <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
-                                    <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
-                                    <input type="submit" name='track' class="btn btn-warning text-muted btn-sm" value='Track' />
-                                </form> -->
                                 <a href="trackEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-warning text-muted btn-sm">Track</a>
                             </td>
                             <td>
                                 <a href="workingHourEmployeeDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-success btn-sm">Working</a>
                             </td>
+                            <td class='w-25'>
+                                <a href="addEmployeeInfo.php?id=<?php echo $row["id"] ?>" class="btn btn-dark btn-sm">Add/Edit Info</a>
+                            </td>
                             <td>
-                                <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
-                                    <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
-                                    <input type="submit" name='delete' class="btn btn-danger btn-sm" value='Delete' />
-                                </form> -->
                                 <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>

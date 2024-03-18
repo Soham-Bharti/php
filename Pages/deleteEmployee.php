@@ -1,7 +1,9 @@
 <?php
 session_start();
 require '../config/dbConnect.php';
-if ($_SESSION['role' === 'admin']) {
+if ($_SESSION['role' == 'emp']) {
+    header('Location: login.php');
+}
     if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     if (isset($desiredUserId)) {
         // $sql = "DELETE from users where id = '$desiredUserId'";
@@ -18,4 +20,4 @@ if ($_SESSION['role' === 'admin']) {
     } else {
         echo "ID parameter is missing - check your session";
     }
-} else header('Location: login.php');
+
