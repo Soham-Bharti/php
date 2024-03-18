@@ -2,10 +2,14 @@
 session_start();
 require '../config/dbConnect.php';
 // print_r($_SESSION);
+if ($_SESSION['role'] !== "emp") {
+    header("Location: login.php");
+}
+
 $confirmNewPassword = $newPassword = $oldPassword =  "";
 $confirmNewPasswordErr = $newPasswordErr = $oldPasswordErr = "";
 
-$desiredUserId = $_SESSION['empUserId'];
+$desiredUserId = $_SESSION['id'];
 function test_input($data)
 {
     $data = trim($data);
@@ -20,27 +24,27 @@ if (isset($_POST['change'])) {
     $newPassword = test_input($_POST['newPassword']);
     $confirmNewPassword = test_input($_POST['confirmNewPassword']);
 
-    if(empty($oldPassword)){
+    if (empty($oldPassword)) {
         $oldPasswordErr = 'Required';
         $flag = false;
-    }else{
+    } else {
         $hashedPassword = md5($oldPassword);
     }
 
-    if(empty($newPassword)){
+    if (empty($newPassword)) {
         $newPasswordErr = 'Required';
         $flag = false;
-    }else{
-    //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
-    //     if (!preg_match($password_regex, $password)) {
-    //         $passwordErr = "Check that a password:<br>
-    //         Has minimum 8 characters in length<br>
-    //         At least one uppercase English letter<br>
-    //         At least one lowercase English letter<br>
-    //         At least one digit<br>
-    //         At least one special character";
-    //         $flag = false;
-    //     }
+    } else {
+        //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
+        //     if (!preg_match($password_regex, $password)) {
+        //         $passwordErr = "Check that a password:<br>
+        //         Has minimum 8 characters in length<br>
+        //         At least one uppercase English letter<br>
+        //         At least one lowercase English letter<br>
+        //         At least one digit<br>
+        //         At least one special character";
+        //         $flag = false;
+        //     }
 
     }
 
@@ -56,31 +60,31 @@ if (isset($_POST['change'])) {
 
     if ($flag) {
         $sql = "SELECT password from users where id = '$desiredUserId' and deleted_at is null";
-        $result = mysqli_query($conn,$sql);
-        if(mysqli_num_rows($result) == 1){
-            while($row = mysqli_fetch_assoc( $result )){
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) == 1) {
+            while ($row = mysqli_fetch_assoc($result)) {
                 $userOldHashedPassword = $row['password'];
             }
         }
-        if($hashedPassword == $userOldHashedPassword){
+        if ($hashedPassword == $userOldHashedPassword) {
             // echo 'Password matched';
             $newHashedPassword = md5($newPassword);
-            if($newHashedPassword == $userOldHashedPassword){
+            if ($newHashedPassword == $userOldHashedPassword) {
                 $newPasswordErr = "New password can not be same as old password!";
-            }else{
+            } else {
                 $sql2 = "UPDATE users set password = '$newHashedPassword', updated_at = now() where id = '$desiredUserId'";
-                if(mysqli_query($conn, $sql2)){
+                if (mysqli_query($conn, $sql2)) {
                     echo "Password changed successfully!";
                     mysqli_close($conn);
                     $_SESSION['userChangePasswordStatus'] = 'success';
                     header("Location: userDashboard.php");
-                }else{
+                } else {
                     $newPasswordErr =  "There was some Database Issue while updating your password!";
                     $oldPasswordErr =  "There was some Database Issue while updating your password!";
                     $confirmNewPasswordErr =  "There was some Database Issue while updating your password!";
                 }
             }
-        }else{
+        } else {
             $oldPasswordErr = "Password doesn't match";
         }
     }
@@ -94,8 +98,8 @@ if (isset($_POST['change'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Employee</title>
-    <link rel="stylesheet" href="./Styles/updateemployee.css">
+    <title>Changing Password...</title>
+    <link rel="stylesheet" href="../Styles/updateemployee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
@@ -154,11 +158,23 @@ if (isset($_POST['change'])) {
                 </div>
                 <div class="buttons">
                     <input type="submit" name="change" class="btn btn-dark btn-lg" value="Confirm">
-                    <input type="reset" name="reset" class="btn btn-dark btn-lg">
+                    <input type="reset" name="reset" class="btn btn-dark btn-lg" value="Clear">
                 </div>
             </form>
         </div>
     </div>
+
+    <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+        <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
+
+        <a href="home.php" class="col-1 svg">
+            <img src="../Images/emp.svg" alt='svg here'>
+        </a>
+
+        <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
+
+    </footer>
+
 </body>
 
 </html>

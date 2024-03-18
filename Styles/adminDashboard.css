@@ -8,6 +8,7 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    border-spacing: 1rem;
 }
 
 th, td {
@@ -17,9 +18,14 @@ th, td {
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: black;
+    color: white;
 }
 
 tr:nth-child(even) {
     background-color: #f9f9f9;
+}
+.svg{
+    width: 10%;
+    margin-right: 30px;
 }

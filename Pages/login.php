@@ -1,11 +1,9 @@
 <?php
 session_start();
 require_once '../config/dbConnect.php';
-$_SESSION['userName']  =  '';
-$_SESSION['adminLoggedIn']  =  false;
-$_SESSION['userLoggedIn']  =  false;
-$_SESSION['empUserId'] = '';
-$_SESSION['adminUserId'] = '';
+unset($_SESSION['userName']);
+unset($_SESSION['id']);
+unset($_SESSION['role']);
 
 $email = $password = "";
 $emailErr = $passwordErr = $invalidCredentialsErr = "";
@@ -52,13 +50,13 @@ if (isset($_POST['submit'])) {
                 $role = $row['role'];
                 $userId = $row['id'];
             }
-            if ($role == 'admin') {
-                $_SESSION['adminName']  =  $userName;
-                $_SESSION['adminUserId']     =  $userId;
+            $_SESSION['userName']   =  $userName;
+            $_SESSION['id']     =  $userId;
+            if ($role === 'admin') {
+                $_SESSION['role']     =  'admin';
                 header('Location: adminDashboard.php');
             } else {
-                $_SESSION['userName']   =  $userName;
-                $_SESSION['empUserId']     =  $userId;
+                $_SESSION['role']     =  'emp';
                 header('Location: userDashboard.php');
             }
         } else {
@@ -77,18 +75,20 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome | Login</title>
-    <link rel="stylesheet" href="./Styles/login.css">
+    <link rel="stylesheet" href="../Styles/login.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="https://soham-bharti.netlify.app/" target="_blank">Employee Tracker WebApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <div class='col-md-2'>
+                <a href="home.php" class="svg text-decoration-none d-flex align-items-center">
+                    <img src="../Images/emp.svg" alt='svg here' class='w-25'>
+                    <span class='text-success fw-bold'>EmployeeTracker.com</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse mx-1">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <!-- Here http://localhost/php_training/Pages is static for the moment -->
@@ -125,11 +125,23 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="buttons">
                     <input type="submit" name="submit" class="btn btn-dark btn-lg" value="Login">
-                    <input type="reset" name="reset" class="btn btn-dark btn-lg">
+                    <input type="reset" name="reset" class="btn btn-dark btn-lg" value="Clear">
                 </div>
             </form>
         </div>
     </div>
+
+    <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
+        <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
+
+        <a href="home.php" class="col-1 svg">
+            <img src="../Images/emp.svg" alt='svg here'>
+        </a>
+
+        <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
+
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
