@@ -47,7 +47,7 @@ unset($_SESSION['role']);
             </div>
         </div>
     </nav>
-    <marquee direction="left" class='marquee display-5'>Welcome to Web Employee Tracker</marquee>
+    <marquee direction="left" class='marquee display-5'>Welcome to Employee Tracker Web App</marquee>
 
     <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>

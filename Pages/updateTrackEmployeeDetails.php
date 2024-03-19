@@ -40,7 +40,11 @@ if (isset($_POST['submit'])) {
     // print_r($_POST);
     $checkInTime = $_POST['checkInTime'];
     $checkOutTime = $_POST['checkOutTime'];
-    var_dump($checkOutTime);
+    $desiredUserId = $_POST['userId'];
+    $desiredTrackId = $_POST['trackId'];
+    $originalDate = $_POST['originalDate'];
+
+    print_r($_POST);
     if ($checkOutTime != '') {
         // sending data to data base  
         $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originalDate $checkInTime', check_out_time = '$originalDate $checkOutTime', updated_at = now() where user_id = '$desiredUserId' and id = '$desiredTrackId' and deleted_at is null";
@@ -60,6 +64,7 @@ if (isset($_POST['submit'])) {
     mysqli_close($conn);
     $_SESSION['UpdateEmpTrackStatus'] = 'success';
     $desiredLocation = "trackEmployee.php?id=$desiredUserId";
+    // echo "$desiredLocation";
     header("Location: $desiredLocation");
 }
 
@@ -114,6 +119,11 @@ if (isset($_POST['submit'])) {
                 <div class="mb-3">
                     <label class="form-label">Day</label>
                     <input type="text" class="form-control user-select-none" name="day" value='<?php echo $day ?>' disabled>
+                </div>
+                <div class="mb-3">
+                    <input type="hidden" class="form-control user-select-none" name="userId" value='<?php echo $desiredUserId ?>'>
+                    <input type="hidden" class="form-control user-select-none" name="trackId" value='<?php echo $desiredTrackId ?>'>
+                    <input type="hidden" class="form-control user-select-none" name="originalDate" value='<?php echo $originalDate ?>'>
                 </div>
 
                 <div class="mb-3">
