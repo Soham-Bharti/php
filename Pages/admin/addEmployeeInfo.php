@@ -12,12 +12,6 @@ $tech = $joiningDate = $salary = $joiningDate = $noticePeriodDays = $noticePerio
 
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 // echo $desiredUserId;
-$sql = "SELECT * from employeeDetails where user_id = '$desiredUserId' and deleted_at is null";
-$result = mysqli_query($conn, $sql);
-// print_r($result);
-if (mysqli_num_rows($result) > 0) {
-    header("Location: updateEmployeeInfo.php?id=$desiredUserId");
-}
 
 function test_input($data)
 {

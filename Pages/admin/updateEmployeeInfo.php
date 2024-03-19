@@ -175,6 +175,7 @@ if (isset($_POST['update'])) {
                         $name = $row['name'];
                         $email = $row['email'];
                         $profile = $row['profile_url'];
+                        if(empty($profile)) $profile = 'defaultImg.webp';
                     }
                 }
                 ?>

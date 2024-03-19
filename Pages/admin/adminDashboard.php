@@ -170,8 +170,17 @@ if ($_SESSION['role'] !== 'admin') {
                             <td>
                                 <a href="workingHourEmployeeDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-success btn-sm">Working</a>
                             </td>
+                            <?php
+                            $editEmployeeInfo = false;
+                            $sql2 = "SELECT * FROM employeeDetails WHERE user_id = " . $row["id"] . " AND deleted_at IS NULL";
+                            $result2 = mysqli_query($conn, $sql2);
+                            // print_r($result);
+                            if (mysqli_num_rows($result2) > 0) {
+                                $editEmployeeInfo = true;
+                            }
+                            ?>
                             <td class='w-25'>
-                                <a href="addEmployeeInfo.php?id=<?php echo $row["id"] ?>" class="btn btn-dark btn-sm">Add/Edit Info</a>
+                            <a href="<?php echo $editEmployeeInfo ? 'updateEmployeeInfo.php?id=' . $row["id"] : 'addEmployeeInfo.php?id=' . $row["id"]; ?>" class="btn btn-dark btn-sm">Add/Edit Info</a>
                             </td>
                             <td>
                                 <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a>
