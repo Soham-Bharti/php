@@ -22,20 +22,11 @@ unset($_SESSION['role']);
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-
             <a href="home.php" class="svg text-decoration-none d-flex align-items-center">
                 <img src="../Images/mainIcon.gif" alt='svg here'>
                 <span class='text-success fw-bold'>EmployeeTracker.com</span>
             </a>
-
-
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <!-- <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a>
-                    </li> -->
-                <!-- <li class="nav-item">
-                        <a class="nav-link" href="register.php">Register</a>
-                    </li> -->
                 <li class="nav-item">
                     <a class="nav-link" href="login.php">Login</a>
                 </li>
@@ -44,7 +35,6 @@ unset($_SESSION['role']);
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-
         </div>
     </nav>
     <marquee direction="left" class='marquee display-5'>Welcome to Employee Tracker Web App</marquee>

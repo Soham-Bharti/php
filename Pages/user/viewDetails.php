@@ -1,9 +1,9 @@
 <?php
 session_start();
-require '../config/dbConnect.php';
+require '../../config/dbConnect.php';
 // print_r($_SESSION);
-if ($_SESSION['role'] !== 'admin') {
-    header('Location: login.php');
+if ($_SESSION['role'] !== 'emp') {
+    header('Location: ../login.php');
 }
 
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
@@ -45,7 +45,7 @@ GROUP BY
             $mobile = $row['mobile'];
             $profile = $row['profile_url'];
             if (empty($profile)) {
-                $profile = '../Images/defaultImg.webp';
+                $profile = '../../Images/defaultImg.webp';
             }
             $gender = $row['gender'];
             $city = $row['city'];
@@ -93,20 +93,20 @@ GROUP BY
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo explode(' ', $name)[0] ?> - Details</title>
-    <link rel="stylesheet" href="../Styles/updateemployee.css">
+    <link rel="stylesheet" href="../../Styles/updateemployee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../Images/mainIcon.gif" alt='svg here'>
+            <a href="../home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+                <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                    <a class="nav-link" href="userDashboard.php">Back</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -117,12 +117,12 @@ GROUP BY
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2"><span class='text-info'>View</span> Employees' All Details</h2>
+    <h2 class="text-center mt-2"><span class='text-info'><?php echo $name ?></span> - All Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">
                 <div class="d-inline-block profile-img w-25">
-                    <img src="<?php echo "../Images/" . $profile ?>" alt="No profile to show" class="img-thumbnail object-fit-contain border rounded-circle  mb-2">
+                    <img src="<?php echo "../../Images/" . $profile ?>" alt="No profile to show" class="img-thumbnail object-fit-contain border rounded-circle  mb-2">
                 </div>
                 <div class='text-center'>
                     <p class='d-flex justify-content-center align-items-center gap-2'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-badge" viewBox="0 0 16 16">
@@ -147,11 +147,11 @@ GROUP BY
             </div>
             <hr>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
-
                 <div class="mb-3 d-flex align-items-center justify-content-center">
                     <label class="form-label w-50 text-center">Total Working (current month) - </label>
                     <label class="form-label w-50 text-center fw-bold text-primary"><?php echo $formatted_time ?></label>
                 </div>
+
                 <?php
                 if ($salary != 'N/A') {
                     $sql1 = "SELECT DAY(LAST_DAY(NOW())) AS days_in_current_month;";
@@ -165,9 +165,10 @@ GROUP BY
                 }
                 ?>
                 <div class="mb-3 d-flex align-items-center justify-content-center">
-                    <label class="form-label w-50 text-center">Salary to credit (till today) - </label>
-                    <label class="form-label w-50 text-center fw-bold text-success"><?php echo $salary != 'N/A' ? "Rs. $desiredSalaryToPay/-" : 'Oops! Salary not set' ?></label>
+                    <label class="form-label w-50 text-center">Salary to debit (till today) - </label>
+                    <label class="form-label w-50 text-center fw-bold text-success"><?php echo $salary != 'N/A' ? "Rs. $desiredSalaryToPay/-" : 'Salary not set' ?></label>
                 </div>
+
                 <div class="mb-3 d-flex align-items-center justify-content-center">
                     <label class="form-label w-25">DoB - </span></label>
                     <input type="text" name="dob" class="form-control w-25" disabled value='<?php echo $dob ?>'>
@@ -257,8 +258,8 @@ GROUP BY
     <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
-        <a href="home.php" class="col-1 svg">
-            <img src="../Images/mainIcon.gif" alt='svg here'>
+        <a href="../home.php" class="col-1 svg">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>

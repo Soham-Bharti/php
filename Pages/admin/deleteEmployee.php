@@ -1,8 +1,8 @@
 <?php
 session_start();
-require '../config/dbConnect.php';
+require '../../config/dbConnect.php';
 if ($_SESSION['role' == 'emp']) {
-    header('Location: login.php');
+    header('Location: ../login.php');
 }
     if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     if (isset($desiredUserId)) {

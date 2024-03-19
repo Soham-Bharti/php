@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../config/dbConnect.php';
+require '../../config/dbConnect.php';
 if ($_SESSION['role'] == 'emp') {
     $desiredUserId = $_SESSION['id'];
     $sql = "INSERT into employeeTrackingDetails(user_id, check_in_time) values ('$desiredUserId',now())";

@@ -54,10 +54,10 @@ if (isset($_POST['submit'])) {
             $_SESSION['id']     =  $userId;
             if ($role === 'admin') {
                 $_SESSION['role']     =  'admin';
-                header('Location: adminDashboard.php');
+                header('Location: admin/adminDashboard.php');
             } else {
                 $_SESSION['role']     =  'emp';
-                header('Location: userDashboard.php');
+                header('Location: user/userDashboard.php');
             }
         } else {
             $invalidCredentialsErr = 'Invalid credentials';

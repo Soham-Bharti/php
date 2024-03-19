@@ -1,12 +1,11 @@
 <?php
 session_start();
-require '../config/dbConnect.php';
+require '../../config/dbConnect.php';
 // print_r($_SESSION);
-if ($_SESSION['role'] !== 'emp') {
-    header('Location: login.php');
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: ../login.php');
 }
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
-
 
 ?>
 
@@ -16,8 +15,8 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Working Hours</title>
-    <link rel="stylesheet" href="../Styles/userdashboard.css">
+    <title>Emplpoyee Track | Admin</title>
+    <link rel="stylesheet" href="../../Styles/userdashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -26,13 +25,17 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../Images/mainIcon.gif" alt='svg here'>
+            <a href="../home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+                <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
+
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="userDashboard.php">Back</a>
+                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="addTrackEmployee.php?id=<?php echo $desiredUserId ?>">Add Track</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -43,7 +46,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Employee <span class='text-info'>Working Hours'</span> dashboard</h2>
+    <h2 class="text-center mt-3">Employee <span class='text-info'>Tracking</span> dashboard</h2>
 
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
@@ -84,6 +87,29 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
             </div>
         </div>
 
+        <!-- toast after successful added -->
+        <?php if (isset($_SESSION['UpdateEmpTrackStatus']) && $_SESSION['UpdateEmpTrackStatus'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-warning text-muted ">
+                    <strong class="me-auto">Track updated successfully!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['UpdateEmpTrackStatus'] = '' ?>
+        <!-- toast ends -->
+        <!-- toast after successful added -->
+        <?php if (isset($_SESSION['AddEmpTrackStatus']) && $_SESSION['AddEmpTrackStatus'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-success text-white ">
+                    <strong class="me-auto">Track added successfully!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['AddEmpTrackStatus'] = '' ?>
+        <!-- toast ends -->
+
         <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
         <div class="mt-3">
             <table>
@@ -91,35 +117,29 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                     <th>S.Number</th>
                     <th>Date</th>
                     <th>Day</th>
-                    <th>Working Hours</th>
+                    <th>Check In Time</th>
+                    <th>Check Out Time</th>
+                    <th>Action</th>
                 </tr>
                 <?php
-                $sql = "SELECT
-                DATE(check_in_time) AS date,
-                SUM(TIMESTAMPDIFF(SECOND, check_in_time, check_out_time)) AS total_seconds
-            FROM
-                employeeTrackingDetails
-            WHERE
-                user_id = '$desiredUserId' and deleted_at is null
-            GROUP BY
-                DATE(check_in_time)
-            ORDER BY
-                DATE(check_in_time) DESC;
-            ";
+                $sql = "SELECT check_in_time, check_out_time, id from employeeTrackingDetails where user_id = $desiredUserId order by check_in_time desc limit 10";
                 $result = mysqli_query($conn, $sql);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
-                        $dateTime = $row["date"];
-                        $time = strtotime($dateTime);
-                        $total_seconds = $row['total_seconds'];
+                        $flag = false;
+                        $checkOut = $row["check_out_time"];
+                        $trackId = $row['id'];
                 ?>
                         <?php
-                        // seconds to hours, minutes and seconds
-                        $hours = floor($total_seconds / 3600);
-                        $minutes = floor(($total_seconds % 3600) / 60);
-                        $seconds = $total_seconds % 60;
-                        $formatted_time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+                        $time = strtotime($row["check_in_time"]);
+                        $checkInTime = strtotime($row["check_in_time"]);
+                        if (is_null($checkOut)) {
+                            $checkOutIsNull = true;
+                        } else {
+                            $checkOutTime = strtotime($row["check_out_time"]);
+                            $checkOutIsNull = false;
+                        };
                         ?>
                         <tr>
                             <td><?php echo $seialNumber++ ?></td>
@@ -130,10 +150,22 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                                 echo date('l', $time);
                                 ?>
                             </td>
-                            <td class='fw-bold <?php echo $formatted_time > '08:45:00' ? 'text-success' : 'text-danger' ?>'>
+                            <td>
                                 <?php
-                                echo "$formatted_time";
+                                echo date('H:i:s', $checkInTime);
                                 ?>
+                            </td>
+                            <td>
+                                <?php
+                                if ($checkOutIsNull) {
+                                    echo " -- ";
+                                } else {
+                                    echo date('H:i:s', $checkOutTime);
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <a href="updateTrackEmployeeDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-primary">Edit</a>
                             </td>
                         </tr>
                     <?php
@@ -149,8 +181,8 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
-        <a href="home.php" class="col-1 svg">
-            <img src="../Images/mainIcon.gif" alt='svg here'>
+        <a href="../home.php" class="col-1 svg">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>

@@ -1,35 +1,11 @@
 <?php
 session_start();
-require '../config/dbConnect.php';
-// print_r($_SESSION);
+require '../../config/dbConnect.php';
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: login.php');
+    header('Location: ../login.php');
 }
-$nameErr = $emailErr = $dobErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
-if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
-if (isset($desiredUserId)) {
-    $sql = "SELECT name, email, gender, mobile, date_of_birth, address, city, state, profile_url from users where id = '$desiredUserId' and deleted_at is null";
-    $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result) == 1) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $name = $row['name'];
-            $email = $row['email'];
-            $dob = $row['date_of_birth'];
-            $gender = $row['gender'];
-            $mobile = $row['mobile'];
-            $address = $row['address'];
-            $city = $row['city'];
-            $state = $row['state'];
-            $profile = $row['profile_url'];
-            if (empty($profile)) {
-                $profile = 'defaultImg.webp';
-            }
-        }
-    }
-} else {
-    // echo "Emp User ID parameter is missing - check your session";
-}
-
+$name = $email = $dob = $confirm_password = $password = $gender = $mobile = $image = $address = "";
+$nameErr = $emailErr = $dobErr = $confirm_passwordErr = $passwordErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
 
 function test_input($data)
 {
@@ -38,108 +14,121 @@ function test_input($data)
     $data = htmlspecialchars($data);
     return $data;
 }
-
 $flag = true;
 if (isset($_POST['submit'])) {
     // print_r($_POST);
     $name = test_input($_POST['name']);
     $email = test_input($_POST['email']);
     $dob = test_input($_POST['dob']);
+    // $role = test_input($_POST['role']);
+    $role = 'employee';
+    $password = test_input($_POST['password']);
+    $confirm_password = test_input($_POST['confirm_password']);
     $gender = test_input($_POST['gender']);
     $mobile = test_input($_POST['mobile']);
     $address = test_input($_POST['address']);
     $city = test_input($_POST['city']);
     $state = test_input($_POST['state']);
-    $id = test_input($_POST['id']);
 
     if (empty($name)) {
         $nameErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
             $nameErr = "Only letters and white space allowed";
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($email)) {
         $emailErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+(@gmail.com)$/", $email)) {
             $emailErr = "Invalid email format";
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
+        }
+    }
+
+    if (empty($password)) {
+        $passwordErr = 'Required';
+        $flag = false;
+    }
+    // else {
+    //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
+    //     if (!preg_match($password_regex, $password)) {
+    //         $passwordErr = "Check that a password:<br>
+    //         Has minimum 8 characters in length<br>
+    //         At least one uppercase English letter<br>
+    //         At least one lowercase English letter<br>
+    //         At least one digit<br>
+    //         At least one special character";
+    //         $flag = false;
+    //     }
+    // }
+
+    if (empty($confirm_password)) {
+        $confirm_passwordErr = 'Required';
+        $flag = false;
+    } else {
+        if ($confirm_password !== $password) {
+            $confirm_passwordErr = "Password Mismatch";
+            $flag = false;
         }
     }
 
     if (empty($gender)) {
         $genderErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     }
 
     if (empty($mobile)) {
         $mobileErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[6-9]{1}\d{9}$/", $mobile)) {
             $mobileErr = "Invalid mobile number";
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($dob)) {
         $dobErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         $year = explode('-', $dob);
         if ($year[0] > 2010) {
             $dobErr = 'Choose a DoB before 2010';
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($city)) {
         $cityErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $city)) {
             $cityErr = "Only letters and white space allowed";
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($state)) {
         $stateErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $state)) {
             $stateErr = "Only letters and white space allowed";
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($address)) {
         $addressErr = 'Required';
         $flag = false;
-        $_SESSION['UpdateStatus'] = 'fail';
     }
 
-    // print_r($_FILES['image']);
     if ($flag && $_FILES['image']['name'] !== '') {
-        // echo 'Inside';
         $fileName = $_FILES['image']['name'];
         $fileTmpName = $_FILES['image']['tmp_name'];
         $fileSize = $_FILES['image']['size'];
@@ -155,8 +144,7 @@ if (isset($_POST['submit'])) {
                 if ($fileSize < 50000000000) { // 500kb =  500000b 
                     $nameArr = explode(' ', $name);
                     $fileNameNew = strtolower($nameArr[0]) . "_" . uniqid('', true) . "." . $fileActualExtension;
-                    $fileDestination = '../Images/' . $fileNameNew;
-                    // echo "LOCATION___" . $fileDestination;
+                    $fileDestination = '../../Images/' . $fileNameNew;
                     if (!file_exists($fileName)) {
                         if (move_uploaded_file(
                             $fileTmpName,
@@ -166,61 +154,50 @@ if (isset($_POST['submit'])) {
                         } else {
                             $imageErr =  "Failed to upload your image";
                             $flag = false;
-                            $_SESSION['UpdateStatus'] = 'fail';
                         }
                     } else {
                         $imageErr = "File already exists!";
                         $flag = false;
-                        $_SESSION['UpdateStatus'] = 'fail';
                     }
                 } else {
                     $imageErr = "FILE  TOO LARGE!";
                     $flag = false;
-                    $_SESSION['UpdateStatus'] = 'fail';
                 }
             } else {
                 $imageErr = "There was file error";
                 $flag = false;
-                $_SESSION['UpdateStatus'] = 'fail';
             }
         } else {
             $imageErr = "Only .png, .jpg, .jpeg supported";
             $flag = false;
-            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     // print_r($_POST);
 
     if ($flag) {
-        // sending data to data base  except LOAD_FILE('$fileDestination')
-        if (empty($fileDestination)) {
-            $sql = "UPDATE users
-            SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', updated_at = now()
-            where id = '$id'
-            ";
+        // sending data to data base
+        $hashedPassword = md5($password);
+        if (isset($_FILES['image'])) {
+            $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state, profile_url)
+                values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state', '$fileNameNew')";
         } else {
-            $sql = "UPDATE users
-            SET name = '$name',  email='$email', mobile='$mobile' , address= '$address', gender = '$gender', date_of_birth = '$dob', city = '$city', state = '$state', profile_url = '$fileNameNew', updated_at = now()
-            where id = '$id'
-            ";
+            $sql = "INSERT INTO users(role, name, email, password, gender, mobile, date_of_birth, address, city, state)
+                values('$role', '$name','$email', '$hashedPassword', '$gender', '$mobile', '$dob', '$address', '$city', '$state')";
         }
-
         if (mysqli_query($conn, $sql)) {
-            echo "<br>Record updated successfully<br>";
-            // if everthing if well then redirecting the user to login page
-            $_SESSION['UpdateStatus'] = 'success';
+            // echo "<br>New record inserted successfully<br>";
+            $_SESSION['AddStatus'] = 'success';
             header("Location: adminDashboard.php");
-            // echo "Successfully updated";
-        } else {
-            echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-            $_SESSION['UpdateStatus'] = 'fail';
-        }
+        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
+        // if everthing if well then redirecting the user to login page
     }
 }
 
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -228,116 +205,115 @@ if (isset($_POST['submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Employee</title>
-    <link rel="stylesheet" href="../Styles/updateemployee.css">
+    <title>New Employee Registration</title>
+    <link rel="stylesheet" href="../../Styles/addEmployee.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../Images/mainIcon.gif" alt='svg here'>
+        <a href="../home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+                <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                    <a class="nav-link" aria-current="page" href="home.php">Logout</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="adminDashboard.php">Back</a>
-                </li>
-            </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-
+    
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminDashboard.php">Back</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+   
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employees' Personal Details</h2>
+    <h2 class="text-center mt-2">New <span class='text-info'>Employee</span> Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">
-            <!-- toast after fail udation -->
-            <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'fail') { ?>
-                <div class="toast show m-auto hide">
-                    <div class="toast-header bg-danger text-white ">
-                        <strong class="me-auto">Something went wrong!</strong>
-                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-            <?php }
-            $_SESSION['UpdateStatus'] = '' ?>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
-
+                <!-- <div class="mb-3">
+                    <label class="col-form-label"> Register as</label>
+                    <select class="form-select" aria-label="Default select example" name="role">
+                        <option value="admin" disabled>Admin</option>
+                        <option value="employee" selected>Employee</option>
+                    </select>
+                </div> -->
                 <div class="mb-3">
                     <label class="col-form-label">Name <span>* <?php echo $nameErr ?></span></label>
                     <div class="mb-3">
-                        <input type="text" name="name" class="form-control" placeholder="Joey Tribbiani" value='<?php echo $name ?>'>
+                        <input type="text" name="name" class="form-control" placeholder="Joey Tribbiani">
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email address <span>* <?php echo $emailErr ?></span></label>
-                    <input type="email" class="form-control" name="email" placeholder="name@example.com" value='<?php echo $email ?>'>
+                    <input type="email" class="form-control" name="email" placeholder="name@example.com">
                 </div>
-
                 <div class="mb-3">
                     <div class="col-auto">
-                        <label for="gender" class="col-form-label" checked='<?php echo $gender ?>'>Gender <span>* <?php echo $genderErr ?></span></label>
+                        <label class="col-form-label">Password <span>* <?php echo $passwordErr ?></span></label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="password" name="password" class="form-control" aria-describedby="passwordHelpInline">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="col-auto">
+                        <label class="col-form-label">Confirm Password <span>* <?php echo $confirm_passwordErr ?></span></label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="password" name="confirm_password" class="form-control" aria-describedby="passwordHelpInline">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="col-auto">
+                        <label for="gender" class="col-form-label">Gender <span>* <?php echo $genderErr ?></span></label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" value="female" <?php echo $gender == 'female' ? 'checked' : '' ?> />
+                        <input class="form-check-input" type="radio" name="gender" value="female">
                         <label class="form-check-label" for="gender">Female</label>
                     </div>
-
-
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" value="male" <?php echo $gender == 'male' ? 'checked' : '' ?> />
+                        <input class="form-check-input" type="radio" name="gender" value="male" checked>
                         <label class="form-check-label" for="gender">Male</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" value="others" <?php echo $gender == 'others' ? 'checked' : '' ?> />
+                        <input class="form-check-input" type="radio" name="gender" value="others">
                         <label class="form-check-label" for="gender">Others</label>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Mobile <span>* <?php echo $mobileErr ?></span></label>
-                    <input type="tel" name="mobile" class="form-control" placeholder="9876543210" maxlength="10" value='<?php echo $mobile ?>'>
+                    <input type="tel" name="mobile" class="form-control" placeholder="9876543210" maxlength="10">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Date of Birth <span>* <?php echo $dobErr ?></span></label>
-                    <input type="date" class="form-control" name="dob" value='<?php echo $dob ?>'>
+                    <input type="date" class="form-control" name="dob">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Profile Picture <span>* (displaying your current profile, CHOOSE only if you want to change) <?php echo $imageErr ?></span></label>
-                    <div class="d-inline-block profile-img w-25">
-                        <img src="<?php echo "../Images/" . $profile ?>" alt="No profile to show" class="img-thumbnail object-fit-contain border rounded-circle  mb-2">
-                    </div>
+                    <label class="form-label">Profile Piture <span>* <?php echo $imageErr ?></span></label>
                     <input class="form-control" type="file" name="image">
                 </div>
-
                 <div class="mb-3">
                     <label class="form-label">Address <span>* <?php echo $addressErr ?></span></label>
-                    <input type="text" class="form-control" name="address" placeholder="628 Iskon Emporio" value='<?php echo $address ?>'>
+                    <input type="text" class="form-control" name="address" placeholder="628 Iskon Emporio">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">City <span>* <?php echo $cityErr ?></span></label>
-                    <input type="text" class="form-control" name="city" placeholder="Ahemdabad" value='<?php echo $city ?>'>
+                    <input type="text" class="form-control" name="city" placeholder="Ahemdabad">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">State <span>* <?php echo $stateErr ?></span></label>
-                    <input type="text" class="form-control" name="state" placeholder="Gujarat" value='<?php echo $state ?>'>
-                </div>
-                <div class="mb-3">
-                    <input type="hidden" class="form-control" name="id" value='<?php echo $desiredUserId ?>'>
+                    <input type="text" class="form-control" name="state" placeholder="Gujarat">
                 </div>
 
                 <div class="buttons">
-                    <input type="submit" name="submit" class="btn btn-dark btn-lg" value="Save">
+                    <input type="submit" name="submit" class="btn btn-dark btn-lg" value="Register">
                     <input type="reset" name="reset" class="btn btn-dark btn-lg">
                 </div>
 
@@ -348,14 +324,14 @@ if (isset($_POST['submit'])) {
     <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
-        <a href="home.php" class="col-1 svg">
-            <img src="../Images/mainIcon.gif" alt='svg here'>
+        <a href="../home.php" class="col-1 svg">
+            <img src="../../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
 
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
