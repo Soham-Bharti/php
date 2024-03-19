@@ -57,6 +57,9 @@ if (isset($_POST['check-out-submit'])) {
                     <li class="nav-item">
                         <a href="workingHours.php?id=<?php echo $desiredUserId ?>" class="nav-link">Working Track</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="viewDetails.php?id=<?php echo $desiredUserId ?>" class="nav-link">View Details</a>
+                    </li>
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
