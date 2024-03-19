@@ -26,8 +26,8 @@ if ($_SESSION['role'] !== 'admin') {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../Images/emp.svg" alt='svg here' class='w-25'>
-                <span class=' fw-bold'>EmployeeTracker.com</span>
+                <img src="../Images/mainIcon.gif" alt='svg here'>
+                <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
 
                 <ul class="navbar-nav mb-2 me-auto mb-lg-0">
@@ -137,6 +137,7 @@ if ($_SESSION['role'] !== 'admin') {
                     <th>Action</th>
                     <th>Action</th>
                     <th>Action</th>
+                    <th>Action</th>
                 </tr>
                 <?php
                 $sql = "SELECT id, profile_url, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
@@ -154,6 +155,9 @@ if ($_SESSION['role'] !== 'admin') {
                             <td><?php echo $row["email"] ?></td>
                             <td><?php echo $row["gender"] ?></td>
                             <td><?php echo $row["mobile"] ?></td>
+                            <td>
+                                <a href="viewEmployeeAllDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-info text-white btn-sm">View</a>
+                            </td>
                             <!-- <td class='w-25'><?php echo $row["date_of_birth"] ?></td> -->
                             <td>
                                 <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
@@ -190,7 +194,7 @@ if ($_SESSION['role'] !== 'admin') {
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
         <a href="home.php" class="col-1 svg">
-            <img src="../Images/emp.svg" alt='svg here'>
+            <img src="../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>

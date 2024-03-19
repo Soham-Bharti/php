@@ -64,7 +64,7 @@ if (isset($_POST['add'])) {
         } else {
             echo "No record found for the user, may be user is no more existing in db";
         };
-        if ($registrationDate >= $joiningDate) {
+        if ($registrationDate > $joiningDate) {
             $joiningDateErr = "Joining Date is earlier than Registration Date";
             $flag = false;
         }
@@ -129,26 +129,22 @@ if (isset($_POST['add'])) {
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="https://soham-bharti.netlify.app/" target="_blank">Employee Tracker WebApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <a class="nav-link" aria-current="page" href="home.php">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminDashboard.php">Back</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+                <img src="../Images/mainIcon.gif" alt='svg here'>
+                <span class='fw-bold text-success'>EmployeeTracker.com</span>
+            </a>
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
         </div>
     </nav>
     <!-- nav ends -->
@@ -164,6 +160,9 @@ if (isset($_POST['add'])) {
                         $name = $row['name'];
                         $email = $row['email'];
                         $profile = $row['profile_url'];
+                        if (empty($profile)) {
+                            $profile = '../Images/defaultImg.webp';
+                        }
                     }
                 }
                 ?>
@@ -182,7 +181,7 @@ if (isset($_POST['add'])) {
 
                 <div class="mb-3">
                     <label class="form-label">Joining Date <span>* <?php echo $joiningDateErr ?></span></label>
-                    <input type="date" name="joiningDate" class="form-control" placeholder="9876543210" maxlength="10" value='<?php echo $mobile ?>'>
+                    <input type="date" name="joiningDate" class="form-control" max="<?php echo $date = date("Y-m-d") ?>">
                 </div>
 
                 <div class="mb-3">
@@ -256,7 +255,7 @@ if (isset($_POST['add'])) {
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
         <a href="home.php" class="col-1 svg">
-            <img src="../Images/emp.svg" alt='svg here'>
+            <img src="../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>

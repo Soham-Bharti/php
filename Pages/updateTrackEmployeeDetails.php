@@ -5,10 +5,14 @@ require '../config/dbConnect.php';
 if ($_SESSION['role'] !== 'admin') {
     header('Location: login.php');
 }
-if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
-if (isset($_GET['trackId'])) $desiredTrackId = $_GET['trackId'];
+if (isset($_GET['id'])) {
+    $desiredUserId = $_GET['id'];
+}
+if (isset($_GET['trackId'])) {
+    $desiredTrackId = $_GET['trackId'];
+}
 
-$checkInTime = "";
+$checkInTime = $originalDate = $originDate = $uId = $tId = "";
 $checkOutTime = null;
 $checkInTimeErr = $checkOutTimeErr = "";
 
@@ -40,31 +44,30 @@ if (isset($_POST['submit'])) {
     // print_r($_POST);
     $checkInTime = $_POST['checkInTime'];
     $checkOutTime = $_POST['checkOutTime'];
-    $desiredUserId = $_POST['userId'];
-    $desiredTrackId = $_POST['trackId'];
-    $originalDate = $_POST['originalDate'];
+    $originDate = $_POST['originDate'];
+    $uId = $_POST['uId'];
+    $tId = $_POST['tId'];
 
-    print_r($_POST);
+    var_dump($checkOutTime);
     if ($checkOutTime != '') {
         // sending data to data base  
-        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originalDate $checkInTime', check_out_time = '$originalDate $checkOutTime', updated_at = now() where user_id = '$desiredUserId' and id = '$desiredTrackId' and deleted_at is null";
+        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
             echo "<br>Record updated successfully<br>";
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
 
-        // echo "Successfully updated with check out time";
+        echo "Successfully updated with check out time";
     } else {
-        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originalDate $checkInTime', updated_at = now() where user_id = '$desiredUserId' and id = '$desiredTrackId' and deleted_at is null";
+        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
             echo "<br>Record updated successfully<br>";
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
 
-        // echo "Successfully updated without checkout time";
+        echo "Successfully updated without checkout time";
     }
     mysqli_close($conn);
     $_SESSION['UpdateEmpTrackStatus'] = 'success';
-    $desiredLocation = "trackEmployee.php?id=$desiredUserId";
-    // echo "$desiredLocation";
+    $desiredLocation = "trackEmployee.php?id=$uId";
     header("Location: $desiredLocation");
 }
 
@@ -83,26 +86,26 @@ if (isset($_POST['submit'])) {
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="https://soham-bharti.netlify.app/" target="_blank">Employee Tracker WebApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="trackEmployee.php?id=<?php echo $desiredUserId ?>">Back</a>
-                    </li>
-                    <li class="nav-item">
-                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <a class="nav-link" aria-current="page" href="adminDashboard.php">Dashboard</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+                <img src="../Images/mainIcon.gif" alt='svg here'>
+                <span class='fw-bold text-success'>EmployeeTracker.com</span>
+            </a>
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="trackEmployee.php?id=<?php echo $desiredUserId ?>">Back</a>
+                </li>
+                <li class="nav-item">
+                    <!-- Here http://localhost/php_training/Pages is static for the moment -->
+                    <a class="nav-link" aria-current="page" href="adminDashboard.php">Dashboard</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
         </div>
     </nav>
     <!-- nav ends -->
@@ -120,11 +123,9 @@ if (isset($_POST['submit'])) {
                     <label class="form-label">Day</label>
                     <input type="text" class="form-control user-select-none" name="day" value='<?php echo $day ?>' disabled>
                 </div>
-                <div class="mb-3">
-                    <input type="hidden" class="form-control user-select-none" name="userId" value='<?php echo $desiredUserId ?>'>
-                    <input type="hidden" class="form-control user-select-none" name="trackId" value='<?php echo $desiredTrackId ?>'>
-                    <input type="hidden" class="form-control user-select-none" name="originalDate" value='<?php echo $originalDate ?>'>
-                </div>
+                <input type="hidden" class="form-control user-select-none" name="originDate" value='<?php echo $originalDate ?>'>
+                <input type="hidden" class="form-control user-select-none" name="uId" value='<?php echo $desiredUserId ?>'>
+                <input type="hidden" class="form-control user-select-none" name="tId" value='<?php echo $desiredTrackId ?>'>
 
                 <div class="mb-3">
                     <label class="form-label">Check In Time<span>* <?php echo $checkInTimeErr ?></span></label>
@@ -147,7 +148,7 @@ if (isset($_POST['submit'])) {
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
         <a href="home.php" class="col-1 svg">
-            <img src="../Images/emp.svg" alt='svg here'>
+            <img src="../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>

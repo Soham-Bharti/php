@@ -27,6 +27,3 @@ tr:nth-child(even) {
 .cursor-not-allowed{
     cursor: not-allowed;
 }
-.svg{
-    margin-right: 30px;
-}

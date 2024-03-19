@@ -22,29 +22,29 @@ unset($_SESSION['role']);
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-            <div class='col-md-2'>
-                <a href="home.php" class="svg text-decoration-none d-flex align-items-center">
-                    <img src="../Images/emp.svg" alt='svg here' class='w-25'>
-                    <span class='text-success fw-bold'>EmployeeTracker.com</span>
-                </a>
-            </div>
-            <div class="collapse navbar-collapse mx-1">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- <li class="nav-item">
+
+            <a href="home.php" class="svg text-decoration-none d-flex align-items-center">
+                <img src="../Images/mainIcon.gif" alt='svg here'>
+                <span class='text-success fw-bold'>EmployeeTracker.com</span>
+            </a>
+
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a>
                     </li> -->
-                    <!-- <li class="nav-item">
+                <!-- <li class="nav-item">
                         <a class="nav-link" href="register.php">Register</a>
                     </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">Login</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php">Login</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
         </div>
     </nav>
     <marquee direction="left" class='marquee display-5'>Welcome to Employee Tracker Web App</marquee>
@@ -53,7 +53,7 @@ unset($_SESSION['role']);
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
         <a href="home.php" class="col-1 svg">
-            <img src="../Images/emp.svg" alt='svg here'>
+            <img src="../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
