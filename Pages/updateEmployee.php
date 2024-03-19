@@ -27,7 +27,7 @@ if (isset($desiredUserId)) {
         }
     }
 } else {
-    echo "Emp User ID parameter is missing - check your session";
+    // echo "Emp User ID parameter is missing - check your session";
 }
 
 
@@ -55,72 +55,86 @@ if (isset($_POST['submit'])) {
     if (empty($name)) {
         $nameErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
             $nameErr = "Only letters and white space allowed";
             $flag = false;
+            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($email)) {
         $emailErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+(@gmail.com)$/", $email)) {
             $emailErr = "Invalid email format";
             $flag = false;
+            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($gender)) {
         $genderErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     }
 
     if (empty($mobile)) {
         $mobileErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[6-9]{1}\d{9}$/", $mobile)) {
             $mobileErr = "Invalid mobile number";
             $flag = false;
+            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($dob)) {
         $dobErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         $year = explode('-', $dob);
         if ($year[0] > 2010) {
             $dobErr = 'Choose a DoB before 2010';
             $flag = false;
+            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($city)) {
         $cityErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $city)) {
             $cityErr = "Only letters and white space allowed";
             $flag = false;
+            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($state)) {
         $stateErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $state)) {
             $stateErr = "Only letters and white space allowed";
             $flag = false;
+            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
     if (empty($address)) {
         $addressErr = 'Required';
         $flag = false;
+        $_SESSION['UpdateStatus'] = 'fail';
     }
 
     // print_r($_FILES['image']);
@@ -152,22 +166,27 @@ if (isset($_POST['submit'])) {
                         } else {
                             $imageErr =  "Failed to upload your image";
                             $flag = false;
+                            $_SESSION['UpdateStatus'] = 'fail';
                         }
                     } else {
                         $imageErr = "File already exists!";
                         $flag = false;
+                        $_SESSION['UpdateStatus'] = 'fail';
                     }
                 } else {
                     $imageErr = "FILE  TOO LARGE!";
                     $flag = false;
+                    $_SESSION['UpdateStatus'] = 'fail';
                 }
             } else {
                 $imageErr = "There was file error";
                 $flag = false;
+                $_SESSION['UpdateStatus'] = 'fail';
             }
         } else {
             $imageErr = "Only .png, .jpg, .jpeg supported";
             $flag = false;
+            $_SESSION['UpdateStatus'] = 'fail';
         }
     }
 
@@ -189,12 +208,15 @@ if (isset($_POST['submit'])) {
 
         if (mysqli_query($conn, $sql)) {
             echo "<br>Record updated successfully<br>";
-        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+            // if everthing if well then redirecting the user to login page
+            $_SESSION['UpdateStatus'] = 'success';
+            header("Location: adminDashboard.php");
+            // echo "Successfully updated";
+        } else {
+            echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+            $_SESSION['UpdateStatus'] = 'fail';
+        }
         mysqli_close($conn);
-        // if everthing if well then redirecting the user to login page
-        $_SESSION['UpdateStatus'] = 'success';
-        header("Location: adminDashboard.php");
-        // echo "Successfully updated";
     }
 }
 
@@ -238,6 +260,16 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employees' Personal Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
+            <!-- toast after fail udation -->
+            <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'fail') { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-danger text-white ">
+                        <strong class="me-auto">Something went wrong!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            <?php }
+            $_SESSION['UpdateStatus'] = '' ?>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
 
                 <div class="mb-3">

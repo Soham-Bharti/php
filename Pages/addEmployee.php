@@ -33,26 +33,31 @@ if (isset($_POST['submit'])) {
     if (empty($name)) {
         $nameErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $name)) {
             $nameErr = "Only letters and white space allowed";
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
     if (empty($email)) {
         $emailErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+(@gmail.com)$/", $email)) {
             $emailErr = "Invalid email format";
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
     if (empty($password)) {
         $passwordErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     }
     // else {
     //     $password_regex = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/";
@@ -64,68 +69,81 @@ if (isset($_POST['submit'])) {
     //         At least one digit<br>
     //         At least one special character";
     //         $flag = false;
+    //          $_SESSION['AddStatus'] = 'fail';
     //     }
     // }
 
     if (empty($confirm_password)) {
         $confirm_passwordErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     } else {
         if ($confirm_password !== $password) {
             $confirm_passwordErr = "Password Mismatch";
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
     if (empty($gender)) {
         $genderErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     }
 
     if (empty($mobile)) {
         $mobileErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] == 'fail';
     } else {
         if (!preg_match("/^[6-9]{1}\d{9}$/", $mobile)) {
             $mobileErr = "Invalid mobile number";
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
     if (empty($dob)) {
         $dobErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     } else {
         $year = explode('-', $dob);
         if ($year[0] > 2010) {
             $dobErr = 'Choose a DoB before 2010';
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
     if (empty($city)) {
         $cityErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $city)) {
             $cityErr = "Only letters and white space allowed";
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
     if (empty($state)) {
         $stateErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] == 'fail';
     } else {
         if (!preg_match("/^[a-zA-Z-' ]*$/", $state)) {
             $stateErr = "Only letters and white space allowed";
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
     if (empty($address)) {
         $addressErr = 'Required';
         $flag = false;
+        $_SESSION['AddStatus'] = 'fail';
     }
 
     if ($flag && $_FILES['image']['name'] !== '') {
@@ -154,22 +172,27 @@ if (isset($_POST['submit'])) {
                         } else {
                             $imageErr =  "Failed to upload your image";
                             $flag = false;
+                            $_SESSION['AddStatus'] = 'fail';
                         }
                     } else {
                         $imageErr = "File already exists!";
                         $flag = false;
+                        $_SESSION['AddStatus'] = 'fail';
                     }
                 } else {
                     $imageErr = "FILE  TOO LARGE!";
                     $flag = false;
+                    $_SESSION['AddStatus'] = 'fail';
                 }
             } else {
                 $imageErr = "There was file error";
                 $flag = false;
+                $_SESSION['AddStatus'] = 'fail';
             }
         } else {
             $imageErr = "Only .png, .jpg, .jpeg supported";
             $flag = false;
+            $_SESSION['AddStatus'] = 'fail';
         }
     }
 
@@ -188,10 +211,14 @@ if (isset($_POST['submit'])) {
         if (mysqli_query($conn, $sql)) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddStatus'] = 'success';
+            // if everthing if well then redirecting the user to login page
             header("Location: adminDashboard.php");
-        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+        } else {
+            echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+            $_SESSION['AddStatus'] = 'fail';
+        }
+
         mysqli_close($conn);
-        // if everthing if well then redirecting the user to login page
     }
 }
 
@@ -213,31 +240,41 @@ if (isset($_POST['submit'])) {
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-        <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
                 <img src="../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
-    
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <a class="nav-link" aria-current="page" href="home.php">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminDashboard.php">Back</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-   
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <!-- Here http://localhost/php_training/Pages is static for the moment -->
+                    <a class="nav-link" aria-current="page" href="home.php">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
         </div>
     </nav>
     <!-- nav ends -->
     <h2 class="text-center mt-2">New <span class='text-info'>Employee</span> Registration</h2>
     <div class="container mt-3">
         <div class="col-md-7">
+        <!-- toast after fail addition -->
+        <?php if (isset($_SESSION['AddStatus']) && $_SESSION['AddStatus'] == 'fail') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white ">
+                    <strong class="me-auto">Something went wrong!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['AddStatus'] = '' ?>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post" enctype="multipart/form-data">
                 <!-- <div class="mb-3">
                     <label class="col-form-label"> Register as</label>

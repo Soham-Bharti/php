@@ -29,7 +29,7 @@ if (isset($desiredUserId)) {
         }
     }
 } else {
-    echo "User Professional Info has more than 1 entry kindly check";
+    // echo "User Professional Info has more than 1 entry kindly check";
 }
 
 
@@ -59,12 +59,14 @@ if (isset($_POST['update'])) {
         if ($bondPeriodMonths >= 12) {
             $bondPeriodErr = '* Increase year when months are more than 11';
             $flag = false;
+            $_SESSION['updateEmployeeInfoStatus'] = 'fail';
         }
     }
 
     if (empty($joiningDate) || $joiningDate == '') {
         $joiningDateErr = 'Required';
         $flag = false;
+        $_SESSION['updateEmployeeInfoStatus'] = 'fail';
     } else {
         $sql = "SELECT created_at from users where id = '$id' and deleted_at is null order by created_at limit 1";
         $result = mysqli_query($conn, $sql);
@@ -76,25 +78,30 @@ if (isset($_POST['update'])) {
                 // echo $registrationDate; 
             }
         } else {
+            $_SESSION['updateEmployeeInfoStatus'] = 'fail';
             echo "No record found for the user, may be user is no more existing in db";
         };
         if ($registrationDate > $joiningDate) {
             $joiningDateErr = "Joining Date is earlier than Registration Date";
             $flag = false;
+            $_SESSION['updateEmployeeInfoStatus'] = 'fail';
         }
     }
 
     if (empty($salary)) {
         $salaryErr = 'Required';
         $flag = false;
+        $_SESSION['updateEmployeeInfoStatus'] = 'fail';
     }
 
     if (empty($noticePeriodDays) && empty($noticePeriodMonths)) {
         $noticePeriodErr = 'Required';
         $flag = false;
+        $_SESSION['updateEmployeeInfoStatus'] = 'fail';
     } else if ($noticePeriodDays >= 30) {
         $noticePeriodErr = 'Increase month when days are more than 29';
         $flag = false;
+        $_SESSION['updateEmployeeInfoStatus'] = 'fail';
     }
 
     if ($flag) {
@@ -117,16 +124,16 @@ if (isset($_POST['update'])) {
 
         $result1 = mysqli_query($conn, $sql1);
         if ($result1) {
-            echo "<br>Record updated successfully<br>";
+            // echo "<br>Record updated successfully<br>";
+            // if everthing if well then redirecting the admin to ldashboard
+            $_SESSION['updateEmployeeInfoStatus'] = 'success';
+            header("Location: adminDashboard.php");
+            // echo "Update success";
         } else {
-            echo "<br>Error occurred while updated into table : " . mysqli_error($conn); // Print any errors returned by MySQL
+            // echo "<br>Error occurred while updated into table : " . mysqli_error($conn); // Print any errors returned by MySQL
+            $_SESSION['updateEmployeeInfoStatus'] = 'fail';
         }
         mysqli_close($conn); // Close the database connection
-
-        // if everthing if well then redirecting the admin to ldashboard
-        $_SESSION['updateEmployeeInfoStatus'] = 'success';
-        header("Location: adminDashboard.php");
-        // echo "Update success";
     }
 }
 
@@ -166,6 +173,16 @@ if (isset($_POST['update'])) {
     <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employees' Professional Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
+            <!-- toast after fail updation -->
+            <?php if (isset($_SESSION['updateEmployeeInfoStatus']) && $_SESSION['updateEmployeeInfoStatus'] == 'fail') { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-danger text-white ">
+                        <strong class="me-auto">Something went wrong!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            <?php }
+            $_SESSION['updateEmployeeInfoStatus'] = '' ?>
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">
                 <?php
                 $sql = "select name, profile_url, email from users where id = '$desiredUserId' and deleted_at is null";

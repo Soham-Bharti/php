@@ -53,22 +53,29 @@ if (isset($_POST['submit'])) {
         // sending data to data base  
         $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
-            echo "<br>Record updated successfully<br>";
-        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-
-        echo "Successfully updated with check out time";
+            // echo "<br>Record updated successfully<br>";
+            $_SESSION['UpdateEmpTrackStatus'] = 'success';
+            $desiredLocation = "trackEmployee.php?id=$uId";
+            header("Location: $desiredLocation");
+            // echo "Successfully updated with check out time";
+        } else {
+            echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+            $_SESSION['UpdateEmpTrackStatus'] = 'fail';
+        }
     } else {
         $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
-            echo "<br>Record updated successfully<br>";
-        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-
-        echo "Successfully updated without checkout time";
+            // echo "<br>Record updated successfully<br>";
+            $_SESSION['UpdateEmpTrackStatus'] = 'success';
+            $desiredLocation = "trackEmployee.php?id=$uId";
+            header("Location: $desiredLocation");
+            // echo "Successfully updated without checkout time";
+        } else {
+            // echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+            $_SESSION['UpdateEmpTrackStatus'] = 'fail';
+        }
     }
     mysqli_close($conn);
-    $_SESSION['UpdateEmpTrackStatus'] = 'success';
-    $desiredLocation = "trackEmployee.php?id=$uId";
-    header("Location: $desiredLocation");
 }
 
 ?>
@@ -112,6 +119,16 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employee Tracking Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
+            <!-- toast after fail updation -->
+            <?php if (isset($_SESSION['UpdateEmpTrackStatus']) && $_SESSION['UpdateEmpTrackStatus'] == 'fail') { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-danger text-white ">
+                        <strong class="me-auto">Something went wrong!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            <?php }
+            $_SESSION['UpdateEmpTrackStatus'] = '' ?>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
                 <div class="mb-3">
                     <label class="col-form-label">Date</label>
