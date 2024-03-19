@@ -26,8 +26,8 @@ if ($_SESSION['role'] !== 'admin') {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="home.php" class="svg text-decoration-none text-success d-flex align-items-center">
-                <img src="../Images/emp.svg" alt='svg here' class='w-25'>
-                <span class=' fw-bold'>EmployeeTracker.com</span>
+                <img src="../Images/mainIcon.gif" alt='svg here'>
+                <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
 
                 <ul class="navbar-nav mb-2 me-auto mb-lg-0">
@@ -194,7 +194,7 @@ if ($_SESSION['role'] !== 'admin') {
         <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
 
         <a href="home.php" class="col-1 svg">
-            <img src="../Images/emp.svg" alt='svg here'>
+            <img src="../Images/mainIcon.gif" alt='svg here'>
         </a>
 
         <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
