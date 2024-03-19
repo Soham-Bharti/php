@@ -21,6 +21,9 @@ if (isset($desiredUserId)) {
             $city = $row['city'];
             $state = $row['state'];
             $profile = $row['profile_url'];
+            if (empty($profile)) {
+                $profile = 'defaultImg.webp';
+            }
         }
     }
 } else {

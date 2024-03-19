@@ -137,6 +137,7 @@ if ($_SESSION['role'] !== 'admin') {
                     <th>Action</th>
                     <th>Action</th>
                     <th>Action</th>
+                    <th>Action</th>
                 </tr>
                 <?php
                 $sql = "SELECT id, profile_url, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
@@ -154,6 +155,9 @@ if ($_SESSION['role'] !== 'admin') {
                             <td><?php echo $row["email"] ?></td>
                             <td><?php echo $row["gender"] ?></td>
                             <td><?php echo $row["mobile"] ?></td>
+                            <td>
+                                <a href="viewEmployeeAllDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-info text-white btn-sm">View</a>
+                            </td>
                             <!-- <td class='w-25'><?php echo $row["date_of_birth"] ?></td> -->
                             <td>
                                 <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">

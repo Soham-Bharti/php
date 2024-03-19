@@ -64,7 +64,7 @@ if (isset($_POST['add'])) {
         } else {
             echo "No record found for the user, may be user is no more existing in db";
         };
-        if ($registrationDate >= $joiningDate) {
+        if ($registrationDate > $joiningDate) {
             $joiningDateErr = "Joining Date is earlier than Registration Date";
             $flag = false;
         }
@@ -137,10 +137,6 @@ if (isset($_POST['add'])) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <a class="nav-link" aria-current="page" href="home.php">Logout</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="adminDashboard.php">Back</a>
                     </li>
                 </ul>
@@ -164,6 +160,9 @@ if (isset($_POST['add'])) {
                         $name = $row['name'];
                         $email = $row['email'];
                         $profile = $row['profile_url'];
+                        if (empty($profile)) {
+                            $profile = '../Images/defaultImg.webp';
+                        }
                     }
                 }
                 ?>
@@ -182,7 +181,7 @@ if (isset($_POST['add'])) {
 
                 <div class="mb-3">
                     <label class="form-label">Joining Date <span>* <?php echo $joiningDateErr ?></span></label>
-                    <input type="date" name="joiningDate" class="form-control" placeholder="9876543210" maxlength="10" value='<?php echo $mobile ?>'>
+                    <input type="date" name="joiningDate" class="form-control" max="<?php echo $date = date("Y-m-d") ?>">
                 </div>
 
                 <div class="mb-3">

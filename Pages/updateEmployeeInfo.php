@@ -78,7 +78,7 @@ if (isset($_POST['update'])) {
         } else {
             echo "No record found for the user, may be user is no more existing in db";
         };
-        if ($registrationDate >= $joiningDate) {
+        if ($registrationDate > $joiningDate) {
             $joiningDateErr = "Joining Date is earlier than Registration Date";
             $flag = false;
         }
@@ -152,10 +152,6 @@ if (isset($_POST['update'])) {
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <a class="nav-link" aria-current="page" href="home.php">Logout</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="adminDashboard.php">Back</a>
                     </li>

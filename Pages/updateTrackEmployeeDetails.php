@@ -5,10 +5,14 @@ require '../config/dbConnect.php';
 if ($_SESSION['role'] !== 'admin') {
     header('Location: login.php');
 }
-if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
-if (isset($_GET['trackId'])) $desiredTrackId = $_GET['trackId'];
+if (isset($_GET['id'])) {
+    $desiredUserId = $_GET['id'];
+}
+if (isset($_GET['trackId'])) {
+    $desiredTrackId = $_GET['trackId'];
+}
 
-$checkInTime = "";
+$checkInTime = $originalDate = $originDate = $uId = $tId = "";
 $checkOutTime = null;
 $checkInTimeErr = $checkOutTimeErr = "";
 
@@ -40,26 +44,30 @@ if (isset($_POST['submit'])) {
     // print_r($_POST);
     $checkInTime = $_POST['checkInTime'];
     $checkOutTime = $_POST['checkOutTime'];
+    $originDate = $_POST['originDate'];
+    $uId = $_POST['uId'];
+    $tId = $_POST['tId'];
+
     var_dump($checkOutTime);
     if ($checkOutTime != '') {
         // sending data to data base  
-        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originalDate $checkInTime', check_out_time = '$originalDate $checkOutTime', updated_at = now() where user_id = '$desiredUserId' and id = '$desiredTrackId' and deleted_at is null";
+        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
             echo "<br>Record updated successfully<br>";
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
 
-        // echo "Successfully updated with check out time";
+        echo "Successfully updated with check out time";
     } else {
-        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originalDate $checkInTime', updated_at = now() where user_id = '$desiredUserId' and id = '$desiredTrackId' and deleted_at is null";
+        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
             echo "<br>Record updated successfully<br>";
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
 
-        // echo "Successfully updated without checkout time";
+        echo "Successfully updated without checkout time";
     }
     mysqli_close($conn);
     $_SESSION['UpdateEmpTrackStatus'] = 'success';
-    $desiredLocation = "trackEmployee.php?id=$desiredUserId";
+    $desiredLocation = "trackEmployee.php?id=$uId";
     header("Location: $desiredLocation");
 }
 
@@ -115,6 +123,9 @@ if (isset($_POST['submit'])) {
                     <label class="form-label">Day</label>
                     <input type="text" class="form-control user-select-none" name="day" value='<?php echo $day ?>' disabled>
                 </div>
+                <input type="hidden" class="form-control user-select-none" name="originDate" value='<?php echo $originalDate ?>'>
+                <input type="hidden" class="form-control user-select-none" name="uId" value='<?php echo $desiredUserId ?>'>
+                <input type="hidden" class="form-control user-select-none" name="tId" value='<?php echo $desiredTrackId ?>'>
 
                 <div class="mb-3">
                     <label class="form-label">Check In Time<span>* <?php echo $checkInTimeErr ?></span></label>
