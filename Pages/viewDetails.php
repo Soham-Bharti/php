@@ -153,14 +153,16 @@ GROUP BY
                 </div>
 
                 <?php
-                $sql1 = "SELECT DAY(LAST_DAY(NOW())) AS days_in_current_month;";
-                $result = mysqli_query($conn, $sql1);
-                $row = mysqli_fetch_assoc($result);
-                $numberOfDays = $row['days_in_current_month'];
-                $perDaySalary = $salary / $numberOfDays;
-                $perHourSalary = $perDaySalary / 24;
-                $perMinuteSalary = $perHourSalary / 60;
-                $desiredSalaryToPay = round($perMinuteSalary * ($total_seconds / 60), 2);
+                if ($salary != 'N/A') {
+                    $sql1 = "SELECT DAY(LAST_DAY(NOW())) AS days_in_current_month;";
+                    $result = mysqli_query($conn, $sql1);
+                    $row = mysqli_fetch_assoc($result);
+                    $numberOfDays = $row['days_in_current_month'];
+                    $perDaySalary = $salary / $numberOfDays;
+                    $perHourSalary = $perDaySalary / 24;
+                    $perMinuteSalary = $perHourSalary / 60;
+                    $desiredSalaryToPay = round($perMinuteSalary * ($total_seconds / 60), 2);
+                }
                 ?>
                 <div class="mb-3 d-flex align-items-center justify-content-center">
                     <label class="form-label w-50 text-center">Salary to debit (till today) - </label>

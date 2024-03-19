@@ -17,9 +17,10 @@ if ($_SESSION['role'] !== 'admin') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Dashboard</title>
     <link rel="stylesheet" href="../Styles/adminDashboard.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 
 <body>
@@ -30,21 +31,16 @@ if ($_SESSION['role'] !== 'admin') {
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
 
-                <ul class="navbar-nav mb-2 me-auto mb-lg-0">
-                    <li class="nav-item">
-                        <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                        <!-- <a class="nav-link" aria-current="page" href="<?php echo "http://localhost/php_training/Pages" ?>">Home</a> -->
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">Logout</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-         
-            </div>
+            <ul class="navbar-nav mb-2 me-auto mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php">Logout</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
         </div>
     </nav>
     <!-- nav ends -->
@@ -123,22 +119,24 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
         <h2 class="text-center mt-5">Showing <span class='text-primary'>employees'</span> details</h2>
         <div class="mt-3">
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Profile</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Gender</th>
-                    <th>Mobile</th>
-                    <!-- <th>Date of Birth</th> -->
-                    <th>Action</th>
-                    <th>Action</th>
-                    <th>Action</th>
-                    <th>Action</th>
-                    <th>Action</th>
-                    <th>Action</th>
-                </tr>
+            <table id="adminDashboardEmployeesTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <!-- <th>Profile</th> -->
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Mobile</th>
+                        <!-- <th>Date of Birth</th> -->
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
                 <?php
                 $sql = "SELECT id, profile_url, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
                 $result = mysqli_query($conn, $sql);
@@ -148,12 +146,12 @@ if ($_SESSION['role'] !== 'admin') {
                 ?>
                         <tr>
                             <td><?php echo $row["id"] ?></td>
-                            <td class="w-25">
+                            <!-- <td class="w-25">
                                 <img src="<?php echo $row["profile_url"] ? "../Images/" . $row["profile_url"] : "../Images/defaultImg.webp" ?>" alt="No profile to show" class="d-inline-block w-50 img-thumbnail object-fit-contain border rounded-circle ">
-                            </td>
-                            <td class='w-25'><?php echo $row["name"] ?></td>
+                            </td> -->
+                            <td class='w-50'><?php echo $row["name"] ?></td>
                             <td><?php echo $row["email"] ?></td>
-                            <td><?php echo $row["gender"] ?></td>
+                            <td><?php echo ucfirst($row["gender"]) ?></td>
                             <td><?php echo $row["mobile"] ?></td>
                             <td>
                                 <a href="viewEmployeeAllDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-info text-white btn-sm">View</a>
@@ -201,7 +199,12 @@ if ($_SESSION['role'] !== 'admin') {
 
     </footer>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+    <script>
+        new DataTable('#adminDashboardEmployeesTable');
+    </script>
 </body>
 
 </html>

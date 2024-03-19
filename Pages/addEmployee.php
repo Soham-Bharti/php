@@ -187,12 +187,12 @@ if (isset($_POST['submit'])) {
         }
         if (mysqli_query($conn, $sql)) {
             // echo "<br>New record inserted successfully<br>";
+            $_SESSION['AddStatus'] = 'success';
+            header("Location: adminDashboard.php");
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page
-        $_SESSION['AddStatus'] = 'success';
-        header("Location: adminDashboard.php");
-    } else echo "THERE WAS AN ERROR adding new employee";
+    }
 }
 
 ?>
