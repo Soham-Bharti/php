@@ -110,8 +110,8 @@ if (isset($_POST['delete'])) {
                 from users u
                 inner join employeesProjects ep
                 on u.id = ep.user_id
-                where u.role = 'employee' and ep.deleted_at is null 
-                order by id";
+                where u.role = 'employee' and ep.project_id = '$desiredProjectId' and ep.deleted_at is null 
+                order by u.id";
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -126,7 +126,7 @@ if (isset($_POST['delete'])) {
                         </tr>
                 <?php
                     }
-                }
+                }else ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No members are assigned yet!";?></span><?php
                 ?>
             </table>
       
