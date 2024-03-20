@@ -194,20 +194,12 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
 
     </div>
+    
+    <!-- footer here -->
+    <?php include('../views/footer.php');?>
+    <!-- footer ends -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-    <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
-        <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
-
-        <a href="../home.php" class="col-1 svg">
-            <img src="../../Images/mainIcon.gif" alt='svg here'>
-        </a>
-
-        <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
-
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>

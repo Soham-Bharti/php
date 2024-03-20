@@ -321,16 +321,9 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
-    <footer class="d-flex flex-wrap justify-content-between align-items-center m-3 p-3 border-top">
-        <p class="mb-0 text-body-secondary">Copyright &copy; 2023 - <?php echo date("Y") ?>, All Rights Reserved</p>
-
-        <a href="../home.php" class="col-1 svg">
-            <img src="../../Images/mainIcon.gif" alt='svg here'>
-        </a>
-
-        <p class=" mb-0 text-body-secondary">Handcrafted & Made with ❤️ - <a href="https://soham-bharti.netlify.app/" target="_blank" class='fw-bold text-decoration-none cursor-pointer text-danger'>Soham Bharti</a></p>
-
-    </footer>
+    <!-- footer here -->
+    <?php include('../views/footer.php');?>
+    <!-- footer ends -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
