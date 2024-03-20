@@ -59,7 +59,7 @@ if (isset($_POST['delete'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
@@ -97,39 +97,39 @@ if (isset($_POST['delete'])) {
 
     <h2 class="text-center mt-2"><span class='text-info'>All</span> Member/s in <span text-danger><?php echo $title ?></span> Project</h2>
     <div class="container mt-5 px-5 w-100">
-            <table>
-                <thead>
-                    <tr>
-                        <th>User Id</th>
-                        <th>Name</th>
-                        <th>Added on</th>
-                    </tr>
-                </thead>
-                <?php
-                $sql = "SELECT u.id as id, u.name as name, ep.created_at as addedOn
+        <table>
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>Name</th>
+                    <th>Added on</th>
+                </tr>
+            </thead>
+            <?php
+            $sql = "SELECT u.id as id, u.name as name, ep.created_at as addedOn
                 from users u
                 inner join employeesProjects ep
                 on u.id = ep.user_id
                 where u.role = 'employee' and ep.project_id = '$desiredProjectId' and ep.deleted_at is null 
                 order by u.id";
-                $result = mysqli_query($conn, $sql);
+            $result = mysqli_query($conn, $sql);
 
-                if (mysqli_num_rows($result) > 0) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $dateTime = $row["addedOn"];
-                        $time = strtotime($dateTime);
-                ?>
-                        <tr>
-                            <td><?php echo $row["id"] ?></td>
-                            <td><?php echo $row["name"] ?></td>
-                            <td><?php echo date('d M Y', $time); ?></td>
-                        </tr>
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $dateTime = $row["addedOn"];
+                    $time = strtotime($dateTime);
+            ?>
+                    <tr>
+                        <td><?php echo $row["id"] ?></td>
+                        <td><?php echo $row["name"] ?></td>
+                        <td><?php echo date('d M Y', $time); ?></td>
+                    </tr>
                 <?php
-                    }
-                }else ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No members are assigned yet!";?></span><?php
-                ?>
-            </table>
-      
+                }
+            } else { ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No members are assigned yet!"; ?></span><?php
+                                                                                                                                    } ?>
+        </table>
+
     </div>
 
     <!-- footer here -->
