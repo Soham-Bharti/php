@@ -1,0 +1,108 @@
+<?php
+session_start();
+require '../../config/dbConnect.php';
+
+// print_r($_SESSION);
+if ($_SESSION['role'] !== 'emp') {
+    header('Location: ../common/login.php');
+}else{
+    if(isset($_SESSION["id"])){
+        $desiredUserId = $_SESSION["id"];
+    }else{
+        header('Location: ../common/login.php');
+    }
+}
+
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <link rel="stylesheet" href="../../Styles/viewProjects.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+
+</head>
+
+<body class = 'd-flex flex-column min-vh-100'>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+                <img src="../../Images/mainIcon.gif" alt='svg here'>
+                <span class='fw-bold text-success'>EmployeeTracker.com</span>
+            </a>
+
+            <ul class="navbar-nav mb-2 me-auto mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="userDashboard.php">Back</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+        </div>
+    </nav>
+    <!-- nav ends -->
+    <div class="container mt-5 px-5">
+        <h2 class="text-center mt-5">Showing your <span class='text-primary'>assigned Projects'</span> details</h2>
+        <div class="mt-3">
+            <table id="projectsTable" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Project Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Assigned on</th>
+                    </tr>
+                </thead>
+                <?php
+                $sql = "SELECT p.id as id, p.title as title, p.description as description, ep.created_at as assigned_on
+                from projects as p
+                inner join employeesProjects as ep
+                on p.id = ep.project_id
+                where ep.deleted_at is null and p.deleted_at is null and ep.user_id = '$desiredUserId'
+                order by ep.created_at desc;";
+                $result = mysqli_query($conn, $sql);
+
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $dateTime = $row["assigned_on"];
+                        $time = strtotime($dateTime);
+                ?>
+                        <tr>
+                            <td><?php echo $row["id"] ?></td>
+                            <td><?php echo $row["title"] ?></td>
+                            <td><?php echo $row["description"] == '' ? 'N/A' : $row["description"] ?></td>
+                            <td><?php echo date('d M Y', $time); ?></td>
+                        </tr>
+                <?php
+                    }
+                }else { ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No members are assigned yet!"; ?></span><?php
+                } ?>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- footer here -->
+    <?php include('../views/footer.php'); ?>
+    <!-- footer ends -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+    <script>
+        new DataTable('#projectsTable');
+    </script>
+</body>
+
+</html>
