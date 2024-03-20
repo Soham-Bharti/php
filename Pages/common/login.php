@@ -1,9 +1,7 @@
 <?php
 session_start();
 require_once '../../config/dbConnect.php';
-unset($_SESSION['userName']);
-unset($_SESSION['id']);
-unset($_SESSION['role']);
+$_SESSION['id'] = '';
 
 $email = $password = "";
 $emailErr = $passwordErr = $invalidCredentialsErr = "";
@@ -53,10 +51,10 @@ if (isset($_POST['submit'])) {
             $_SESSION['userName']   =  $userName;
             $_SESSION['id']     =  $userId;
             if ($role === 'admin') {
-                $_SESSION['role']     =  'admin';
+                $_SESSION['role'] =  'admin';
                 header('Location: ../admin/adminDashboard.php');
             } else {
-                $_SESSION['role']     =  'emp';
+                $_SESSION['role']  =  'emp';
                 header('Location: ../user/userDashboard.php');
             }
         } else {
@@ -90,10 +88,6 @@ if (isset($_POST['submit'])) {
 
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <!-- Here http://localhost/php_training/Pages is static for the moment -->
-                    <a class="nav-link" aria-current="page" href="home.php">Home</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="home.php">Back</a>
                 </li>
