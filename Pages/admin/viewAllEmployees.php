@@ -33,13 +33,10 @@ if ($_SESSION['role'] !== 'admin') {
 
             <ul class="navbar-nav mb-2 me-auto mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="../common/login.php">Logout</a>
+                    <a class="nav-link" href="adminDashboard.php">Back</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="viewAllEmployees.php">Employees</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="viewAllProjects.php">Projects</a>
+                    <a class="nav-link" href="addEmployee.php">Add Employee</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -50,7 +47,6 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to the <span class='text-info'>admin</span> dashboard</h2>
 
     <!-- toast after successful added -->
     <?php if (isset($_SESSION['AddStatus']) && $_SESSION['AddStatus'] == 'success') { ?>
@@ -105,26 +101,86 @@ if ($_SESSION['role'] !== 'admin') {
 
     <div class="container mt-5 px-5">
         <div class="d-flex justify-content-between align-items-center">
-            <div class='fs-4'>
-                <?php
-                if (isset($_SESSION['userName'])) {
-                    $user = $_SESSION['userName'];
-                    echo "Admin: <b>" . ucwords($user) . "</b>";
-                } else {
-                    echo "Session expired - login again to see your details";
-                    header("Location: ../common/login.php");
-                }
-                ?>
-            </div>
             <div class="buttons d-flex justify-content-between gap-3 align-items-center">
                 <!-- <form action="addEmployee.php" method="POST">
                     <input type="submit" name="add-submit" class="btn btn-success btn-lg" value="Add Employee">
                 </form> -->
-
             </div>
         </div>
-        <!-- <h2 class="text-center mt-5">Showing <span class='text-primary'>analytical</span> details</h2> -->
+        <h2 class="text-center">Showing <span class='text-primary'>employees'</span> details</h2>
         <div class="mt-3">
+            <table id="adminDashboardEmployeesTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <!-- <th>Profile</th> -->
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Mobile</th>
+                        <!-- <th>Date of Birth</th> -->
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <?php
+                $sql = "SELECT id, profile_url, name, email, gender, mobile, date_of_birth from users where role = 'employee' and deleted_at is null order by id";
+                $result = mysqli_query($conn, $sql);
+
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                ?>
+                        <tr>
+                            <td><?php echo $row["id"] ?></td>
+                            <!-- <td class="w-25">
+                                <img src="<?php echo $row["profile_url"] ? "../../Images/" . $row["profile_url"] : "../../Images/defaultImg.webp" ?>" alt="No profile to show" class="d-inline-block w-50 img-thumbnail object-fit-contain border rounded-circle ">
+                            </td> -->
+                            <td class='w-50'><?php echo $row["name"] ?></td>
+                            <td><?php echo $row["email"] ?></td>
+                            <td><?php echo ucfirst($row["gender"]) ?></td>
+                            <td><?php echo $row["mobile"] ?></td>
+                            <td>
+                                <a href="viewEmployeeAllDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-info text-white btn-sm">View</a>
+                            </td>
+                            <!-- <td class='w-25'><?php echo $row["date_of_birth"] ?></td> -->
+                            <td>
+                                <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
+                                    <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
+                                    <input type="submit" name='update' class="btn btn-primary btn-sm" value='Update' />
+                                </form> -->
+                                <a href="updateEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-primary btn-sm">Update</a>
+                            </td>
+                            <td>
+                                <a href="trackEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-warning text-muted btn-sm">Track</a>
+                            </td>
+                            <td>
+                                <a href="workingHourEmployeeDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-success btn-sm">Working</a>
+                            </td>
+                            <?php
+                            $editEmployeeInfo = false;
+                            $sql2 = "SELECT * FROM employeeDetails WHERE user_id = " . $row["id"] . " AND deleted_at IS NULL";
+                            $result2 = mysqli_query($conn, $sql2);
+                            // print_r($result);
+                            if (mysqli_num_rows($result2) > 0) {
+                                $editEmployeeInfo = true;
+                            }
+                            ?>
+                            <td class='w-25'>
+                                <a href="<?php echo $editEmployeeInfo ? 'updateEmployeeInfo.php?id=' . $row["id"] : 'addEmployeeInfo.php?id=' . $row["id"]; ?>" class="btn btn-dark btn-sm">Add/Edit Info</a>
+                            </td>
+                            <td>
+                                <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                <?php
+                    }
+                }
+                ?>
+            </table>
         </div>
 
     </div>

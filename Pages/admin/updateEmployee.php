@@ -3,7 +3,7 @@ session_start();
 require '../../config/dbConnect.php';
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../common/login.php');
 }
 $nameErr = $emailErr = $dobErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
@@ -193,7 +193,7 @@ if (isset($_POST['submit'])) {
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page
         $_SESSION['UpdateStatus'] = 'success';
-        header("Location: adminDashboard.php");
+        header("Location: viewAllEmployees.php");
         // echo "Successfully updated";
     }
 }
@@ -220,7 +220,7 @@ if (isset($_POST['submit'])) {
             </a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                    <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">

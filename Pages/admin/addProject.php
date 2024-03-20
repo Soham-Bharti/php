@@ -2,7 +2,7 @@
 session_start();
 require '../../config/dbConnect.php';
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../common/login.php');
 }
 $description = $title = "";
 $titleErr = $descErr = "";
@@ -25,8 +25,8 @@ if (isset($_POST['submit'])) {
         $nameErr = 'Required';
         $flag = false;
     } else {
-        if (!preg_match("/^[a-zA-Z-' ]*$/", $title)) {
-            $titleErr = "Only letters and white space allowed";
+        if (!preg_match("/^[a-zA-Z0-9-' ]*$/", $title)) {
+            $titleErr = "Only letters, white space and numbers allowed";
             $flag = false;
         }
     }
@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
         if (mysqli_query($conn, $sql)) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddProjectStatus'] = 'success';
-            header("Location: adminDashboard.php");
+            header("Location: viewAllProjects.php");
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
     }
@@ -75,7 +75,7 @@ if (isset($_POST['submit'])) {
     
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="adminDashboard.php">Back</a>
+                        <a class="nav-link" href="viewAllProjects.php">Back</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">

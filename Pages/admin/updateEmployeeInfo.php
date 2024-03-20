@@ -3,7 +3,7 @@ session_start();
 require '../../config/dbConnect.php';
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../common/login.php');
 }
 $techErr = $joiningDateErr = $salaryErr = $joiningDateErr = $bondPeriodMonthsErr = $noticePeriodDaysErr = $noticePeriodErr = "";
 $tech = $joiningDate = $salary = $joiningDate = $noticePeriodDays = $noticePeriodMonths = $bondPeriodYears = $bondPeriodMonths = "";
@@ -125,7 +125,7 @@ if (isset($_POST['update'])) {
 
         // if everthing if well then redirecting the admin to ldashboard
         $_SESSION['updateEmployeeInfoStatus'] = 'success';
-        header("Location: adminDashboard.php");
+        header("Location: viewAllEmployees.php");
         // echo "Update success";
     }
 }
@@ -152,7 +152,7 @@ if (isset($_POST['update'])) {
             </a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                    <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">

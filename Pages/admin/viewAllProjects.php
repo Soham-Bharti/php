@@ -4,7 +4,7 @@ require '../../config/dbConnect.php';
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../common/login.php');
 }
 
 ?>
@@ -23,7 +23,7 @@ if ($_SESSION['role'] !== 'admin') {
 
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
@@ -34,6 +34,9 @@ if ($_SESSION['role'] !== 'admin') {
             <ul class="navbar-nav mb-2 me-auto mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="adminDashboard.php">Back</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="addProject.php">Add Project</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -57,7 +60,17 @@ if ($_SESSION['role'] !== 'admin') {
                 </div>
             <?php }
             $_SESSION['addProjectMemberStatus'] = '' ?>
-            <table id="projectsTable" class="table table-striped">
+            <!-- toast after successful Project addition -->
+            <?php if (isset($_SESSION['AddProjectStatus']) && $_SESSION['AddProjectStatus'] == 'success') { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-success text-white ">
+                        <strong class="me-auto">Project added successfully!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            <?php }
+            $_SESSION['AddProjectStatus'] = '' ?>
+            <table id="projectsTable" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>ID</th>

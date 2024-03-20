@@ -2,7 +2,7 @@
 session_start();
 require '../../config/dbConnect.php';
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../common/login.php');
 }
 $name = $email = $dob = $confirm_password = $password = $gender = $mobile = $image = $address = "";
 $nameErr = $emailErr = $dobErr = $confirm_passwordErr = $passwordErr = $genderErr = $mobileErr = $imageErr = $cityErr = $stateErr = $addressErr = "";
@@ -188,7 +188,7 @@ if (isset($_POST['submit'])) {
         if (mysqli_query($conn, $sql)) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddStatus'] = 'success';
-            header("Location: adminDashboard.php");
+            header("Location: viewAllEmployees.php");
         } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page

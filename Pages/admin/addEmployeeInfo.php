@@ -3,7 +3,7 @@ session_start();
 require '../../config/dbConnect.php';
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../common/login.php');
 }
 
 
@@ -104,7 +104,7 @@ if (isset($_POST['add'])) {
 
         // if everthing if well then redirecting the admin to ldashboard
         $_SESSION['addEmployeeInfoStatus'] = 'success';
-        header("Location: adminDashboard.php");
+        header("Location: viewAllEmployees.php");
     }
 }
 
@@ -131,7 +131,7 @@ if (isset($_POST['add'])) {
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                    <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">

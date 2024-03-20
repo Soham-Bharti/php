@@ -3,7 +3,7 @@ session_start();
 require '../../config/dbConnect.php';
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../common/login.php');
 }
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
@@ -22,7 +22,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
@@ -32,7 +32,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="adminDashboard.php">Back</a>
+                    <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="addTrackEmployee.php?id=<?php echo $desiredUserId ?>">Add Track</a>
@@ -98,6 +98,16 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
         <?php }
         $_SESSION['UpdateEmpTrackStatus'] = '' ?>
         <!-- toast ends -->
+        <!-- toast after check-in limit reached -->
+        <?php if (isset($_SESSION['checkInLimitMessage']) && $_SESSION['checkInLimitMessage'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white ">
+                    <strong class="me-auto">Oops! Check-in limit was reached!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['checkInLimitMessage'] = '' ?>
         <!-- toast after successful added -->
         <?php if (isset($_SESSION['AddEmpTrackStatus']) && $_SESSION['AddEmpTrackStatus'] == 'success') { ?>
             <div class="toast show m-auto hide">
@@ -179,7 +189,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     </div>
 
     <!-- footer here -->
-    <?php include('../views/footer.php');?>
+    <?php include('../views/footer.php'); ?>
     <!-- footer ends -->
 
 </body>
