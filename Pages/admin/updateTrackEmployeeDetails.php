@@ -49,33 +49,28 @@ if (isset($_POST['submit'])) {
     $tId = $_POST['tId'];
 
     var_dump($checkOutTime);
+    $desiredLocation = "trackEmployee.php?id=$uId";
     if ($checkOutTime != '') {
         // sending data to data base  
         $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
-            // echo "<br>Record updated successfully<br>";
-            $_SESSION['UpdateEmpTrackStatus'] = 'success';
-            $desiredLocation = "trackEmployee.php?id=$uId";
-            header("Location: $desiredLocation");
-            // echo "Successfully updated with check out time";
-        } else {
-            echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-            $_SESSION['UpdateEmpTrackStatus'] = 'fail';
-        }
+            echo "<br>Record updated successfully<br>";
+        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+        echo "Successfully updated with check out time";
+        $_SESSION['UpdateEmpTrackStatus'] = 'success';
+        header("Location: $desiredLocation");
     } else {
-        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
+        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = null, updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
         if (mysqli_query($conn, $sql2)) {
-            // echo "<br>Record updated successfully<br>";
-            $_SESSION['UpdateEmpTrackStatus'] = 'success';
-            $desiredLocation = "trackEmployee.php?id=$uId";
-            header("Location: $desiredLocation");
-            // echo "Successfully updated without checkout time";
-        } else {
-            // echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-            $_SESSION['UpdateEmpTrackStatus'] = 'fail';
-        }
+            echo "<br>Record updated successfully<br>";
+        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+
+        echo "Successfully updated without checkout time";
+        $_SESSION['UpdateEmpTrackStatus'] = 'success';
+        header("Location: $desiredLocation");
     }
     mysqli_close($conn);
+
 }
 
 ?>
