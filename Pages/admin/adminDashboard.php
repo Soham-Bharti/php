@@ -23,10 +23,10 @@ if ($_SESSION['role'] !== 'admin') {
 
 </head>
 
-<body>
+<body class = 'd-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="../home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
                 <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
@@ -96,6 +96,16 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
     <?php }
     $_SESSION['updateEmployeeInfoStatus'] = '' ?>
+    <!-- toast after successful Project addition -->
+    <?php if (isset($_SESSION['AddProjectStatus']) && $_SESSION['AddProjectStatus'] == 'success') { ?>
+        <div class="toast show m-auto hide">
+            <div class="toast-header bg-success text-white ">
+                <strong class="me-auto">Project added successfully!</strong>
+                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    <?php }
+    $_SESSION['AddProjectStatus'] = '' ?>
 
     <div class="container mt-5 px-5">
         <div class="d-flex justify-content-between align-items-center">
@@ -115,6 +125,8 @@ if ($_SESSION['role'] !== 'admin') {
                     <input type="submit" name="add-submit" class="btn btn-success btn-lg" value="Add Employee">
                 </form> -->
                 <a href="addEmployee.php" class="btn btn-success btn-lg">Add Employee</a>
+                <a href="addProject.php" class="btn btn-secondary btn-lg">Add Project</a>
+                <a href="viewAllProjects.php" class="btn btn-warning text-muted btn-lg">Show Projects</a>
             </div>
         </div>
         <h2 class="text-center mt-5">Showing <span class='text-primary'>employees'</span> details</h2>
