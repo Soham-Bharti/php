@@ -7,7 +7,7 @@ if ($_SESSION['role'] !== 'emp') {
 }
 if (isset($_SESSION['id'])) {
     $desiredUserId = $_SESSION['id'];
-} else header('Location: ../home.php');
+} else header('Location: ../common/home.php');
 
 if (isset($_POST['check-in-submit'])) {
     echo 'check-in-submit clicked';
@@ -33,11 +33,11 @@ if (isset($_POST['check-out-submit'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body>
+<body class = 'd-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
 
-            <a href="../home.php" class="svg text-decoration-none d-flex align-items-center">
+            <a href="../common/home.php" class="svg text-decoration-none d-flex align-items-center">
                 <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='text-success fw-bold'>EmployeeTracker.com</span>
             </a>

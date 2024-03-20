@@ -23,10 +23,10 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body>
+<body class = 'd-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
-            <a href="../home.php" class="svg text-decoration-none text-success d-flex align-items-center">
+            <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
                 <img src="../../Images/mainIcon.gif" alt='svg here'>
                 <span class='fw-bold text-success'>EmployeeTracker.com</span>
             </a>
