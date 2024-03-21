@@ -8,15 +8,10 @@ if ($_SESSION['role'] !== 'admin') {
 }
 
 
-$selectMemberErr = $num = $Err = "";
+$Err = "";
 $desiredProjectId = "";
 
 if (isset($_GET['id'])) $desiredProjectId = $_GET['id'];
-if (isset($_GET['num'])) {
-    $permanentNum = $_GET['num'];
-    $num = $permanentNum;
-}
-if (isset($_GET['selectMemberErr'])) $selectMemberErr = $_GET['selectMemberErr'];
 // echo $desiredUserId;
 
 function test_input($data)
@@ -128,24 +123,6 @@ if (isset($_POST['add'])) {
                 </div>
             </div>
             <hr>
-            <?php if ($num == '') { ?>
-                <form action="projectMemberCount.php" method='post'>
-                    <div class="mb-3">
-                        <label class="col-form-label">Select Number of Members to add <span>* <?php echo $selectMemberErr ?></label>
-                        <select class="form-select" name="numberOfMembers">
-                            <option value="1" <?php echo $num == 1 ? "selected" : '' ?>>1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="" selected disabled>--</option>
-                        </select>
-                    </div>
-                    <input type="hidden" name="projectId" class="btn btn-dark" value="<?php echo $desiredProjectId ?>">
-                    <div class="mb-3">
-                        <input type="submit" name="submit" class="btn btn-dark" value="Go">
-                    </div>
-                </form>
-            <?php } ?>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
                 <div class="mb-3">
                     <label class="col-form-label" for='memberId'>Select Member/s <span class="text-danger">* <?php echo $selectMemberErr ?></span></label>
@@ -178,11 +155,9 @@ if (isset($_POST['add'])) {
                     </select>
                 </div>
                 <input type="hidden" name="projectId" value="<?php echo $desiredProjectId ?>">
-                <?php if (isset($_GET['num']) && $_GET['num'] > 0 ) { ?>
                 <div class="buttons">
                     <input type="submit" name="add" class="btn btn-dark btn-lg" value="Add">
                 </div>
-                <?php } ?>
 
 
             </form>
