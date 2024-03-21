@@ -58,7 +58,7 @@ if ($_SESSION['role'] !== 'admin') {
                         <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                     </div>
                 </div>
-            <?php } else $_SESSION['addProjectMemberStatus'] = '' ?>
+            <?php } $_SESSION['addProjectMemberStatus'] = '' ?>
             <!-- toast after unsuccessful Project Member addition -->
             <?php if (isset($_SESSION['addProjectMemberStatus']) && $_SESSION['addProjectMemberStatus'] == 'failure') { ?>
                 <div class="toast show m-auto hide">
@@ -67,7 +67,7 @@ if ($_SESSION['role'] !== 'admin') {
                         <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                     </div>
                 </div>
-            <?php } else $_SESSION['addProjectMemberStatus'] = '' ?>
+            <?php } $_SESSION['addProjectMemberStatus'] = '' ?>
             <!-- toast after successful Project addition -->
             <?php if (isset($_SESSION['AddProjectStatus']) && $_SESSION['AddProjectStatus'] == 'success') { ?>
                 <div class="toast show m-auto hide">
@@ -76,7 +76,7 @@ if ($_SESSION['role'] !== 'admin') {
                         <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                     </div>
                 </div>
-            <?php } else $_SESSION['AddProjectStatus'] = '' ?>
+            <?php } $_SESSION['AddProjectStatus'] = '' ?>
             <table id="projectsTable" class="table table-striped table-hover">
                 <thead>
                     <tr>

@@ -56,7 +56,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } else $_SESSION['AddStatus'] = '' ?>
+    <?php } $_SESSION['AddStatus'] = '' ?>
     <!-- toast after successful update -->
     <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -65,7 +65,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } else $_SESSION['UpdateStatus'] = '' ?>
+    <?php } $_SESSION['UpdateStatus'] = '' ?>
     <!-- toast after successful delete -->
     <?php if (isset($_SESSION['DeleteStatus']) && $_SESSION['DeleteStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -74,7 +74,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } else $_SESSION['DeleteStatus'] = '' ?>
+    <?php } $_SESSION['DeleteStatus'] = '' ?>
     <!-- toast after successful addEmployeeInfo professional -->
     <?php if (isset($_SESSION['addEmployeeInfoStatus']) && $_SESSION['addEmployeeInfoStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -83,7 +83,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } else $_SESSION['addEmployeeInfoStatus'] = '' ?>
+    <?php } $_SESSION['addEmployeeInfoStatus'] = '' ?>
     <!-- toast after successful updateEmployeeInfo professional -->
     <?php if (isset($_SESSION['updateEmployeeInfoStatus']) && $_SESSION['updateEmployeeInfoStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -92,7 +92,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } else $_SESSION['updateEmployeeInfoStatus'] = '' ?>
+    <?php } $_SESSION['updateEmployeeInfoStatus'] = '' ?>
 
     <div class="container mt-5 px-5">
         <div class="d-flex justify-content-between align-items-center">
