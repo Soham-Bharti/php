@@ -108,6 +108,9 @@ if (isset($desiredUserId)) {
                 <li class="nav-item">
                     <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="updateEmployee.php?id=<?php echo $desiredUserId?>">Update</a>
+                </li>
             </ul>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

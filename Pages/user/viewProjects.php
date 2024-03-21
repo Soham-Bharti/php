@@ -40,7 +40,7 @@ if ($_SESSION['role'] !== 'emp') {
 
             <ul class="navbar-nav mb-2 me-auto mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="userDashboard.php">Back</a>
+                    <a class="nav-link" href="pms.php">Back</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -85,7 +85,7 @@ if ($_SESSION['role'] !== 'emp') {
                         </tr>
                     <?php
                     }
-                } else { ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No members are assigned yet!"; ?></span><?php
+                } else { ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No Projects are assigned yet!"; ?></span><?php
                                                                                                                                     } ?>
             </table>
         </div>

@@ -9,15 +9,7 @@ if (isset($_SESSION['id'])) {
     $desiredUserId = $_SESSION['id'];
 } else header('Location: ../common/home.php');
 
-if (isset($_POST['check-in-submit'])) {
-    echo 'check-in-submit clicked';
-    header('Location: check-in.php');
-    // print_r($_SESSION);
-}
-if (isset($_POST['check-out-submit'])) {
-    echo 'check-out-submit clicked';
-    header('Location: check-out.php');
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -26,8 +18,8 @@ if (isset($_POST['check-out-submit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | <?php echo $_SESSION['userName']; ?> </title>
-    <link rel="stylesheet" href="../../Styles/userdashboard.css">
+    <title>PMS | <?php echo $_SESSION['userName']; ?> </title>
+    <link rel="stylesheet" href="../../Styles/pms.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -45,19 +37,13 @@ if (isset($_POST['check-out-submit'])) {
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="../common/login.php">Logout</a>
+                    <a class="nav-link" href="userDashboard.php">Back</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="changePassword.php">Change Password</a>
+                    <a href="viewProjects.php?id=<?php echo $desiredUserId ?>" class="nav-link">My Projects</a>
                 </li>
                 <li class="nav-item">
-                    <a href="workingHours.php?id=<?php echo $desiredUserId ?>" class="nav-link">Working Track</a>
-                </li>
-                <li class="nav-item">
-                    <a href="viewDetails.php?id=<?php echo $desiredUserId ?>" class="nav-link">View Details</a>
-                </li>
-                <li class="nav-item">
-                    <a href="pms.php?id=<?php echo $desiredUserId ?>" class="nav-link">PMS</a>
+                    <a href="addProjectHours.php?id=<?php echo $desiredUserId ?>" class="nav-link">Add Hours</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -68,29 +54,7 @@ if (isset($_POST['check-out-submit'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to the <span class='text-info'>User</span> dashboard</h2>
-    <?php
-    $showStatus = '';
-    $sql = "SELECT check_out_time from employeeTrackingDetails where user_id = '$desiredUserId' order by check_in_time desc limit 1";
-    $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $checkOut = $row["check_out_time"];
-            is_null($checkOut) ? $showStatus = 'check-in' : $showStatus = 'check-out';
-        }
-    }
-    ?>
-    <?php
-    if ($showStatus === 'check-in') {
-    ?>
-        <h4 class="text-center mt-3">You are currently <span class='text-success'><?php echo $showStatus ?></span></h4>
-    <?php } else if ($showStatus === 'check-out') {
-    ?>
-        <h4 class="text-center mt-3">You are currently <span class='text-danger'><?php echo $showStatus ?></span></h4>
-    <?php } else { ?>
-        <h4 class="text-center mt-3">Do your <span class='text-warning'>FIRST</span> check-in!</h4>
-    <?php } ?>
-
+    <h2 class="text-center mt-3">Welcome to your <span class='text-info'>PMS</span> dashboard</h2>
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
@@ -99,12 +63,6 @@ if (isset($_POST['check-out-submit'])) {
                 $userId = $_SESSION['id'];
                 echo "Emp Id: <b>" . $userId . "</b> | " . $user;
                 ?>
-            </div>
-            <div class="buttons d-flex justify-content-between align-items-center">
-                <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
-                    <input type="submit" name="check-in-submit" class="btn btn-primary btn-lg <?php echo $showStatus === 'check-in' ? "disabled cursor-not-allowed" : '' ?>" value="Check-in">
-                    <input type="submit" name="check-out-submit" class="btn btn-danger btn-lg <?php echo $showStatus === 'check-in' ? '' : "disabled cursor-not-allowed" ?>" value='Check-out'>
-                </form>
             </div>
         </div>
         <!-- toast after successful change of password -->
@@ -157,56 +115,49 @@ if (isset($_POST['check-out-submit'])) {
             </div>
         <?php } $_SESSION['AddDailyTaskStatus'] = ''; ?>
         <!-- toast ends -->
-        <h2 class="text-center mt-5">Showing your <span class='text-success'>LAST 10</span> tracks</h2>
+        <h2 class="text-center mt-5">Showing your <span class='text-success'>LAST 10</span> activity</h2>
         <div class="mt-3">
             <table>
                 <tr>
                     <th>S.Number</th>
-                    <th>Date</th>
-                    <th>Day</th>
-                    <th>Check In Time</th>
-                    <th>Check Out Time</th>
+                    <th>Project Title</th>
+                    <th>Project Id</th>
+                    <th>Created Day - Date - Time</th>
+                    <th>Summary</th>
                 </tr>
                 <?php
-                $sql = "SELECT check_in_time, check_out_time from employeeTrackingDetails where user_id = $desiredUserId order by check_in_time desc limit 10";
+                $sql = "SELECT updt.project_id as projectId, updt.activity_log as summary, updt.created_at as created_dateTime, p.title as projectTitle
+                from UserProjectDailyTask updt
+                inner join projects p
+                on p.id = updt.project_id
+                where user_id = $desiredUserId and p.deleted_at is null order by created_dateTime desc limit 10";
                 $result = mysqli_query($conn, $sql);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
-                        $flag = false;
-                        $checkOut = $row["check_out_time"];
-                ?>
-                        <?php
-                        $time = strtotime($row["check_in_time"]);
-                        $checkInTime = strtotime($row["check_in_time"]);
-                        if (is_null($checkOut)) {
-                            $checkOutIsNull = true;
-                        } else {
-                            $checkOutTime = strtotime($row["check_out_time"]);
-                            $checkOutIsNull = false;
-                        };
+                        $time = strtotime($row["created_dateTime"]);
                         ?>
                         <tr>
                             <td><?php echo $seialNumber++ ?></td>
-                            <td><?php
-                                echo date('d M Y', $time);
-                                ?></td>
-                            <td><?php
-                                echo date('l', $time);
+                            <td class='fw-bold'>
+                                <?php
+                                echo $row['projectTitle'];
                                 ?>
                             </td>
                             <td>
                                 <?php
-                                echo date('H:i:s', $checkInTime);
+                                echo $row['projectId'];
                                 ?>
                             </td>
                             <td>
                                 <?php
-                                if ($checkOutIsNull) {
-                                    echo " -- ";
-                                } else {
-                                    echo date('H:i:s', $checkOutTime);
-                                }
+                                echo date('D - d M Y - h:ia', $time);
+                                ?>
+                            </td>
+                            
+                            <td class='w-50'>
+                                <?php
+                               echo $row['summary'];
                                 ?>
                             </td>
                         </tr>
