@@ -8,7 +8,7 @@ if ($_SESSION['role'] !== 'admin') {
 }
 
 
-$Err = "";
+$Err = $selectMemberErr ="";
 $desiredProjectId = "";
 
 if (isset($_GET['id'])) $desiredProjectId = $_GET['id'];
