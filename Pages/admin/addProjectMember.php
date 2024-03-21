@@ -32,34 +32,37 @@ if (isset($_POST['add'])) {
     // print_r($_POST);
     $desiredProjectId = test_input($_POST['projectId']);
 
-    $memberIdArr = $_POST['memberId'];
-    $temp_array = array_unique($memberIdArr);
-    $duplicates = sizeof($temp_array) != sizeof($memberIdArr); // returns true if duplicate found
-    $memberIdArraySize = sizeof($memberIdArr);
-    if ($duplicates) {
+    if (!isset($_POST['memberId'])) {
+        $selectMemberErr = 'Required';
         $flag = false;
-        $Err = "Duplicates found!";
     } else {
-        // if(sizeof($memberIdArr) != $num) {
-        //     $flag = false;
-        //     $Err = "---";
-        // }
-        if ($flag) {
-            // sending data to data base
-            foreach ($memberIdArr as $value) {
-                $sql = "INSERT INTO employeesProjects(project_id, user_id) values('$desiredProjectId', '$value');";
-                $result = mysqli_query($conn, $sql);
-                if ($result) {
-                    echo "<br>Record inserted successfully<br>";
-                    // if everthing if well then redirecting the admin
-                    $_SESSION['addProjectMemberStatus'] = 'success';
-                    header("Location: viewAllProjects.php");
-                } else {
-                    echo "<br>Error occurred while inserting into table : " . mysqli_error($conn); // Print any errors returned by MySQL
-                }
+        $memberIdArr = $_POST['memberId'];
+    }
+
+
+    if ($flag) {
+        // sending data to data base
+        foreach ($memberIdArr as $value) {
+            $sql = "INSERT INTO employeesProjects(project_id, user_id) values('$desiredProjectId', '$value');";
+            $result = mysqli_query($conn, $sql);
+            if ($result) {
+                // echo "<br>Record inserted successfully<br>";
+                // if everthing if well then redirecting the admin
+            } else {
+                $flag = false;
+                echo "<br>Error occurred while inserting into table : " . mysqli_error($conn); // Print any errors returned by MySQL
             }
-            mysqli_close($conn); // Close the database connection
         }
+        if ($flag) {
+            $_SESSION['addProjectMemberStatus'] = 'success';
+            header("Location: viewAllProjects.php");
+        }else {
+            // echo "There was an error while insertion!";
+            $_SESSION['addProjectMemberStatus'] = 'failure';
+            header("Location: viewAllProjects.php");
+        }
+        mysqli_close($conn); // Close the database connection
+
     }
 
 }
@@ -72,9 +75,12 @@ if (isset($_POST['add'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Memeber</title>
-    <link rel="stylesheet" href="../../Styles/updateemployee.css">
+    <title>Add Memeber/s</title>
+    <link rel="stylesheet" href="../../Styles/addProjctMember.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
 </head>
 
 <body class='d-flex flex-column min-vh-100'>
@@ -111,7 +117,7 @@ if (isset($_POST['add'])) {
         }
     }
     ?>
-    <h2 class="text-center mt-2"><span class='text-info'>Add</span> Member in <span text-danger><?php echo $title ?></span> Project</h2>
+    <h2 class="text-center mt-2"><span class='text-info'>Add</span> Member/s in <span text-danger><?php echo $title ?></span> Project</h2>
     <div class="container mt-3">
         <div class="col-md-7">
             <div class="my-3 d-flex align-items-center justify-content-around gap-4">
@@ -141,12 +147,11 @@ if (isset($_POST['add'])) {
                 </form>
             <?php } ?>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
-                <?php while ($num-- > 0) { ?>
-                    <div class="mb-3">
-                        <label class="col-form-label">Select Member <span>* <?php echo $selectMemberErr ?></label>
-                        <select class="form-select" name="memberId[]">
-                            <?php
-                            $sql2 = "SELECT id, name
+                <div class="mb-3">
+                    <label class="col-form-label" for='memberId'>Select Member/s <span class="text-danger">* <?php echo $selectMemberErr ?></span></label>
+                    <select class="form-control selectpicker" name="memberId[]" id="memberId" multiple data-live-search="true" placeholder='choose'>
+                        <?php
+                        $sql2 = "SELECT id, name
                             FROM users 
                             WHERE role = 'employee'
                             AND deleted_at IS NULL
@@ -157,24 +162,25 @@ if (isset($_POST['add'])) {
                                 AND employeesProjects.project_id = '$desiredProjectId'
                             )
                             ORDER BY name;";
-                            $result2 = mysqli_query($conn, $sql2);
-                            if (mysqli_num_rows($result2) > 0) {
-                                while ($row = mysqli_fetch_assoc($result2)) {
-                            ?>
-                                    <option name="memberId[]" value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                        $result2 = mysqli_query($conn, $sql2);
+                        if (mysqli_num_rows($result2) > 0) {
+                            while ($row = mysqli_fetch_assoc($result2)) {
+                        ?>
+                                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
                             <?php
-                                }
-                            } else echo "No users available.";
+                            }
+                        } else {
                             ?>
-                            <option value="" selected disabled>Employee</option>
-                        </select>
-                    </div>
-                <?php } ?>
+                            <option value="" disabled selected>No users found!</option>
+                        <?php
+                        };
+                        ?>
+                    </select>
+                </div>
                 <input type="hidden" name="projectId" value="<?php echo $desiredProjectId ?>">
                 <?php if (isset($_GET['num']) && $_GET['num'] > 0 ) { ?>
                 <div class="buttons">
                     <input type="submit" name="add" class="btn btn-dark btn-lg" value="Add">
-                    <input type="reset" name="reset" class="btn btn-dark btn-lg">
                 </div>
                 <?php } ?>
 
@@ -187,6 +193,8 @@ if (isset($_POST['add'])) {
     <?php include('../views/footer.php'); ?>
     <!-- footer ends -->
 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>

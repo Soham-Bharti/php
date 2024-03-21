@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../config/dbConnect.php';
+date_default_timezone_set("Asia/Kolkata");
 if ($_SESSION['role'] !== 'admin') {
     header('Location: ../common/login.php');
 }
@@ -8,7 +9,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
 $checkInTime = $date = $day = "";
 $checkOutTime = null;
-$checkInTimeErr = $dateErr = "";
+$checkInTimeErr = $dateErr = $checkOutTimeErr = "";
 
 $flag = true;
 if (isset($_POST['submit'])) {
@@ -41,24 +42,39 @@ if (isset($_POST['submit'])) {
                 header("Location: $desiredLocation");
             } else {
                 if (is_null($checkOutTime) || $checkOutTime == '') {
-                    $sql = "INSERT INTO employeeTrackingDetails(user_id, check_in_time) values('$desiredUserId', '$date $checkInTime')";
-                    if (mysqli_query($conn, $sql)) {
-                        // echo "Success 1";
-                        $_SESSION['AddEmpTrackStatus'] = 'success';
-
-                        header("Location: $desiredLocation");
-                    } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                    if ($date == date("Y-m-d") && $checkInTime <= date("H:i")) {
+                        $sql = "INSERT INTO employeeTrackingDetails(user_id, check_in_time) values('$desiredUserId', '$date $checkInTime')";
+                        if (mysqli_query($conn, $sql)) {
+                            // echo "Success 1";
+                            $_SESSION['AddEmpTrackStatus'] = 'success';
+                            header("Location: $desiredLocation");
+                        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                    } else {
+                        // echo "Either you are only adding check-in time in past day without check-out time or check in time is greater than current time.";
+                        // $_SESSION['AddEmpTrackStatus'] = 'failure';
+                        if($checkInTime > date("H:i")){
+                            $checkInTimeErr = 'Check-in time is greater than current time!';
+                        }else {
+                            $dateErr = "Check-out time required in past";
+                            $checkOutTimeErr = "* Required when manipulating time in past";
+                        }
+                    }
                 } else {
-                    $sql = "INSERT INTO employeeTrackingDetails(user_id, check_in_time, check_out_time) values('$desiredUserId', '$date $checkInTime', '$date $checkOutTime')";
-                    if (mysqli_query($conn, $sql)) {
-                        // echo "Success 2";
-                        $_SESSION['AddEmpTrackStatus'] = 'success';
-
-                        header("Location: $desiredLocation");
-                    } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                    if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
+                        // $sql = "INSERT INTO employeeTrackingDetails(user_id, check_in_time, check_out_time) values('$desiredUserId', '$date $checkInTime', '$date $checkOutTime')";
+                        if (mysqli_query($conn, $sql)) {
+                            // echo "Success 2";
+                            $_SESSION['AddEmpTrackStatus'] = 'success';
+                            header("Location: $desiredLocation");
+                        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                    } else {
+                        if($checkOutTime > date("H:i")){
+                            $checkOutTimeErr = '* You are checking-out in future!';
+                        }else $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                    }
                 }
 
-                mysqli_close($conn);
+                // mysqli_close($conn);
             }
         } else echo "There was an error fetching the data";
     } else echo "THERE WAS AN ERROR adding new employee track";
@@ -97,6 +113,34 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2">New <span class='text-info'>Employee Track</span></h2>
     <div class="container mt-3">
         <div class="col-md-7">
+            <!-- toast after unsuccessful track added -->
+            <?php if (isset($_SESSION['AddEmpTrackStatus']) && $_SESSION['AddEmpTrackStatus'] == 'failure') { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-danger text-white ">
+                        <strong class="me-auto">Oops Something went wrong!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body bg-warning text-muted">
+                        <p>Either - <b>'you are only adding check-in time in past day without check-out time'</b> OR <b>'check in time is greater than current time!</b></p>
+                    </div>
+                </div>
+            <?php }
+            unset($_SESSION['AddEmpTrackStatus']) ?>
+            <!-- toast ends -->
+            <!-- toast after unsuccessful track added -->
+            <?php if (isset($_SESSION['checkInTimeBigErrorStatus']) && $_SESSION['checkInTimeBigErrorStatus'] == 'failure') { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-danger text-white ">
+                        <strong class="me-auto">Oops Something went wrong!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body bg-warning text-muted">
+                        <p>Either - <b>'Check-in time is greater than Check-out-time'</b> - OR - <b>'You are checking-out in future'</b> - <br>Please correct it!</p>
+                    </div>
+                </div>
+            <?php }
+            unset($_SESSION['checkInTimeBigErrorStatus']) ?>
+            <!-- toast ends -->
             <form action="" method="post" enctype="multipart/form-data">
 
                 <div class="mb-3">
@@ -111,7 +155,7 @@ if (isset($_POST['submit'])) {
                     <input type="time" name="checkInTime" class="form-control">
                 </div>
                 <div class="mb-3 timepicker">
-                    <label class="form-label">Check Out Time</label>
+                    <label class="form-label">Check Out Time<span><?php echo $checkOutTimeErr ?></span></label>
                     <input type="time" name="checkOutTime" class="form-control">
                 </div>
 

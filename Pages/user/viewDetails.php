@@ -4,13 +4,14 @@ require '../../config/dbConnect.php';
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'emp') {
     header('Location: ../common/login.php');
+    exit();
 }
 
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
 if (isset($desiredUserId)) {
     $sql = "SELECT 
-    SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)) AS total_seconds,
+    COALESCE(SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)), 0) AS total_seconds,
     u.name, 
     u.mobile, 
     u.date_of_birth, 
@@ -26,16 +27,16 @@ if (isset($desiredUserId)) {
     ed.notice_period 
 FROM 
     users u
-LEFT JOIN 
-    employeeTrackingDetails e ON u.id = e.user_id
+LEFT JOIN
+    employeeTrackingDetails e ON u.id = e.user_id AND MONTH(e.check_in_time) = MONTH(CURDATE()) AND YEAR(e.check_in_time) = YEAR(CURDATE())
 LEFT JOIN 
     employeeDetails ed ON u.id = ed.user_id
 WHERE 
-    e.user_id = '$desiredUserId' 
+    ed.user_id = '$desiredUserId' 
     AND u.deleted_at IS NULL
-    AND MONTH(check_in_time) = MONTH(now())
 GROUP BY 
-    u.id, ed.user_id;";
+    u.id, ed.user_id;
+";
 
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) == 1) {
@@ -45,7 +46,7 @@ GROUP BY
             $mobile = $row['mobile'];
             $profile = $row['profile_url'];
             if (empty($profile)) {
-                $profile = '../../Images/defaultImg.webp';
+                $profile = 'defaultImg.webp';
             }
             $gender = $row['gender'];
             $city = $row['city'];

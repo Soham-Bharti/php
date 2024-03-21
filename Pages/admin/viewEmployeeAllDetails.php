@@ -10,32 +10,32 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
 if (isset($desiredUserId)) {
     $sql = "SELECT 
-    SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)) AS total_seconds,
-    u.name, 
-    u.mobile, 
-    u.date_of_birth, 
-    u.gender, 
-    u.city, 
-    u.state, 
-    u.email, 
-    u.profile_url,
-    ed.salary, 
-    ed.technology_assigned, 
-    ed.joining_date, 
-    ed.bond_period, 
-    ed.notice_period 
-FROM 
-    users u
-LEFT JOIN 
-    employeeTrackingDetails e ON u.id = e.user_id
-LEFT JOIN 
-    employeeDetails ed ON u.id = ed.user_id
-WHERE 
-    e.user_id = '$desiredUserId' 
-    AND u.deleted_at IS NULL
-    AND MONTH(check_in_time) = MONTH(now())
-GROUP BY 
-    u.id, ed.user_id;";
+        COALESCE(SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)), 0) AS total_seconds,
+        u.name, 
+        u.mobile, 
+        u.date_of_birth, 
+        u.gender, 
+        u.city, 
+        u.state, 
+        u.email, 
+        u.profile_url,
+        ed.salary, 
+        ed.technology_assigned, 
+        ed.joining_date, 
+        ed.bond_period, 
+        ed.notice_period 
+    FROM 
+        users u
+    LEFT JOIN
+        employeeTrackingDetails e ON u.id = e.user_id AND MONTH(e.check_in_time) = MONTH(CURDATE()) AND YEAR(e.check_in_time) = YEAR(CURDATE())
+    LEFT JOIN 
+        employeeDetails ed ON u.id = ed.user_id
+    WHERE 
+        ed.user_id = '$desiredUserId' 
+        AND u.deleted_at IS NULL
+    GROUP BY 
+        u.id, ed.user_id;
+    ";
 
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) == 1) {
@@ -97,7 +97,7 @@ GROUP BY
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
@@ -107,6 +107,9 @@ GROUP BY
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="viewAllEmployees.php">Back</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="updateEmployee.php?id=<?php echo $desiredUserId?>">Update</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -255,7 +258,7 @@ GROUP BY
     </div>
 
     <!-- footer here -->
-    <?php include('../views/footer.php');?>
+    <?php include('../views/footer.php'); ?>
     <!-- footer ends -->
 
 </body>

@@ -15,8 +15,8 @@ if ($_SESSION['role'] !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Dashboard</title>
-    <link rel="stylesheet" href="../../Styles/adminDashboard.css">
+    <title>Admin | Employees details</title>
+    <link rel="stylesheet" href="../../Styles/viewAllEmployees.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -56,8 +56,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php }
-    $_SESSION['AddStatus'] = '' ?>
+    <?php } $_SESSION['AddStatus'] = '' ?>
     <!-- toast after successful update -->
     <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -66,8 +65,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php }
-    $_SESSION['UpdateStatus'] = '' ?>
+    <?php } $_SESSION['UpdateStatus'] = '' ?>
     <!-- toast after successful delete -->
     <?php if (isset($_SESSION['DeleteStatus']) && $_SESSION['DeleteStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -76,8 +74,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php }
-    $_SESSION['DeleteStatus'] = '' ?>
+    <?php } $_SESSION['DeleteStatus'] = '' ?>
     <!-- toast after successful addEmployeeInfo professional -->
     <?php if (isset($_SESSION['addEmployeeInfoStatus']) && $_SESSION['addEmployeeInfoStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -86,8 +83,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php }
-    $_SESSION['addEmployeeInfoStatus'] = '' ?>
+    <?php } $_SESSION['addEmployeeInfoStatus'] = '' ?>
     <!-- toast after successful updateEmployeeInfo professional -->
     <?php if (isset($_SESSION['updateEmployeeInfoStatus']) && $_SESSION['updateEmployeeInfoStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -96,8 +92,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php }
-    $_SESSION['updateEmployeeInfoStatus'] = '' ?>
+    <?php } $_SESSION['updateEmployeeInfoStatus'] = '' ?>
 
     <div class="container mt-5 px-5">
         <div class="d-flex justify-content-between align-items-center">
@@ -107,20 +102,18 @@ if ($_SESSION['role'] !== 'admin') {
                 </form> -->
             </div>
         </div>
-        <h2 class="text-center">Showing <span class='text-primary'>employees'</span> details</h2>
+        <h2 class="text-center">Showing <span class='text-info'>Employees'</span> details</h2>
         <div class="mt-3">
-            <table id="adminDashboardEmployeesTable" class="table table-striped">
+            <table id="EmployeesTable" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <!-- <th>Profile</th> -->
+                        <th>Profile</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Gender</th>
                         <th>Mobile</th>
                         <!-- <th>Date of Birth</th> -->
-                        <th>Action</th>
-                        <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
@@ -136,30 +129,30 @@ if ($_SESSION['role'] !== 'admin') {
                 ?>
                         <tr>
                             <td><?php echo $row["id"] ?></td>
-                            <!-- <td class="w-25">
+                            <td class="w-25">
                                 <img src="<?php echo $row["profile_url"] ? "../../Images/" . $row["profile_url"] : "../../Images/defaultImg.webp" ?>" alt="No profile to show" class="d-inline-block w-50 img-thumbnail object-fit-contain border rounded-circle ">
-                            </td> -->
+                            </td>
                             <td class='w-50'><?php echo $row["name"] ?></td>
                             <td><?php echo $row["email"] ?></td>
                             <td><?php echo ucfirst($row["gender"]) ?></td>
                             <td><?php echo $row["mobile"] ?></td>
-                            <td>
-                                <a href="viewEmployeeAllDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-info text-white btn-sm">View</a>
+                            <td class='w-25'>
+                                <a href="viewEmployeeAllDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-success btn-sm">All Details</a>
                             </td>
                             <!-- <td class='w-25'><?php echo $row["date_of_birth"] ?></td> -->
-                            <td>
+                            <!-- <td> -->
                                 <!-- <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="get">
                                     <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
                                     <input type="submit" name='update' class="btn btn-primary btn-sm" value='Update' />
                                 </form> -->
-                                <a href="updateEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-primary btn-sm">Update</a>
-                            </td>
+                                <!-- <a href="updateEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-primary btn-sm">Update</a>
+                            </td> -->
                             <td>
                                 <a href="trackEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-warning text-muted btn-sm">Track</a>
                             </td>
-                            <td>
+                            <!-- <td>
                                 <a href="workingHourEmployeeDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-success btn-sm">Working</a>
-                            </td>
+                            </td> -->
                             <?php
                             $editEmployeeInfo = false;
                             $sql2 = "SELECT * FROM employeeDetails WHERE user_id = " . $row["id"] . " AND deleted_at IS NULL";
@@ -170,7 +163,7 @@ if ($_SESSION['role'] !== 'admin') {
                             }
                             ?>
                             <td class='w-25'>
-                                <a href="<?php echo $editEmployeeInfo ? 'updateEmployeeInfo.php?id=' . $row["id"] : 'addEmployeeInfo.php?id=' . $row["id"]; ?>" class="btn btn-dark btn-sm">Add/Edit Info</a>
+                                <a href="<?php echo $editEmployeeInfo ? 'updateEmployeeInfo.php?id=' . $row["id"] : 'addEmployeeInfo.php?id=' . $row["id"]; ?>" class="btn btn-primary btn-sm">Add/Edit Info</a>
                             </td>
                             <td>
                                 <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a>
@@ -194,7 +187,7 @@ if ($_SESSION['role'] !== 'admin') {
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
     <script>
-        new DataTable('#adminDashboardEmployeesTable');
+        new DataTable('#EmployeesTable');
     </script>
 </body>
 
