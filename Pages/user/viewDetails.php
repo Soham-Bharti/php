@@ -4,6 +4,7 @@ require '../../config/dbConnect.php';
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'emp') {
     header('Location: ../common/login.php');
+    exit();
 }
 
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];

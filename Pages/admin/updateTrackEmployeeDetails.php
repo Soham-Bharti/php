@@ -51,26 +51,38 @@ if (isset($_POST['submit'])) {
     var_dump($checkOutTime);
     $desiredLocation = "trackEmployee.php?id=$uId";
     if ($checkOutTime != '') {
-        // sending data to data base  
-        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
-        if (mysqli_query($conn, $sql2)) {
-            echo "<br>Record updated successfully<br>";
-        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-        echo "Successfully updated with check out time";
-        $_SESSION['UpdateEmpTrackStatus'] = 'success';
-        header("Location: $desiredLocation");
+        if ($checkInTime < $checkOutTime) {
+            // sending data to data base  
+            $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
+            if (mysqli_query($conn, $sql2)) {
+                echo "<br>Record updated successfully<br>";
+            } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+            echo "Successfully updated with check out time";
+            $_SESSION['UpdateEmpTrackStatus'] = 'success';
+            header("Location: $desiredLocation");
+        } else {
+            $_SESSION['checkInTimeBigErrorStatus'] = 'failure';
+            header("Location: $desiredLocation");
+            // echo "Either - 'Check-in time is greater than Check-out-time!' - OR  - 'You are checking-out in future!' - Please correct it.";
+        }
     } else {
-        $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = null, updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
-        if (mysqli_query($conn, $sql2)) {
-            echo "<br>Record updated successfully<br>";
-        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+        if ($originDate == date("H:i")) {
+            $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = null, updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
+            if (mysqli_query($conn, $sql2)) {
+                echo "<br>Record updated successfully<br>";
+            } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
 
-        echo "Successfully updated without checkout time";
-        $_SESSION['UpdateEmpTrackStatus'] = 'success';
-        header("Location: $desiredLocation");
+            echo "Successfully updated without checkout time";
+            $_SESSION['UpdateEmpTrackStatus'] = 'success';
+            header("Location: $desiredLocation");
+        } else {
+            $_SESSION['UpdateEmpTrackStatusFail'] = 'failure';
+            header("Location: $desiredLocation");
+            // $checkOutTimeErr = "You can't be checked-in in future. Please select check-out time as well!";
+            // echo "You can't be checked-in in future. Please select check-out time as well!";
+        }
     }
     mysqli_close($conn);
-
 }
 
 ?>
@@ -86,7 +98,7 @@ if (isset($_POST['submit'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
@@ -147,7 +159,7 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
     <!-- footer here -->
-    <?php include('../views/footer.php');?>
+    <?php include('../views/footer.php'); ?>
     <!-- footer ends -->
 </body>
 

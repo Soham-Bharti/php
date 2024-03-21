@@ -111,7 +111,7 @@ if (isset($_POST['delete'])) {
                 inner join employeesProjects ep
                 on u.id = ep.user_id
                 where u.role = 'employee' and ep.project_id = '$desiredProjectId' and ep.deleted_at is null 
-                order by u.id";
+                order by addedOn desc";
             $result = mysqli_query($conn, $sql);
 
             if (mysqli_num_rows($result) > 0) {

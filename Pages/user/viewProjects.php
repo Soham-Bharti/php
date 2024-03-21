@@ -5,10 +5,10 @@ require '../../config/dbConnect.php';
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'emp') {
     header('Location: ../common/login.php');
-}else{
-    if(isset($_SESSION["id"])){
+} else {
+    if (isset($_SESSION["id"])) {
         $desiredUserId = $_SESSION["id"];
-    }else{
+    } else {
         header('Location: ../common/login.php');
     }
 }
@@ -30,7 +30,7 @@ if ($_SESSION['role'] !== 'emp') {
 
 </head>
 
-<body class = 'd-flex flex-column min-vh-100'>
+<body class='d-flex flex-column min-vh-100'>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
             <a href="../common/home.php" class="svg text-decoration-none text-success d-flex align-items-center">
@@ -69,7 +69,7 @@ if ($_SESSION['role'] !== 'emp') {
                 inner join employeesProjects as ep
                 on p.id = ep.project_id
                 where ep.deleted_at is null and p.deleted_at is null and ep.user_id = '$desiredUserId'
-                order by ep.created_at desc;";
+                order by assigned_on desc;";
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -83,10 +83,10 @@ if ($_SESSION['role'] !== 'emp') {
                             <td><?php echo $row["description"] == '' ? 'N/A' : $row["description"] ?></td>
                             <td><?php echo date('d M Y', $time); ?></td>
                         </tr>
-                <?php
+                    <?php
                     }
-                }else { ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No members are assigned yet!"; ?></span><?php
-                } ?>
+                } else { ?><span class='fw-bold text-center d-block h3 text-danger'><?php echo "No members are assigned yet!"; ?></span><?php
+                                                                                                                                    } ?>
             </table>
         </div>
 
@@ -101,7 +101,18 @@ if ($_SESSION['role'] !== 'emp') {
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
     <script>
-        new DataTable('#projectsTable');
+        // new DataTable('#projectsTable');
+        // Disable ordering on the first column AND set the default ordering for the table (the default would still be to order on column index 0 otherwise):
+        // setting assigned on column in desc order by default
+        new DataTable('#projectsTable', {
+            columnDefs: [{
+                orderable: false,
+                targets: 0
+            }],
+            order: [
+                [3, 'desc']
+            ]
+        });
     </script>
 </body>
 

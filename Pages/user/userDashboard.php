@@ -115,8 +115,7 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php }
-        $_SESSION['userChangePasswordStatus'] = '' ?>
+        <?php } $_SESSION['userChangePasswordStatus'] = '' ?>
         <!-- toast ends -->
         <!-- toast after successful check-in -->
         <?php if (isset($_SESSION['checkInMessage']) && $_SESSION['checkInMessage'] == 'success') { ?>
@@ -126,8 +125,7 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php }
-        $_SESSION['checkInMessage'] = '' ?>
+        <?php } $_SESSION['checkInMessage'] = '' ?>
         <!-- toast ends -->
         <!-- toast after successful check-in -->
         <?php if (isset($_SESSION['checkOutMessage']) && $_SESSION['checkOutMessage'] == 'success') { ?>
@@ -137,8 +135,7 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php }
-        $_SESSION['checkOutMessage'] = '' ?>
+        <?php } $_SESSION['checkOutMessage'] = '' ?>
         <!-- toast ends -->
         <!-- toast after fail check-in -->
         <?php if (isset($_SESSION['checkInLimitMessage']) && $_SESSION['checkInLimitMessage'] == 'success') { ?>
@@ -148,8 +145,7 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php }
-        $_SESSION['checkInLimitMessage'] = ''; ?>
+        <?php } $_SESSION['checkInLimitMessage'] = ''; ?>
         <!-- toast ends -->
         <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
         <div class="mt-3">

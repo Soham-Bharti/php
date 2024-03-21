@@ -50,7 +50,7 @@ if ($_SESSION['role'] !== 'admin') {
     <div class="container mt-5 px-5">
         <h2 class="text-center mt-5">Showing <span class='text-primary'>Projects'</span> details</h2>
         <div class="mt-3">
-            <!-- toast after successful Project addition -->
+            <!-- toast after successful Project Member addition -->
             <?php if (isset($_SESSION['addProjectMemberStatus']) && $_SESSION['addProjectMemberStatus'] == 'success') { ?>
                 <div class="toast show m-auto hide">
                     <div class="toast-header bg-success text-white ">
@@ -58,8 +58,16 @@ if ($_SESSION['role'] !== 'admin') {
                         <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                     </div>
                 </div>
-            <?php }
-            $_SESSION['addProjectMemberStatus'] = '' ?>
+            <?php } else $_SESSION['addProjectMemberStatus'] = '' ?>
+            <!-- toast after unsuccessful Project Member addition -->
+            <?php if (isset($_SESSION['addProjectMemberStatus']) && $_SESSION['addProjectMemberStatus'] == 'failure') { ?>
+                <div class="toast show m-auto hide">
+                    <div class="toast-header bg-danger text-white ">
+                        <strong class="me-auto">Oops somthing went wrong!</strong>
+                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            <?php } else $_SESSION['addProjectMemberStatus'] = '' ?>
             <!-- toast after successful Project addition -->
             <?php if (isset($_SESSION['AddProjectStatus']) && $_SESSION['AddProjectStatus'] == 'success') { ?>
                 <div class="toast show m-auto hide">
@@ -68,8 +76,7 @@ if ($_SESSION['role'] !== 'admin') {
                         <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                     </div>
                 </div>
-            <?php }
-            $_SESSION['AddProjectStatus'] = '' ?>
+            <?php } else $_SESSION['AddProjectStatus'] = '' ?>
             <table id="projectsTable" class="table table-striped table-hover">
                 <thead>
                     <tr>

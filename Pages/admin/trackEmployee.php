@@ -95,8 +95,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php }
-        $_SESSION['UpdateEmpTrackStatus'] = '' ?>
+        <?php } $_SESSION['UpdateEmpTrackStatus'] = '' ?>
         <!-- toast ends -->
         <!-- toast after check-in limit reached -->
         <?php if (isset($_SESSION['checkInLimitMessage']) && $_SESSION['checkInLimitMessage'] == 'success') { ?>
@@ -106,9 +105,8 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php }
-        $_SESSION['checkInLimitMessage'] = '' ?>
-        <!-- toast after successful added -->
+        <?php } $_SESSION['checkInLimitMessage'] = '' ?>
+        <!-- toast after successful track added -->
         <?php if (isset($_SESSION['AddEmpTrackStatus']) && $_SESSION['AddEmpTrackStatus'] == 'success') { ?>
             <div class="toast show m-auto hide">
                 <div class="toast-header bg-success text-white ">
@@ -116,8 +114,33 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php }
-        $_SESSION['AddEmpTrackStatus'] = '' ?>
+        <?php } $_SESSION['AddEmpTrackStatus'] = '' ?>
+        <!-- toast ends -->
+        <!-- toast after unsuccessful track added -->
+        <?php if (isset($_SESSION['UpdateEmpTrackStatusFail']) && $_SESSION['UpdateEmpTrackStatusFail'] == 'failure') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white ">
+                    <strong class="me-auto">Oops Something went wrong!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    <p>You can't be checked-in in future. Please select check-out time as well!</p>
+                </div>
+            </div>
+        <?php } $_SESSION['UpdateEmpTrackStatusFail'] = '' ?>
+        <!-- toast ends -->
+        <!-- toast after unsuccessful track added -->
+        <?php if (isset($_SESSION['checkInTimeBigErrorStatus']) && $_SESSION['checkInTimeBigErrorStatus'] == 'failure') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white ">
+                    <strong class="me-auto">Oops Something went wrong!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    <p>Check-in time is greater than Check-out-time!' - OR  - 'You are checking-out in future!</p>
+                </div>
+            </div>
+        <?php } $_SESSION['checkInTimeBigErrorStatus'] = '' ?>
         <!-- toast ends -->
 
         <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
