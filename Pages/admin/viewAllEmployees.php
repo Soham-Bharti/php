@@ -118,6 +118,7 @@ if ($_SESSION['role'] !== 'admin') {
                         <th>Action</th>
                         <th>Action</th>
                         <th>Action</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <?php
@@ -147,6 +148,9 @@ if ($_SESSION['role'] !== 'admin') {
                                 </form> -->
                                 <!-- <a href="updateEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-primary btn-sm">Update</a>
                             </td> -->
+                            <td>
+                                <a href="employeePMSDetails.php?id=<?php echo $row["id"] ?>" class="btn btn-dark  btn-sm">PMS</a>
+                            </td>
                             <td>
                                 <a href="trackEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-warning text-muted btn-sm">Track</a>
                             </td>
