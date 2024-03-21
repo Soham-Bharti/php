@@ -109,7 +109,7 @@ if (isset($desiredUserId)) {
                     <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="updateEmployee.php?id=<?php echo $desiredUserId?>">Update</a>
+                    <a class="nav-link" href="updateEmployee.php?id=<?php echo $desiredUserId?>">Update Personal Details</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">

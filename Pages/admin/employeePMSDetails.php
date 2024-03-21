@@ -2,13 +2,11 @@
 session_start();
 require '../../config/dbConnect.php';
 // print_r($_SESSION);
-if ($_SESSION['role'] !== 'emp') {
+if ($_SESSION['role'] !== 'admin') {
     header('Location: ../common/login.php');
 }
-if (isset($_SESSION['id'])) {
-    $desiredUserId = $_SESSION['id'];
-} else header('Location: ../common/home.php');
 
+if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
 ?>
 
@@ -18,7 +16,7 @@ if (isset($_SESSION['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMS | User<?php echo $_SESSION['userName']; ?> </title>
+    <title>PMS | Admin<?php echo $_SESSION['userName']; ?> </title>
     <link rel="stylesheet" href="../../Styles/pms.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
@@ -37,13 +35,7 @@ if (isset($_SESSION['id'])) {
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="userDashboard.php">Back</a>
-                </li>
-                <li class="nav-item">
-                    <a href="viewProjects.php?id=<?php echo $desiredUserId ?>" class="nav-link">My Projects</a>
-                </li>
-                <li class="nav-item">
-                    <a href="addProjectHours.php?id=<?php echo $desiredUserId ?>" class="nav-link">Add Hours</a>
+                    <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -54,68 +46,24 @@ if (isset($_SESSION['id'])) {
         </div>
     </nav>
     <!-- nav ends -->
-    <h2 class="text-center mt-3">Welcome to your <span class='text-info'>PMS</span> dashboard</h2>
+    <h2 class="text-center mt-3">Showing <span class='text-info'>PMS</span> dashboard</h2>
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
                 <?php
-                $user = $_SESSION['userName'];
-                $userId = $_SESSION['id'];
+                $sql1 = "SELECT name, id from users where id = '$desiredUserId' and deleted_at is null";
+                $result1 = mysqli_query($conn, $sql1);
+                if (mysqli_num_rows($result1) == 1) {
+                    $row = mysqli_fetch_assoc($result1);
+                    $user = $row['name'];
+                    $userId = $row['id'];
+                } else echo "User not found!";
                 echo "Emp Id: <b>" . $userId . "</b> | " . ucwords($user);
                 ?>
             </div>
         </div>
-        <!-- toast after successful change of password -->
-        <?php if ($_SESSION['userChangePasswordStatus'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-success text-white ">
-                    <strong class="me-auto">Password changed successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['userChangePasswordStatus'] = '' ?>
-        <!-- toast ends -->
-        <!-- toast after successful check-in -->
-        <?php if (isset($_SESSION['checkInMessage']) && $_SESSION['checkInMessage'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-success text-white ">
-                    <strong class="me-auto">You are Checked-in successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['checkInMessage'] = '' ?>
-        <!-- toast ends -->
-        <!-- toast after successful check-in -->
-        <?php if (isset($_SESSION['checkOutMessage']) && $_SESSION['checkOutMessage'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-warning text-white ">
-                    <strong class="me-auto">You are Checked-out successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['checkOutMessage'] = '' ?>
-        <!-- toast ends -->
-        <!-- toast after fail check-in -->
-        <?php if (isset($_SESSION['checkInLimitMessage']) && $_SESSION['checkInLimitMessage'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-danger text-white ">
-                    <strong class="me-auto">Check-in limit reached!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['checkInLimitMessage'] = ''; ?>
-        <!-- toast ends -->
-        <!-- toast after successfully adding daily task -->
-        <?php if (isset($_SESSION['AddDailyTaskStatus']) && $_SESSION['AddDailyTaskStatus'] == 'success') { ?>
-            <div class="toast show m-auto hide">
-                <div class="toast-header bg-success text-white ">
-                    <strong class="me-auto">PMS filled successfully!</strong>
-                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        <?php } $_SESSION['AddDailyTaskStatus'] = ''; ?>
-        <!-- toast ends -->
-        <h2 class="text-center mt-5">Showing your <span class='text-success'>LAST 10</span> activity</h2>
+
+        <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> activity</h2>
         <div class="mt-3">
             <table>
                 <tr>
@@ -136,7 +84,7 @@ if (isset($_SESSION['id'])) {
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $time = strtotime($row["created_dateTime"]);
-                        ?>
+                ?>
                         <tr>
                             <td><?php echo $seialNumber++ ?></td>
                             <td class='fw-bold'>
@@ -154,10 +102,10 @@ if (isset($_SESSION['id'])) {
                                 echo date('D - d M Y - h:ia', $time);
                                 ?>
                             </td>
-                            
+
                             <td class='w-50'>
                                 <?php
-                               echo $row['summary'];
+                                echo $row['summary'];
                                 ?>
                             </td>
                         </tr>
