@@ -108,14 +108,15 @@ if (isset($_POST['check-out-submit'])) {
             </div>
         </div>
         <!-- toast after successful change of password -->
-        <?php if ($_SESSION['userChangePasswordStatus'] == 'success') { ?>
+        <?php if (isset($_SESSION['userChangePasswordStatus']) && $_SESSION['userChangePasswordStatus'] == 'success') { ?>
             <div class="toast show m-auto hide">
                 <div class="toast-header bg-success text-white ">
                     <strong class="me-auto">Password changed successfully!</strong>
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php } $_SESSION['userChangePasswordStatus'] = '' ?>
+        <?php }
+        $_SESSION['userChangePasswordStatus'] = '' ?>
         <!-- toast ends -->
         <!-- toast after successful check-in -->
         <?php if (isset($_SESSION['checkInMessage']) && $_SESSION['checkInMessage'] == 'success') { ?>
@@ -125,9 +126,10 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php } $_SESSION['checkInMessage'] = '' ?>
+        <?php }
+        $_SESSION['checkInMessage'] = '' ?>
         <!-- toast ends -->
-        <!-- toast after successful check-in -->
+        <!-- toast after successful check-out -->
         <?php if (isset($_SESSION['checkOutMessage']) && $_SESSION['checkOutMessage'] == 'success') { ?>
             <div class="toast show m-auto hide">
                 <div class="toast-header bg-warning text-white ">
@@ -135,7 +137,22 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php } $_SESSION['checkOutMessage'] = '' ?>
+        <?php }
+        $_SESSION['checkOutMessage'] = '' ?>
+        <!-- toast ends -->
+        <!-- toast after unsuccessful check-out -->
+        <?php if (isset($_SESSION['checkOutCanNotHappenMessage']) && $_SESSION['checkOutCanNotHappenMessage'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white ">
+                    <strong class="me-auto">Checked Out Error!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body bg-warning">
+                    <p>You have been checked-in from past day/s.<br><b>Contact Admin!</b></p>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['checkOutCanNotHappenMessage'] = '' ?>
         <!-- toast ends -->
         <!-- toast after fail check-in -->
         <?php if (isset($_SESSION['checkInLimitMessage']) && $_SESSION['checkInLimitMessage'] == 'success') { ?>
@@ -145,7 +162,8 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php } $_SESSION['checkInLimitMessage'] = ''; ?>
+        <?php }
+        $_SESSION['checkInLimitMessage'] = ''; ?>
         <!-- toast ends -->
         <!-- toast after successfully adding daily task -->
         <?php if (isset($_SESSION['AddDailyTaskStatus']) && $_SESSION['AddDailyTaskStatus'] == 'success') { ?>
@@ -155,7 +173,8 @@ if (isset($_POST['check-out-submit'])) {
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
             </div>
-        <?php } $_SESSION['AddDailyTaskStatus'] = ''; ?>
+        <?php }
+        $_SESSION['AddDailyTaskStatus'] = ''; ?>
         <!-- toast ends -->
         <h2 class="text-center mt-5">Showing your <span class='text-success'>LAST 10</span> tracks</h2>
         <div class="mt-3">
