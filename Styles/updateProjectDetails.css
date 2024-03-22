@@ -23,3 +23,11 @@ span{
   display: flex;
   justify-content: space-around;
 }
+.btn{
+  width: 30%;
+}
+.profile-img {
+    object-fit: cover;
+    width: 20; /* Adjust based on your preference */
+    height: 20; /* Make sure this is equal to the width for a perfect circle */
+}

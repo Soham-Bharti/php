@@ -23,3 +23,6 @@ span{
   display: flex;
   justify-content: space-around;
 }
+.btn{
+  width: 30%;
+}

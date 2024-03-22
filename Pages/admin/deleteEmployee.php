@@ -1,8 +1,8 @@
 <?php
 session_start();
-require '../config/dbConnect.php';
+require '../../config/dbConnect.php';
 if ($_SESSION['role' == 'emp']) {
-    header('Location: login.php');
+    header('Location: ../common/login.php');
 }
     if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
     if (isset($desiredUserId)) {
@@ -15,7 +15,7 @@ if ($_SESSION['role' == 'emp']) {
             $_SESSION['DeleteStatus'] = 'success';
             mysqli_close($conn);
             // if everthing if well then redirecting the user to login page
-            header("Location: adminDashboard.php");
+            header("Location: viewAllEmployees.php");
         }
     } else {
         echo "ID parameter is missing - check your session";
