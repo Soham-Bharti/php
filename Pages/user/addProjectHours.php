@@ -96,7 +96,7 @@ if (isset($_POST['submit'])) {
                             from projects p
                             inner join employeesprojects ep
                             on p.id = ep.project_id
-                            where ep.user_id = '$desiredUserId'";
+                            where ep.user_id = '$desiredUserId' and p.deleted_at is null;";
 
                                 $result = mysqli_query($conn, $sql);
 

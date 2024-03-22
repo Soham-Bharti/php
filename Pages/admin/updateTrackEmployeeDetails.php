@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../../config/dbConnect.php';
+date_default_timezone_set("Asia/Kolkata");
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
     header('Location: ../common/login.php');
@@ -46,32 +47,58 @@ if (isset($_POST['submit'])) {
     $checkOutTime = $_POST['checkOutTime'];
     $originDate = $_POST['originDate'];
     $uId = $_POST['uId'];
+    $uId = $_POST['uId'];
     $tId = $_POST['tId'];
 
-    var_dump($checkOutTime);
+
     $desiredLocation = "trackEmployee.php?id=$uId";
     if ($checkOutTime != '') {
-        if ($checkInTime < $checkOutTime) {
-            // sending data to data base  
-            $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
-            if (mysqli_query($conn, $sql2)) {
-                echo "<br>Record updated successfully<br>";
-            } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-            echo "Successfully updated with check out time";
-            $_SESSION['UpdateEmpTrackStatus'] = 'success';
-            header("Location: $desiredLocation");
-        } else {
-            $_SESSION['checkInTimeBigErrorStatus'] = 'failure';
-            header("Location: $desiredLocation");
-            // echo "Either - 'Check-in time is greater than Check-out-time!' - OR  - 'You are checking-out in future!' - Please correct it.";
+
+        if ($originDate != date("Y-m-d")) {
+            if ($checkInTime < $checkOutTime) {
+                // sending data to data base  
+                $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
+                if (mysqli_query($conn, $sql2)) {
+                    echo "<br>Record updated successfully<br>";
+                } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                echo "Successfully updated with check out time";
+                $_SESSION['UpdateEmpTrackStatus'] = 'success';
+                header("Location: $desiredLocation");
+            } else {
+                $_SESSION['checkInTimeBigErrorStatus'] = 'failure';
+                header("Location: $desiredLocation");
+                // echo "Either - 'Check-in time is greater than Check-out-time!' - OR  - 'You are checking-out in future!' - Please correct it.";
+            }
+        }else{
+            // aaj ka he date h
+            if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
+                $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = '$originDate $checkOutTime', updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
+                if (mysqli_query($conn, $sql2)) {
+                    echo "<br>Record updated successfully<br>";
+                    echo "Successfully updated with check out time";
+                    $_SESSION['UpdateEmpTrackStatus'] = 'success';
+                    header("Location: $desiredLocation");
+                } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+            }else{
+                if($checkOutTime > date("H:i")){
+                    $_SESSION['UpdateEmpTrackStatusFail'] = 'failure';
+                    // $checkOutTimeErr = '* You are checking-out in future!';
+                    header("Location: $desiredLocation");
+                }else {
+                    // $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                    $_SESSION['checkInTimeBigErrorStatus'] = 'failure';
+                    header("Location: $desiredLocation");
+                }
+                
+            }
         }
     } else {
-        if ($originDate == date("H:i")) {
+        // check-out emopty h
+        if ($originDate == date("Y-m-d") && $checkInTime <= date("H:i")) {
             $sql2 = "UPDATE employeeTrackingDetails set check_in_time = '$originDate $checkInTime', check_out_time = null, updated_at = now() where user_id = '$uId' and id = '$tId' and deleted_at is null";
             if (mysqli_query($conn, $sql2)) {
                 echo "<br>Record updated successfully<br>";
             } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-
             echo "Successfully updated without checkout time";
             $_SESSION['UpdateEmpTrackStatus'] = 'success';
             header("Location: $desiredLocation");
@@ -126,16 +153,6 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2"><span class='text-info'>Update</span> Employee Tracking Details</h2>
     <div class="container mt-3">
         <div class="col-md-7">
-            <!-- toast after fail updation -->
-            <?php if (isset($_SESSION['UpdateEmpTrackStatus']) && $_SESSION['UpdateEmpTrackStatus'] == 'fail') { ?>
-                <div class="toast show m-auto hide">
-                    <div class="toast-header bg-danger text-white ">
-                        <strong class="me-auto">Something went wrong!</strong>
-                        <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-                    </div>
-                </div>
-            <?php }
-            $_SESSION['UpdateEmpTrackStatus'] = '' ?>
             <form action="<?php echo htmlspecialchars($_SERVER['SCRIPT_NAME']); ?>" method="post">
                 <div class="mb-3">
                     <label class="col-form-label">Date</label>

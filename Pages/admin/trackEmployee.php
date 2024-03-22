@@ -130,7 +130,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                     <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
                 </div>
                 <div class="toast-body">
-                    <p>You can't be checked-in in future. Please select check-out time as well!</p>
+                    <p>Either you are checking out in future or You are trying to be checked-in in future!</p>
                 </div>
             </div>
         <?php }

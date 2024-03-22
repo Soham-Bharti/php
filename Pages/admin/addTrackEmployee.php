@@ -38,7 +38,6 @@ if (isset($_POST['submit'])) {
             if ($totalCheckInCountToday >= 4) {
                 // check in limit reached
                 $_SESSION['checkInLimitMessage'] = 'success';
-
                 header("Location: $desiredLocation");
             } else {
                 if (is_null($checkOutTime) || $checkOutTime == '') {
@@ -60,21 +59,34 @@ if (isset($_POST['submit'])) {
                         }
                     }
                 } else {
-                    if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
-                        // $sql = "INSERT INTO employeeTrackingDetails(user_id, check_in_time, check_out_time) values('$desiredUserId', '$date $checkInTime', '$date $checkOutTime')";
-                        if (mysqli_query($conn, $sql)) {
-                            // echo "Success 2";
-                            $_SESSION['AddEmpTrackStatus'] = 'success';
-                            header("Location: $desiredLocation");
-                        } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-                    } else {
-                        if($checkOutTime > date("H:i")){
-                            $checkOutTimeErr = '* You are checking-out in future!';
-                        }else $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                    if($date == date("Y-m-d")){
+                        // var_dump($checkOutTime < date("H:i"));
+                        if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
+                            $sql = "INSERT INTO employeeTrackingDetails(user_id, check_in_time, check_out_time) values('$desiredUserId', '$date $checkInTime', '$date $checkOutTime')";
+                            if (mysqli_query($conn, $sql)) {
+                                // echo "Success 2";
+                                $_SESSION['AddEmpTrackStatus'] = 'success';
+                                header("Location: $desiredLocation");
+                            } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                        } else {
+                            if($checkOutTime > date("H:i")){
+                                $checkOutTimeErr = '* You are checking-out in future!';
+                            }else $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                        }
+                    }else{
+                        if ($checkInTime < $checkOutTime){
+                            $sql = "INSERT INTO employeeTrackingDetails(user_id, check_in_time, check_out_time) values('$desiredUserId', '$date $checkInTime', '$date $checkOutTime')";
+                            if (mysqli_query($conn, $sql)) {
+                                $_SESSION['AddEmpTrackStatus'] = 'success';
+                                header("Location: $desiredLocation");
+                            } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                        }else{
+                            $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                        }
                     }
                 }
 
-                // mysqli_close($conn);
+                mysqli_close($conn);
             }
         } else echo "There was an error fetching the data";
     } else echo "THERE WAS AN ERROR adding new employee track";
