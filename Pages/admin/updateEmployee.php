@@ -212,7 +212,7 @@ if (isset($_POST['submit'])) {
         mysqli_close($conn);
         // if everthing if well then redirecting the user to login page
         $_SESSION['UpdateStatus'] = 'success';
-        header("Location: viewAllEmployees.php");
+        header("Location: viewEmployeeAllDetails.php?id=$id");
         // echo "Successfully updated";
     }
 }
