@@ -7,9 +7,40 @@ if ($_SESSION['role'] !== 'admin') {
 }
 
 if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
-
+// initials
+$name = $email = $mobile = $profile = $gender = $city = $state = $dob = $tech = $joining_date =  '';
+$formatted_time = $bond_period_years = $bond_period_months = $notice_period_months = $notice_period_days  = 'N/A';
+$salary = $numberOfDays = $desiredSalaryToPay = $perHourSalary = $perMinuteSalary = $total_seconds = 0;
 if (isset($desiredUserId)) {
-    $sql = "SELECT 
+    $sql1 = "SELECT * from employeeDetails where user_id = '$desiredUserId' and deleted_at is null;";
+    $res1 = mysqli_query($conn, $sql1);
+    if (!mysqli_num_rows($res1) > 0 ) {
+        $sql = "SELECT name, 
+        mobile, 
+        date_of_birth, 
+        gender, 
+        city, 
+        state, 
+        email, 
+        profile_url
+        from users where id = '$desiredUserId';";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            $row1 = mysqli_fetch_assoc($result);
+            $name = $row1['name'];
+            $email = $row1['email'];
+            $mobile = $row1['mobile'];
+            $profile = $row1['profile_url'];
+            if (empty($profile)) {
+                $profile = 'defaultImg.webp';
+            }
+            $gender = $row1['gender'];
+            $city = $row1['city'];
+            $state = $row1['state'];
+            $dob = $row1['date_of_birth'];
+        }
+    } else {
+        $sql = "SELECT 
         COALESCE(SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)), 0) AS total_seconds,
         u.name, 
         u.mobile, 
@@ -37,47 +68,48 @@ if (isset($desiredUserId)) {
         u.id, ed.user_id;
     ";
 
-    $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result) == 1) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $name = $row['name'];
-            $email = $row['email'];
-            $mobile = $row['mobile'];
-            $profile = $row['profile_url'];
-            if (empty($profile)) {
-                $profile = 'defaultImg.webp';
-            }
-            $gender = $row['gender'];
-            $city = $row['city'];
-            $state = $row['state'];
-            $dob = $row['date_of_birth'];
-            $tech = $row['technology_assigned'];
-            $total_seconds = $row['total_seconds'];
-            $joining_date = $row['joining_date'];
-            $salary = $row['salary'];
-            if (empty($salary)) $salary = 'N/A';
-            $bond_period = $row['bond_period'];
-            if (empty($bond_period)) {
-                $bond_period_years = 'N/A';
-                $bond_period_months = 'N/A';
-            } else {
-                $bond_period_years = explode(' ', $bond_period)[0];
-                $bond_period_months = explode(' ', $bond_period)[2];
-            }
-            $notice_period = $row['notice_period'];
-            if (empty($notice_period)) {
-                $notice_period_months = 'N/A';
-                $notice_period_days = 'N/A';
-            } else {
-                $notice_period_months = explode(' ', $notice_period)[0];
-                $notice_period_days = explode(' ', $notice_period)[2];
-            }
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) == 1) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $name = $row['name'];
+                $email = $row['email'];
+                $mobile = $row['mobile'];
+                $profile = $row['profile_url'];
+                if (empty($profile)) {
+                    $profile = 'defaultImg.webp';
+                }
+                $gender = $row['gender'];
+                $city = $row['city'];
+                $state = $row['state'];
+                $dob = $row['date_of_birth'];
+                $tech = $row['technology_assigned'];
+                $total_seconds = $row['total_seconds'];
+                $joining_date = $row['joining_date'];
+                $salary = $row['salary'];
+                if (empty($salary)) $salary = 'N/A';
+                $bond_period = $row['bond_period'];
+                if (empty($bond_period)) {
+                    $bond_period_years = 'N/A';
+                    $bond_period_months = 'N/A';
+                } else {
+                    $bond_period_years = explode(' ', $bond_period)[0];
+                    $bond_period_months = explode(' ', $bond_period)[2];
+                }
+                $notice_period = $row['notice_period'];
+                if (empty($notice_period)) {
+                    $notice_period_months = 'N/A';
+                    $notice_period_days = 'N/A';
+                } else {
+                    $notice_period_months = explode(' ', $notice_period)[0];
+                    $notice_period_days = explode(' ', $notice_period)[2];
+                }
 
-            // seconds to hours, minutes and seconds
-            $hours = floor($total_seconds / 3600);
-            $minutes = floor(($total_seconds % 3600) / 60);
-            $seconds = $total_seconds % 60;
-            $formatted_time = sprintf("%02d Hours %02d Minutes %02d Seconds", $hours, $minutes, $seconds);
+                // seconds to hours, minutes and seconds
+                $hours = floor($total_seconds / 3600);
+                $minutes = floor(($total_seconds % 3600) / 60);
+                $seconds = $total_seconds % 60;
+                $formatted_time = sprintf("%02d Hours %02d Minutes %02d Seconds", $hours, $minutes, $seconds);
+            }
         }
     }
 } else {
@@ -109,7 +141,7 @@ if (isset($desiredUserId)) {
                     <a class="nav-link" href="viewAllEmployees.php">Back</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="updateEmployee.php?id=<?php echo $desiredUserId?>">Update Personal Details</a>
+                    <a class="nav-link" href="updateEmployee.php?id=<?php echo $desiredUserId ?>">Update Personal Details</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
