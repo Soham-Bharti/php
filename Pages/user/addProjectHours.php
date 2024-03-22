@@ -14,7 +14,7 @@ $Err = "";
 $flag = true;
 
 if (isset($_POST['submit'])) {
-    print_r($_POST);
+    // print_r($_POST);
     $projectId_Array = $_POST['projectId'];
     $description_Array = $_POST['description'];
     $desiredUserId = $_POST['desiredUserId'];
