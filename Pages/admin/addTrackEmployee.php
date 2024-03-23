@@ -51,14 +51,19 @@ if (isset($_POST['submit'])) {
                     } else {
                         // echo "Either you are only adding check-in time in past day without check-out time or check in time is greater than current time.";
                         // $_SESSION['AddEmpTrackStatus'] = 'failure';
-                        if($checkInTime > date("H:i")){
-                            $checkInTimeErr = 'Check-in time is greater than current time!';
-                        }else {
-                            $dateErr = "Check-out time required in past";
-                            $checkOutTimeErr = "* Required when manipulating time in past";
+                        if($checkInTime < $checkOutTime){
+                            $result = $adminObject -> addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, NULL);
+                            if ($result) {
+                                // echo "Success 1";
+                                $_SESSION['AddEmpTrackStatus'] = 'success';
+                                header("Location: $desiredLocation");
+                            } else echo "<br>Error occured while inserting into table";
+                        }else{
+                            $checkOutTimeErr = "* Can not be empty for past tracks";
                         }
                     }
                 } else {
+                     // checkout is not null -> filled
                     if($date == date("Y-m-d")){
                         // var_dump($checkOutTime < date("H:i"));
                         if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
