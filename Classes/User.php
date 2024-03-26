@@ -1,6 +1,4 @@
 <?php
-require '../../config/dbConnection.php';
-
 final class User extends dbConnection
 {
     private $conn;
@@ -8,6 +6,7 @@ final class User extends dbConnection
 
     public function __construct($userId)
     {
+        // $dbObj = new dbConnection();
         $this->conn = parent::connect();
         $this->desiredUserId = $userId;
     }

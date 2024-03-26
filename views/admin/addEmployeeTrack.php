@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/Admin.php';
 date_default_timezone_set("Asia/Kolkata");
 $adminObject = new Admin();

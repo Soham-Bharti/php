@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/Admin.php';
 $adminObject = new Admin();
 
@@ -64,7 +65,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                         $userName = $row['name'];
                     }
                 }
-                echo "Emp Id: " . $desiredUserId . " | " . $userName;
+                echo "Emp Id: <b>" . $desiredUserId . "</b> | " . $userName;
                 ?>
             </div>
             <div>
@@ -222,7 +223,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                                 <a href="updateEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-primary">Edit</a>
                             </td>
                             <td>
-                                <a href="deleteEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-danger">Delete</a>
+                                <a onclick="return confirm('Are you sure you want to delete this track?')" href="deleteEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?> " class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     <?php

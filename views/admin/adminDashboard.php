@@ -1,8 +1,10 @@
 <?php
 session_start();
-// require '../../config/dbConnection.php';
-// $conn = new dbConnection();
-// $conn->connect();
+require_once '../../config/dbConnection.php';
+require_once '../../Classes/Project.php';
+require_once '../../Classes/Admin.php';
+$projectObject = new Project();
+$adminObject = new Admin();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -62,7 +64,8 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } $_SESSION['AddStatus'] = '' ?>
+    <?php }
+    $_SESSION['AddStatus'] = '' ?>
     <!-- toast after successful update -->
     <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -71,7 +74,8 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } $_SESSION['UpdateStatus'] = '' ?>
+    <?php }
+    $_SESSION['UpdateStatus'] = '' ?>
     <!-- toast after successful delete -->
     <?php if (isset($_SESSION['DeleteStatus']) && $_SESSION['DeleteStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -80,9 +84,10 @@ if ($_SESSION['role'] !== 'admin') {
                 <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
             </div>
         </div>
-    <?php } $_SESSION['DeleteStatus'] = '' ?>
-    
-    <div class="container mt-5 px-5">
+    <?php }
+    $_SESSION['DeleteStatus'] = '' ?>
+
+    <div class="container-fluid mt-5 px-5">
         <div class="d-flex justify-content-between align-items-center">
             <div class='fs-4'>
                 <?php
@@ -95,24 +100,91 @@ if ($_SESSION['role'] !== 'admin') {
                 }
                 ?>
             </div>
-            <div class="buttons d-flex justify-content-between gap-3 align-items-center">
-                <!-- <form action="addEmployee.php" method="POST">
-                    <input type="submit" name="add-submit" class="btn btn-success btn-lg" value="Add Employee">
-                </form> -->
-
+        </div>
+        <h2 class="text-center mt-5">Showing <span class='text-primary'>analytical</span> details</h2>
+        <div class="my-5 d-flex justify-content-evenly">
+            <div class="card" style="width: 17rem;">
+                <img class="card-img-top" src="../../Images/project.gif" alt="Card image cap">
+                <div class="card-body">
+                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                        <p class="card-title fs-5">Total Projects: </p>
+                        <?php
+                        $result = $projectObject->totalProjectsCount();
+                        if (mysqli_num_rows($result) > 0) {
+                            $row = mysqli_fetch_assoc($result);
+                            $totalProjects =  $row['totalProjectsCount'];
+                        }
+                        ?>
+                        <p class='fw-bold display-6'><?php echo $totalProjects; ?></p>
+                    </div>
+                    <a href="viewAllProjects.php" class="btn btn-primary w-100">Go to Projects</a>
+                </div>
+            </div>
+            <div class="card" style="width: 17rem;">
+                <img class="card-img-top p-4" src="../../Images/calendar.png" alt="Card image cap">
+                <div class="card-body">
+                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                        <p class="card-title fs-5">Idle Employee/s: </p>
+                        <?php
+                        $result = $adminObject->totalEmployeesWithNoProjects();
+                        if (mysqli_num_rows($result) > 0) {
+                            $totalEmployeesWithNoProjectsCount = 0;
+                            $totalEmployeesWithNoProjectsArray = [];
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                array_push($totalEmployeesWithNoProjectsArray,  $row['name']);
+                                $totalEmployeesWithNoProjectsCount++;
+                            }
+                        }
+                        ?>
+                        <p class='fw-bold display-6'><?php echo $totalEmployeesWithNoProjectsCount; ?></p>
+                    </div>
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                    Show List
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <?php
+                                    // print_r($totalEmployeesWithNoProjectsArray);
+                                    foreach($totalEmployeesWithNoProjectsArray as $name){
+                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="width: 17rem;">
+                <img class="card-img-top" src="../../Images/management.gif" alt="Card image cap">
+                <div class="card-body">
+                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                        <p class="card-title fs-5">Attendance: </p>
+                        <?php
+                        $result = $adminObject->totalEmployeesCount();
+                        if (mysqli_num_rows($result) > 0) {
+                            $row = mysqli_fetch_assoc($result);
+                            $totalEmployeesCount =  $row['totalEmployeesCount'];
+                        }
+                        $result = $adminObject->totalCheckedInUsersToday();
+                        $totalCheckedInUsersTodayCount  = mysqli_num_rows($result);
+                        ?>
+                        <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
+                    </div>
+                    <a href="viewAllEmployees.php" class="btn btn-dark w-100">Go to Employees</a>
+                </div>
             </div>
         </div>
-        <!-- <h2 class="text-center mt-5">Showing <span class='text-primary'>analytical</span> details</h2> -->
-        <div class="mt-3">
-        </div>
-
     </div>
 
     <!-- footer here -->
     <?php include('../common/footer.php'); ?>
     <!-- footer ends -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>

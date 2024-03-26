@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/User.php';
 
 // print_r($_SESSION);

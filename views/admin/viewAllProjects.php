@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/Project.php';
 $projectObject = new Project();
 
@@ -8,7 +9,20 @@ if ($_SESSION['role'] !== 'admin') {
     header('Location: ../start/login.php');
 }
 
+if (isset($_GET['delete_id'])) {
+    $projectId = $_GET['delete_id'];
+    $result = $projectObject->delete($projectId);
+    if ($result) {
+        $_SESSION['ProjectDeleteStatus'] = 'success';
+    } else {
+        $_SESSION['ProjectDeleteStatus'] = 'failure';
+    }
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -116,7 +130,7 @@ if ($_SESSION['role'] !== 'admin') {
                     </tr>
                 </thead>
                 <?php
-                $result = $projectObject -> showAllProjects();
+                $result = $projectObject->showAllProjects();
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $dateTime = $row["created_at"];
@@ -137,7 +151,10 @@ if ($_SESSION['role'] !== 'admin') {
                                 <a href="addProjectMember.php?id=<?php echo $row["id"] ?>" class="btn btn-warning text-muted btn-sm">Add Members</a>
                             </td>
                             <td>
-                                <a href="deleteProject.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Remove</a>
+                                <!-- <a href="deleteProject.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Remove</a> -->
+                         
+                                <a onclick="return confirm('Are you sure you want to delete this project?')" href="?delete_id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Remove</a>
+                    
                             </td>
                         </tr>
                 <?php
@@ -158,7 +175,7 @@ if ($_SESSION['role'] !== 'admin') {
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
     <script>
-        new DataTable('#projectsTable',{
+        new DataTable('#projectsTable', {
             stateSave: true
         });
     </script>
