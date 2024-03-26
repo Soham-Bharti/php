@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../../Classes/Admin.php';
-$adminObject = new Admin();
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -37,13 +37,13 @@ if (isset($_POST['add'])) {
     if ($flag) {
         // sending data to data base
         foreach ($memberIdArr as $value) {
-            $result =  $adminObject->addProjectMembers($desiredProjectId, $value);
+            $result =  $projectObject->addProjectMembers($desiredProjectId, $value);
             if ($result) {
                 // echo "<br>Record inserted successfully<br>";
                 // if everthing if well then redirecting the admin
             } else {
                 $flag = false;
-                echo "<br>Error occurred while inserting into table : " . mysqli_error($conn); // Print any errors returned by MySQL
+                echo "<br>Error occurred while inserting into table"; // Print any errors returned by MySQL
             }
         }
         if ($flag) {
@@ -54,8 +54,6 @@ if (isset($_POST['add'])) {
             $_SESSION['addProjectMemberStatus'] = 'failure';
             header("Location: viewAllProjects.php");
         }
-        mysqli_close($conn); // Close the database connection
-
     }
 }
 
@@ -97,7 +95,7 @@ if (isset($_POST['add'])) {
     </nav>
     <!-- nav ends -->
     <?php
-    $result = $adminObject -> showProjectDetails($desiredProjectId);
+    $result = $projectObject -> showProjectDetails($desiredProjectId);
     if (mysqli_num_rows($result) == 1) {
         while ($row = mysqli_fetch_assoc($result)) {
             $title = $row['title'];
@@ -124,7 +122,7 @@ if (isset($_POST['add'])) {
                     <label class="col-form-label" for='memberId'>Select Member/s <span class="text-danger">* <?php echo $selectMemberErr ?></span></label>
                     <select class="form-control selectpicker" name="memberId[]" id="memberId" multiple data-live-search="true" placeholder='choose'>
                         <?php
-                       $result = $adminObject -> showUnAddedProjectMembers($desiredProjectId);
+                       $result = $projectObject -> showUnAddedProjectMembers($desiredProjectId);
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
                         ?>

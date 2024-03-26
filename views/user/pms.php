@@ -1,13 +1,13 @@
 <?php
 session_start();
-require '../../Classes/User.php';
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'emp') {
     header('Location: ../start/login.php');
 }
 if (isset($_SESSION['id'])) $desiredUserId = $_SESSION['id'];
-$userObject = new User($desiredUserId);
 
 ?>
 
@@ -125,7 +125,7 @@ $userObject = new User($desiredUserId);
                     <th>Summary</th>
                 </tr>
                 <?php
-                $result = $userObject -> showPMS();
+                $result = $projectObject -> showPMSbyUserId($desiredUserId);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {

@@ -21,7 +21,7 @@ $checkOutTime = null;
 $checkInTimeErr = $checkOutTimeErr = "";
 
 if (isset($desiredUserId) && isset($desiredTrackId)) {
-    $result = $adminObject->showEmployeeTrackDetails($desiredUserId, $desiredTrackId, false);
+    $result = $adminObject->showEmployeeTrackDetailsUsingTrackId($desiredUserId, $desiredTrackId);
     if (mysqli_num_rows($result) == 1) {
         while ($row = mysqli_fetch_assoc($result)) {
             // echo "created at: ". $row['created_at'] . "<br>";

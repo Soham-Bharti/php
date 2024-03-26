@@ -1,18 +1,21 @@
 <?php
 require '../../config/dbConnection.php';
 
-final class User
+final class User extends dbConnection
 {
     private $conn;
     private $desiredUserId;
 
     public function __construct($userId)
     {
-        $dbObj = new dbConnection();
-        $this->conn = $dbObj->connect();
+        $this->conn = parent::connect();
         $this->desiredUserId = $userId;
     }
 
+    public function __destruct(){
+        mysqli_close($this->conn);
+    }
+    
     public function showDetails()
     {
         $sql = "SELECT 
@@ -121,36 +124,6 @@ GROUP BY
     public function daysInCurrentMonth()
     {
         $sql = "SELECT DAY(LAST_DAY(NOW())) AS days_in_current_month;";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function showPMS()
-    {
-        $sql = "SELECT updt.project_id as projectId, updt.activity_log as summary, updt.created_at as created_dateTime, p.title as projectTitle
-        from UserProjectDailyTask updt
-        inner join projects p
-        on p.id = updt.project_id
-        where user_id = $this->desiredUserId and p.deleted_at is null order by created_dateTime desc limit 10";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function showProjects()
-    {
-        $sql = "SELECT p.id as id, p.title as title, p.description as description, ep.created_at as assigned_on
-        from projects as p
-        inner join employeesProjects as ep
-        on p.id = ep.project_id
-        where ep.deleted_at is null and p.deleted_at is null and ep.user_id = '$this->desiredUserId'
-        order by assigned_on desc;";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function addProjectDailyTask($projectId, $description)
-    {
-        $sql = "INSERT INTO UserProjectDailyTask(user_id, project_id, activity_log) values('$this->desiredUserId', '$projectId', '$description');";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }

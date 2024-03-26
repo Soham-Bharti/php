@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../../Classes/Admin.php';
-$adminObject = new Admin();
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -12,7 +12,7 @@ if (isset($_GET['id'])) $desiredProjectId = $_GET['id'];
 
 if (isset($desiredProjectId)) {
     // $sql = "DELETE from users where id = '$desiredUserId'";
-    $result = $adminObject -> deleteProject($desiredProjectId);
+    $result = $projectObject -> delete($desiredProjectId);
     if ($result) {
         // echo "Successfully deleted the record";
         $_SESSION['ProjectDeleteStatus'] = 'success';

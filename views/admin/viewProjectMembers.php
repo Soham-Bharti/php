@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../../Classes/Admin.php';
-$adminObject = new Admin();
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -55,7 +55,7 @@ function test_input($data)
     <!-- nav ends -->
 
     <?php
-    $result = $adminObject->showProjectDetails($desiredProjectId);
+    $result = $projectObject->showProjectDetails($desiredProjectId);
     if (mysqli_num_rows($result) == 1) {
         while ($row = mysqli_fetch_assoc($result)) {
             $title = $row['title'];
@@ -78,7 +78,7 @@ function test_input($data)
                 </tr>
             </thead>
             <?php
-            $result = $adminObject->showProjectMembers($desiredProjectId);
+            $result = $projectObject->showProjectMembers($desiredProjectId);
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $dateTime = $row["addedOn"];

@@ -1,6 +1,7 @@
 <?php
 session_start();
-require '../../Classes/User.php';
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'emp') {
@@ -8,7 +9,6 @@ if ($_SESSION['role'] !== 'emp') {
 }
 
 if (isset($_SESSION["id"])) $desiredUserId = $_SESSION["id"];
-$userObject = new User($desiredUserId);
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +59,7 @@ $userObject = new User($desiredUserId);
                     </tr>
                 </thead>
                 <?php
-                $result = $userObject -> showProjects();
+                $result = $projectObject -> showProjectsByUserId($desiredUserId);
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $dateTime = $row["assigned_on"];

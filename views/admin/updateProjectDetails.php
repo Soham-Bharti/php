@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../../Classes/Admin.php';
-$adminObject = new Admin();
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -12,7 +12,7 @@ if (isset($_GET['id'])) $desiredProjectId = $_GET['id'];
 $titleErr = $descErr = $title = $description = ''; 
 
 if (isset($desiredProjectId)) {
-    $result = $adminObject -> showProjectDetails($desiredProjectId);
+    $result = $projectObject -> showProjectDetails($desiredProjectId);
     if (mysqli_num_rows($result) == 1) {
         while ($row = mysqli_fetch_assoc($result)) {
             $title = $row['title'];
@@ -50,7 +50,7 @@ if (isset($_POST['update'])) {
     }
 
     if ($flag) {
-        $result = $adminObject -> updateProjectDetails($desiredProjectId, $title, $description);
+        $result = $projectObject -> updateProjectDetails($desiredProjectId, $title, $description);
         if ($result) {
             // echo "<br>Record updated successfully<br>";
             $_SESSION['updateProjectDetailsStatus'] = 'success';

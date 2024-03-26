@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../../Classes/Admin.php';
-$adminObject = new Admin();
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -116,7 +116,7 @@ if ($_SESSION['role'] !== 'admin') {
                     </tr>
                 </thead>
                 <?php
-                $result = $adminObject -> showAllProjects();
+                $result = $projectObject -> showAllProjects();
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $dateTime = $row["created_at"];

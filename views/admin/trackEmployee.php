@@ -70,7 +70,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
             <div>
                 <?php
                 $showStatus = '';
-                $result = $adminObject->showEmployeeTrackDetails($desiredUserId, null, false);
+                $result = $adminObject->showEmployeeTrackDetailsWithGroupByCheckInTime($desiredUserId);
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $checkOut = $row["check_out_time"];
@@ -153,7 +153,16 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
         <?php }
         $_SESSION['checkInTimeBigErrorStatus'] = '' ?>
         <!-- toast ends -->
-
+        <!-- toast after successful deletion of track -->
+        <?php if (isset($_SESSION['DeleteTrackStatus']) && $_SESSION['DeleteTrackStatus'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white ">
+                    <strong class="me-auto">Track deleted successfully!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['DeleteTrackStatus'] = '' ?>
         <h2 class="text-center mt-5">Showing <span class='text-success'>LAST 10</span> tracks</h2>
         <div class="mt-3">
             <table>
@@ -164,9 +173,10 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                     <th>Check In Time</th>
                     <th>Check Out Time</th>
                     <th>Action</th>
+                    <th>Action</th>
                 </tr>
                 <?php
-                $result = $adminObject->showEmployeeTrackDetails($desiredUserId, NULL, false);
+                $result = $adminObject->showEmployeeTrackDetailsWithGroupByCheckInTime($desiredUserId);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
@@ -210,6 +220,9 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                             </td>
                             <td>
                                 <a href="updateEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-primary">Edit</a>
+                            </td>
+                            <td>
+                                <a href="deleteEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     <?php

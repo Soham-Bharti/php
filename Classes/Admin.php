@@ -1,43 +1,18 @@
 <?php
 require '../../config/dbConnection.php';
 
-final class Admin
+final class Admin extends dbConnection
 {
     private $conn;
 
     public function __construct()
     {
-        $dbObj = new dbConnection();
-        $this->conn = $dbObj->connect();
-
-        // if(!isset($adminId)){
-        //     throw new Exception("Admin ID is required");
-        // } else {
-        //     if(!$this->isAdmin($adminId)){
-        //         header('Location: ../start/login.php');
-        //         // throw new Exception("Not an admin");
-        //     }
-        // }
+        $this->conn = parent::connect();
     }
 
-    // public function __destruct()
-    // {
-    //     try {
-    //         mysqli_close($this->conn);
-    //     } catch (Exception $ex) {
-    //         echo "Error in closing connection" . $ex->getMessage();
-    //     }
-    // }
-
-    // public function isAdmin(int $id){
-    //     $sql = "SELECT * FROM users WHERE role = 'admin' AND id = '$id' AND deleted_at IS NULL";
-    //     $result = mysqli_query($this->conn, $sql);
-
-    //     if(mysqli_num_rows($result) === 1){
-    //         return true;
-    //     }
-    //     return false; 
-    // }
+    public function __destruct(){
+        mysqli_close($this->conn);
+    }
 
     public function showEmployees()
     {
@@ -54,13 +29,6 @@ final class Admin
             return true;
         }
         return false;
-    }
-
-    public function showAllProjects()
-    {
-        $sql = "SELECT id, title, description, created_at from projects where deleted_at is null";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
     }
 
     public function addEmployee($role, $name, $email, $hashedPassword, $gender, $mobile, $dob, $address, $city, $state, $fileNameNew)
@@ -164,11 +132,9 @@ final class Admin
         return $result;
     }
 
-    public function showEmployeeTrackDetails($desiredUserId, $desiredTrackId, $isGroupByDate)
+    public function showEmployeeTrackDetailsWithGroupByDate($desiredUserId)
     {
-        if (!isset($desiredTrackId)) {
-            if ($isGroupByDate) {
-                $sql =  "SELECT
+        $sql =  "SELECT
             id,
             check_in_time,
             check_out_time,
@@ -178,8 +144,12 @@ final class Admin
             WHERE user_id = '$desiredUserId' and deleted_at is null
             GROUP BY DATE(check_in_time)
             ORDER BY DATE(check_in_time) DESC;";
-            } else {
-                $sql =  "SELECT
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+    public function showEmployeeTrackDetailsWithGroupByCheckInTime($desiredUserId)
+    {
+        $sql =  "SELECT
             id,
             check_in_time,
             check_out_time,
@@ -189,10 +159,13 @@ final class Admin
             WHERE user_id = '$desiredUserId' and deleted_at is null
             GROUP BY check_in_time
             ORDER BY check_in_time DESC;";
-            }
-        } else {
-            $sql = "SELECT check_in_time, check_out_time from employeeTrackingDetails where user_id = '$desiredUserId' and id = '$desiredTrackId' and deleted_at is null";
-        }
+
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+    public function showEmployeeTrackDetailsUsingTrackId($desiredUserId, $desiredTrackId)
+    {
+        $sql = "SELECT check_in_time, check_out_time from employeeTrackingDetails where user_id = '$desiredUserId' and id = '$desiredTrackId' and deleted_at is null";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
@@ -223,74 +196,16 @@ final class Admin
         return $result;
     }
 
+    public function deleteEmployeeTrackDetails($desiredUserId, $desiredTrackId)
+    {
+        $sql = "UPDATE employeeTrackingDetails set deleted_at = now() where user_id = '$desiredUserId' and id ='$desiredTrackId';";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
     public function deleteEmployee($desiredUserId)
     {
         $sql  = "UPDATE users SET deleted_at = now() WHERE id = '$desiredUserId';";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    // project manipulation functions
-    public function addProject($title, $description)
-    {
-        $sql = "INSERT INTO projects(title, description) values('$title', '$description');";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function showProjectDetails($desiredProjectId)
-    {
-        $sql = "SELECT title, description, created_at from projects where id = '$desiredProjectId' and deleted_at is null";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function showProjectMembers($desiredProjectId)
-    {
-        $sql = "SELECT u.id as id, u.name as name, ep.created_at as addedOn
-        from users u
-        inner join employeesProjects ep
-        on u.id = ep.user_id
-        where u.role = 'employee' and ep.project_id = '$desiredProjectId' and ep.deleted_at is null and u.deleted_at is null 
-        order by addedOn desc";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function updateProjectDetails($desiredProjectId, $title, $description)
-    {
-        $sql = "UPDATE projects set title = '$title', description = '$description', updated_at = now() where id = '$desiredProjectId' and deleted_at is null;";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function addProjectMembers($desiredProjectId, $memberId)
-    {
-        $sql = "INSERT INTO employeesProjects(project_id, user_id) values('$desiredProjectId', '$memberId');";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function showUnAddedProjectMembers($desiredProjectId)
-    {
-        $sql = "SELECT id, name
-        FROM users 
-        WHERE role = 'employee'
-        AND deleted_at IS NULL
-        AND NOT EXISTS (
-            SELECT 1
-            FROM employeesProjects
-            WHERE users.id = employeesProjects.user_id
-            AND employeesProjects.project_id = '$desiredProjectId'
-        )
-        ORDER BY name;";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
-
-    public function deleteProject($desiredProjectId)
-    {
-        $sql  = "UPDATE projects SET deleted_at = now() WHERE id = '$desiredProjectId';";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }

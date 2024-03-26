@@ -63,7 +63,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
             <div>
                 <?php
                 $showStatus = '';
-                $result = $adminObject -> showEmployeeTrackDetails($desiredUserId, NULL, true);
+                $result = $adminObject -> showEmployeeTrackDetailsWithGroupByDate($desiredUserId);
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $checkOut = $row["check_out_time"];
@@ -95,7 +95,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                     <th>Working Hours</th>
                 </tr>
                 <?php
-                $result = $adminObject -> showEmployeeTrackDetails($desiredUserId, NULL, true);
+                $result = $adminObject -> showEmployeeTrackDetailsWithGroupByDate($desiredUserId);
                 $seialNumber = 1;
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {

@@ -1,7 +1,7 @@
 <?php
 session_start();
-require '../../Classes/Admin.php';
-$adminObject = new Admin();
+require '../../Classes/Project.php';
+$projectObject = new Project();
 
 // print_r($_SESSION);
 if ($_SESSION['role'] !== 'admin') {
@@ -20,19 +20,17 @@ function test_input($data)
 }
 $flag = true;
 if (isset($_POST['submit'])) {
-    // print_r($_POST);
     $title = test_input($_POST['title']);
     $description = test_input($_POST['description']);
 
-
     if (empty($title)) {
-        $nameErr = 'Required';
+        $titleErr = 'Required';
         $flag = false;
     } else {
-        if (!preg_match("/^[a-zA-Z0-9-' ]*$/", $title)) {
-            $titleErr = "Only letters, white space and numbers allowed";
-            $flag = false;
-        }
+        // if (!preg_match("/^[a-zA-Z0-9-' ]*$/", $title)) {
+        //     $titleErr = "Only letters, white space and numbers allowed";
+        //     $flag = false;
+        // }
     }
 
     if (empty($description)) {
@@ -44,7 +42,7 @@ if (isset($_POST['submit'])) {
     }
 
     if ($flag) {
-        $result = $adminObject -> addProject($title, $description);
+        $result = $projectObject -> add($title, $description);
         if ($result) {
             // echo "<br>New record inserted successfully<br>";
             $_SESSION['AddProjectStatus'] = 'success';

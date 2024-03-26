@@ -1,14 +1,13 @@
 <?php
 session_start();
-require '../../Classes/User.php';
-
+require '../../Classes/Project.php';
+$projectObject = new Project();
 if ($_SESSION['role'] !== 'emp') {
     header('Location: ../start/login.php');
 }
 
 if (isset($_GET['id'])){
     $desiredUserId = $_GET['id'];
-    $userObject = new User($desiredUserId);
 }
 
 $description = "";
@@ -21,7 +20,6 @@ if (isset($_POST['submit'])) {
     $projectId_Array = $_POST['projectId'];
     $description_Array = $_POST['description'];
     $desiredUserId = $_POST['desiredUserId'];
-    $userObject = new User($desiredUserId);
     $desiredArray = array_combine($projectId_Array, $description_Array);
     
 
@@ -35,7 +33,7 @@ if (isset($_POST['submit'])) {
 
     if ($flag) {
         foreach ($desiredArray as $projectId => $description) {
-            $result = $userObject->addProjectDailyTask($projectId, $description);
+            $result = $projectObject->addProjectDailyTask($desiredUserId, $projectId, $description);
             if ($result) {
                 // echo "<br>New record inserted successfully<br>";
                 $_SESSION['AddDailyTaskStatus'] = 'success';
@@ -95,7 +93,7 @@ if (isset($_POST['submit'])) {
                             <!-- selectpicker -->
                             <select class="form-control" name="projectId[]" id='projectId' data-live-search="true">
                                 <?php
-                                $result = $userObject->showProjects();
+                                $result = $projectObject->showProjectsByUserId($desiredUserId);
                                 if (mysqli_num_rows($result) > 0) {
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         $projectID = $row['id'];
@@ -138,7 +136,7 @@ if (isset($_POST['submit'])) {
                         <!-- selectpicker -->
                         <select class="form-control" name="projectId[]" id='projectId' data-live-search="true">
                             <?php
-                            $result = $userObject->showProjects();
+                            $result = $projectObject->showProjectsByUserId($desiredUserId);
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     $projectID = $row['id'];
