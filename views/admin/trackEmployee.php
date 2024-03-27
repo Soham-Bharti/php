@@ -95,6 +95,18 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
         </div>
 
         <!-- toast after successful added -->
+        <?php if (isset($_SESSION['trackAlreadyPresent']) && $_SESSION['trackAlreadyPresent'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Oops! Track already present between this time range.</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['trackAlreadyPresent'] = '' ?>
+        <!-- toast ends -->
+
+        <!-- toast after successful added -->
         <?php if (isset($_SESSION['UpdateEmpTrackStatus']) && $_SESSION['UpdateEmpTrackStatus'] == 'success') { ?>
             <div class="toast show m-auto hide">
                 <div class="toast-header bg-warning text-muted ">

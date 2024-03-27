@@ -177,6 +177,15 @@ final class Admin extends dbConnection
         return $result;
     }
 
+    public function employeeTrackDetailsOnDate($desiredUserId, $date)
+    {
+        $sql = "SELECT check_in_time, check_out_time
+        from employeetrackingdetails
+        where user_id = '$desiredUserId' and deleted_at is null and DATE(check_in_time) = '$date';";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
     public function employeeTrackCheckInCounts($desiredUserId, $date)
     {
         $sql = "SELECT count(date(check_in_time)) as count from employeeTrackingDetails where user_id = '$desiredUserId' and date(check_in_time) = '$date' and deleted_at is null;";
