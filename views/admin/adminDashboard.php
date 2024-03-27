@@ -124,7 +124,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <img class="card-img-top p-4 w-75 m-auto" src="../../Images/calendar.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Attendance: </p>
+                        <p class="card-title fs-6">Attendance Today's (<?php echo date('d-M');?>): </p>
                         <?php
                         $result = $adminObject->totalEmployeesCount();
                         if (mysqli_num_rows($result) > 0) {
@@ -169,7 +169,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Less Hour (<?php echo date('d-M');?>): </p>
+                        <p class="card-title fs-6">Less Hour (<?php echo date('d-M', strtotime('yesterday'));?>): </p>
                         <?php
                         $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday();
                         if (mysqli_num_rows($result) > 0) {
@@ -205,7 +205,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <img class="card-img-top w-75 m-auto" src="../../Images/pms.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-6">Missed PMS (<?php echo date('d-M');?>): </p>
+                        <p class="card-title fs-6">Missed PMS (<?php echo date('d-M', strtotime('yesterday'));?>): </p>
                         <?php
                         $result = $projectObject->employeesWithNoPMSYesterday();
                         if (mysqli_num_rows($result) > 0) {
