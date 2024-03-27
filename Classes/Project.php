@@ -128,4 +128,14 @@ final class Project extends dbConnection
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
+
+    public function employeesWithNoPMSYesterday(){
+        $sql = "SELECT DISTINCT u.id, u.name
+        from users u
+        left JOIN userprojectdailytask updt
+        on u.id = updt.user_id and DATE(updt.created_at) = SUBDATE(CURDATE(),1)
+        where u.role = 'employee' and u.deleted_at is null and updt.deleted_at is null and updt.id is null";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
 }

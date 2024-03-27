@@ -251,4 +251,17 @@ final class Admin extends dbConnection
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
+
+    public function showEmployeesWithLessWorkingHoursYesterday()
+    {
+        $sql = "SELECT DISTINCT u.id, u.name, COALESCE(SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)), 0) AS total_seconds
+        from users u
+        left JOIN employeetrackingdetails e
+        on u.id = e.user_id and DATE(e.check_in_time) = SUBDATE(CURDATE(),1)
+        where u.role = 'employee' and u.deleted_at is null and e.deleted_at is null
+        GROUP BY u.id, e.user_id
+        HAVING total_seconds < 31500";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
 }
