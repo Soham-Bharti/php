@@ -64,14 +64,14 @@ final class Project extends dbConnection
     public function showUnAddedProjectMembers($desiredProjectId)
     {
         $sql = "SELECT id, name
-        FROM users 
-        WHERE role = 'employee'
-        AND deleted_at IS NULL
+        FROM users
+        WHERE role = 'employee' AND deleted_at IS NULL
         AND NOT EXISTS (
             SELECT 1
             FROM employeesProjects
             WHERE users.id = employeesProjects.user_id
             AND employeesProjects.project_id = '$desiredProjectId'
+            AND employeesProjects.deleted_at is null
         )
         ORDER BY name;";
         $result = mysqli_query($this->conn, $sql);
@@ -119,6 +119,22 @@ final class Project extends dbConnection
 
     public function totalProjectsCount(){
         $sql = "SELECT count(id) as totalProjectsCount from projects where deleted_at is null";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
+    public function deleteMember($desiredProjectId, $desiredUserId){
+        $sql = "UPDATE employeesProjects set deleted_at = now() where user_id = '$desiredUserId' and project_id ='$desiredProjectId';";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
+    public function employeesWithNoPMSYesterday(){
+        $sql = "SELECT DISTINCT u.id, u.name
+        from users u
+        left JOIN userprojectdailytask updt
+        on u.id = updt.user_id and DATE(updt.created_at) = SUBDATE(CURDATE(),1)
+        where u.role = 'employee' and u.deleted_at is null and updt.deleted_at is null and updt.id is null";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }

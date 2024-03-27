@@ -8,10 +8,6 @@ final class Admin extends dbConnection
         $this->conn = parent::connect();
     }
 
-    public function __destruct()
-    {
-        mysqli_close($this->conn);
-    }
 
     public function showEmployees()
     {
@@ -236,10 +232,35 @@ final class Admin extends dbConnection
 
     public function totalEmployeesWithNoProjects()
     {
+        $sql = "SELECT DISTINCT u.id, u.name 
+        FROM users u 
+        left JOIN employeesprojects ep
+        ON u.id = ep.user_id and ep.deleted_at is null
+        where u.deleted_at is null and role = 'employee' and ep.id is null";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
+    public function showTodaysAbsentEmployees()
+    {
         $sql = "SELECT DISTINCT u.id, u.name
-        FROM users u
-        left JOIN employeesprojects ep ON u.id = ep.user_id
-        where u.deleted_at is null and ep.deleted_at is null and role = 'employee' and ep.id is null";
+        from users u
+        left join employeetrackingdetails etd
+        on etd.user_id = u.id and DATE(etd.check_in_time) = DATE(now()) and etd.deleted_at is null
+        where u.deleted_at is null and u.role = 'employee' and etd.id is null";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
+    public function showEmployeesWithLessWorkingHoursYesterday()
+    {
+        $sql = "SELECT DISTINCT u.id, u.name, COALESCE(SUM(TIMESTAMPDIFF(SECOND, e.check_in_time, e.check_out_time)), 0) AS total_seconds
+        from users u
+        left JOIN employeetrackingdetails e
+        on u.id = e.user_id and DATE(e.check_in_time) = SUBDATE(CURDATE(),1)
+        where u.role = 'employee' and u.deleted_at is null and e.deleted_at is null
+        GROUP BY u.id, e.user_id
+        HAVING total_seconds < 31500";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }

@@ -26,6 +26,7 @@ final class User extends dbConnection
     u.city, 
     u.state, 
     u.email, 
+    u.password,
     u.profile_url,
     ed.salary, 
     ed.technology_assigned, 
@@ -106,13 +107,7 @@ GROUP BY
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
-
-    public function getCurrentPassword()
-    {
-        $sql = "SELECT password from users where id = '$this->desiredUserId' and deleted_at is null";
-        $result = mysqli_query($this->conn, $sql);
-        return $result;
-    }
+    
     public function changePassword($newHashedPassword)
     {
         $sql = "UPDATE users set password = '$newHashedPassword', updated_at = now() where id = '$this->desiredUserId'";

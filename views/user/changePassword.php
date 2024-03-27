@@ -62,11 +62,11 @@ if (isset($_POST['change'])) {
     }
 
     if ($flag) {
-       $result = $userObject -> getCurrentPassword();
+       $result = $userObject -> showDetails();
         if (mysqli_num_rows($result) == 1) {
-            while ($row = mysqli_fetch_assoc($result)) {
+            $row = mysqli_fetch_assoc($result);
                 $userOldHashedPassword = $row['password'];
-            }
+            
         }
         if ($hashedPassword == $userOldHashedPassword) {
             // echo 'Password matched';
