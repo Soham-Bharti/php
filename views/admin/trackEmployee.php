@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/Admin.php';
 $adminObject = new Admin();
 
@@ -64,7 +65,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                         $userName = $row['name'];
                     }
                 }
-                echo "Emp Id: " . $desiredUserId . " | " . $userName;
+                echo "Emp Id: <b>" . $desiredUserId . "</b> | " . $userName;
                 ?>
             </div>
             <div>
@@ -92,6 +93,18 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                 <?php } ?>
             </div>
         </div>
+
+        <!-- toast after successful added -->
+        <?php if (isset($_SESSION['trackAlreadyPresent']) && $_SESSION['trackAlreadyPresent'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Oops! Track already present between this time range.</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['trackAlreadyPresent'] = '' ?>
+        <!-- toast ends -->
 
         <!-- toast after successful added -->
         <?php if (isset($_SESSION['UpdateEmpTrackStatus']) && $_SESSION['UpdateEmpTrackStatus'] == 'success') { ?>
@@ -222,7 +235,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
                                 <a href="updateEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-primary">Edit</a>
                             </td>
                             <td>
-                                <a href="deleteEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?>" class="btn btn-danger">Delete</a>
+                                <a onclick="return confirm('Are you sure you want to delete this track?')" href="deleteEmployeeTrackDetails.php?trackId=<?php echo $row["id"] ?>&id=<?php echo $desiredUserId ?> " class="btn btn-danger">Delete</a>
                             </td>
                         </tr>
                     <?php

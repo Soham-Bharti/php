@@ -1,6 +1,4 @@
 <?php
-require '../../config/dbConnection.php';
-
 final class Admin extends dbConnection
 {
     private $conn;
@@ -10,7 +8,8 @@ final class Admin extends dbConnection
         $this->conn = parent::connect();
     }
 
-    public function __destruct(){
+    public function __destruct()
+    {
         mysqli_close($this->conn);
     }
 
@@ -178,6 +177,15 @@ final class Admin extends dbConnection
         return $result;
     }
 
+    public function employeeTrackDetailsOnDate($desiredUserId, $date)
+    {
+        $sql = "SELECT check_in_time, check_out_time
+        from employeetrackingdetails
+        where user_id = '$desiredUserId' and deleted_at is null and DATE(check_in_time) = '$date';";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
     public function employeeTrackCheckInCounts($desiredUserId, $date)
     {
         $sql = "SELECT count(date(check_in_time)) as count from employeeTrackingDetails where user_id = '$desiredUserId' and date(check_in_time) = '$date' and deleted_at is null;";
@@ -206,6 +214,32 @@ final class Admin extends dbConnection
     public function deleteEmployee($desiredUserId)
     {
         $sql  = "UPDATE users SET deleted_at = now() WHERE id = '$desiredUserId';";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+    public function totalEmployeesCount()
+    {
+        $sql = "SELECT count(id) as totalEmployeesCount from users where deleted_at is null and role = 'employee'";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
+    public function totalCheckedInUsersToday()
+    {
+        $sql = "SELECT DISTINCT u.name , u.id
+        FROM users u 
+        INNER JOIN employeetrackingdetails e ON e.user_id = u.id
+        WHERE e.deleted_at IS NULL AND DATE(e.check_in_time) = DATE(NOW());";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
+
+    public function totalEmployeesWithNoProjects()
+    {
+        $sql = "SELECT DISTINCT u.id, u.name
+        FROM users u
+        left JOIN employeesprojects ep ON u.id = ep.user_id
+        where u.deleted_at is null and ep.deleted_at is null and role = 'employee' and ep.id is null";
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }

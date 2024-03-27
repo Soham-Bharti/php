@@ -1,5 +1,5 @@
 <?php
-require '../../config/dbConnection.php';
+
 
 final class Project extends dbConnection
 {
@@ -115,6 +115,11 @@ final class Project extends dbConnection
         where user_id = $desiredUserId and p.deleted_at is null order by created_dateTime desc limit 10";
         $result = mysqli_query($this->conn, $sql);
         return $result;
-        
+    }
+
+    public function totalProjectsCount(){
+        $sql = "SELECT count(id) as totalProjectsCount from projects where deleted_at is null";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
     }
 }

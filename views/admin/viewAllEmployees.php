@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/Admin.php';
 $adminObject = new Admin();
 
@@ -7,7 +8,15 @@ $adminObject = new Admin();
 if ($_SESSION['role'] !== 'admin') {
     header('Location: ../start/login.php');
 }
-
+if (isset($_GET['desiredUserId'])) {
+    $desiredUserId = $_GET['desiredUserId'];
+    $result = $adminObject->deleteEmployee($desiredUserId);
+    if ($result) {
+        $_SESSION['DeleteStatus'] = 'success';
+    }
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -59,26 +68,8 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
     <?php }
     $_SESSION['AddStatus'] = '' ?>
-    <!-- toast after successful update -->
-    <?php if (isset($_SESSION['UpdateStatus']) && $_SESSION['UpdateStatus'] == 'success') { ?>
-        <div class="toast show m-auto hide">
-            <div class="toast-header bg-warning text-white">
-                <strong class="me-auto">Record updated successfully!</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    <?php }
-    $_SESSION['UpdateStatus'] = '' ?>
-    <!-- toast after successful delete -->
-    <?php if (isset($_SESSION['DeleteStatus']) && $_SESSION['DeleteStatus'] == 'success') { ?>
-        <div class="toast show m-auto hide">
-            <div class="toast-header bg-danger text-white ">
-                <strong class="me-auto">Record deleted successfully!</strong>
-                <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
-            </div>
-        </div>
-    <?php }
-    $_SESSION['DeleteStatus'] = '' ?>
+
+
     <!-- toast after successful addEmployeeInfo professional -->
     <?php if (isset($_SESSION['addEmployeeInfoStatus']) && $_SESSION['addEmployeeInfoStatus'] == 'success') { ?>
         <div class="toast show m-auto hide">
@@ -109,6 +100,16 @@ if ($_SESSION['role'] !== 'admin') {
             </div>
         </div>
         <h2 class="text-center">Showing <span class='text-info'>Employees'</span> details</h2>
+        <!-- toast after successful delete -->
+        <?php if (isset($_SESSION['DeleteStatus']) && $_SESSION['DeleteStatus'] == 'success') { ?>
+            <div class="toast show m-auto hide">
+                <div class="toast-header bg-danger text-white ">
+                    <strong class="me-auto">Record deleted successfully!</strong>
+                    <button type="button" class="btn-close btn btn-light" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        <?php }
+        $_SESSION['DeleteStatus'] = '' ?>
         <!-- toast after successful addEmployeeInfo professional -->
         <?php if (isset($_SESSION['addEmployeeInfoStatus']) && $_SESSION['addEmployeeInfoStatus'] == 'success') { ?>
             <div class="toast show m-auto hide">
@@ -190,7 +191,8 @@ if ($_SESSION['role'] !== 'admin') {
                                 <a href="<?php echo $editEmployeeInfo ? 'updateEmployeeProfessionalInfo.php?id=' . $row["id"] : 'addEmployeeProfessionalInfo.php?id=' . $row["id"]; ?>" class="btn btn-primary btn-sm">Add/Edit Info</a>
                             </td>
                             <td>
-                                <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a>
+                                <!-- <a href="deleteEmployee.php?id=<?php echo $row["id"] ?>" class="btn btn-danger btn-sm">Delete</a> -->
+                                <a onclick="return confirm('Are you sure you want to delete this Employee?')" href="?desiredUserId=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                 <?php

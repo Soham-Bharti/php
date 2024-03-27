@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/Admin.php';
 date_default_timezone_set("Asia/Kolkata");
 $adminObject = new Admin();
@@ -53,47 +54,69 @@ if (isset($_POST['submit'])) {
     $tId = $_POST['tId'];
     $desiredLocation = "trackEmployee.php?id=$uId";
     if ($checkOutTime != '') {
-        if ($originDate != date("Y-m-d")) {
-            if ($checkInTime < $checkOutTime) {
-                // sending data to data base  
-                $result = $adminObject->updateEmployeeTrackDetails($uId, $tId, $originDate, $checkInTime, $checkOutTime);
-                if ($result) {
-                    echo "<br>Record updated successfully<br>";
-                } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-                echo "Successfully updated with check out time";
-                $_SESSION['UpdateEmpTrackStatus'] = 'success';
-                header("Location: $desiredLocation");
-            } else {
-                $_SESSION['checkInTimeBigErrorStatus'] = 'failure';
-                header("Location: $desiredLocation");
-                // echo "Either - 'Check-in time is greater than Check-out-time!' - OR  - 'You are checking-out in future!' - Please correct it.";
+        $trackResult = $adminObject->employeeTrackDetailsOnDate($uId, $originDate);
+        // check out is filled
+      
+        $flag = true;
+        // checking if there is already a track in between this time period
+        if (mysqli_num_rows($trackResult) > 0) {
+           
+            while ($row2 = mysqli_fetch_assoc($trackResult)) {
+                $dbCheckInDateTime = explode(' ', $row2['check_in_time']);
+                $dbCheckInTime = end($dbCheckInDateTime);
+                $dbCheckOutDateTime = explode(' ', $row2['check_out_time']);
+                $dbCheckOutTime = end($dbCheckOutDateTime);
+                if (($checkInTime < $dbCheckInTime && $checkOutTime >= $dbCheckInTime) || ($checkOutTime > $dbCheckOutTime && $checkInTime <= $dbCheckOutTime) || ($checkInTime >= $dbCheckInTime && $checkInTime <= $dbCheckOutTime) || ($checkOutTime <= $dbCheckOutTime && $checkOutTime >= $dbCheckInTime)) {
+                    // error
+                    $_SESSION['trackAlreadyPresent'] = "success";
+                    $flag = false;
+                    header("location: $desiredLocation" );
+                }
             }
-        } else {
-            // aaj ka he date h
-            if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
-                $result = $adminObject->updateEmployeeTrackDetails($uId, $tId, $originDate, $checkInTime, $checkOutTime);
-                if ($result) {
-                    echo "<br>Record updated successfully<br>";
+        }
+        if ($flag) {
+            if ($originDate != date("Y-m-d")) {
+                if ($checkInTime < $checkOutTime) {
+                    // sending data to data base  
+                    $result = $adminObject->updateEmployeeTrackDetails($uId, $tId, $originDate, $checkInTime, $checkOutTime);
+                    if ($result) {
+                        echo "<br>Record updated successfully<br>";
+                    } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
                     echo "Successfully updated with check out time";
                     $_SESSION['UpdateEmpTrackStatus'] = 'success';
                     header("Location: $desiredLocation");
-                } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-            } else {
-                if ($checkOutTime > date("H:i")) {
-                    $_SESSION['UpdateEmpTrackStatusFail'] = 'failure';
-                    // $checkOutTimeErr = '* You are checking-out in future!';
-                    header("Location: $desiredLocation");
                 } else {
-                    // $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
                     $_SESSION['checkInTimeBigErrorStatus'] = 'failure';
                     header("Location: $desiredLocation");
+                    // echo "Either - 'Check-in time is greater than Check-out-time!' - OR  - 'You are checking-out in future!' - Please correct it.";
+                }
+            } else {
+                // aaj ka he date h
+                if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
+                    $result = $adminObject->updateEmployeeTrackDetails($uId, $tId, $originDate, $checkInTime, $checkOutTime);
+                    if ($result) {
+                        echo "<br>Record updated successfully<br>";
+                        echo "Successfully updated with check out time";
+                        $_SESSION['UpdateEmpTrackStatus'] = 'success';
+                        header("Location: $desiredLocation");
+                    } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                } else {
+                    if ($checkOutTime > date("H:i")) {
+                        $_SESSION['UpdateEmpTrackStatusFail'] = 'failure';
+                        // $checkOutTimeErr = '* You are checking-out in future!';
+                        header("Location: $desiredLocation");
+                    } else {
+                        // $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                        $_SESSION['checkInTimeBigErrorStatus'] = 'failure';
+                        header("Location: $desiredLocation");
+                    }
                 }
             }
         }
     } else {
         // check-out empty h
         if ($originDate == date("Y-m-d") && $checkInTime <= date("H:i")) {
-            $result = $adminObject -> updateEmployeeTrackDetails($desiredUserId, $desiredTrackId, $date, $checkInTime, NULL);
+            $result = $adminObject->updateEmployeeTrackDetails($desiredUserId, $desiredTrackId, $date, $checkInTime, NULL);
             if ($result) {
                 echo "<br>Record updated successfully<br>";
             } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
@@ -107,7 +130,6 @@ if (isset($_POST['submit'])) {
             // echo "You can't be checked-in in future. Please select check-out time as well!";
         }
     }
-
 }
 
 ?>

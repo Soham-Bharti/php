@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../../config/dbConnection.php';
 require '../../Classes/Admin.php';
 date_default_timezone_set("Asia/Kolkata");
 $adminObject = new Admin();
@@ -13,7 +14,7 @@ if (isset($_GET['id'])) $desiredUserId = $_GET['id'];
 
 $checkInTime = $date = $day = "";
 $checkOutTime = null;
-$checkInTimeErr = $dateErr = $checkOutTimeErr = "";
+$checkInTimeErr = $dateErr = $checkOutTimeErr = $Err = "";
 
 $flag = true;
 if (isset($_POST['submit'])) {
@@ -43,18 +44,26 @@ if (isset($_POST['submit'])) {
                 $_SESSION['checkInLimitMessage'] = 'success';
                 header("Location: $desiredLocation");
             } else {
+                $trackResult = $adminObject->employeeTrackDetailsOnDate($desiredUserId, $date);
                 if (is_null($checkOutTime) || $checkOutTime == '') {
-                    if ($date == date("Y-m-d") && $checkInTime <= date("H:i")) {
-                        $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, NULL);
-                        if ($result) {
-                            // echo "Success 1";
-                            $_SESSION['AddEmpTrackStatus'] = 'success';
-                            header("Location: $desiredLocation");
-                        } else echo "<br>Error occured while inserting into table";
-                    } else {
-                        // echo "Either you are only adding check-in time in past day without check-out time or check in time is greater than current time.";
-                        // $_SESSION['AddEmpTrackStatus'] = 'failure';
-                        if ($checkInTime < $checkOutTime) {
+                    $flag = true;
+                    // checkout is not null -> filled
+                    // checking if there is already a track in between this time period
+                    if (mysqli_num_rows($trackResult) > 0) {
+                        while ($row2 = mysqli_fetch_assoc($trackResult)) {
+                            $dbCheckInDateTime = explode(' ', $row2['check_in_time']);
+                            $dbCheckInTime = end($dbCheckInDateTime);
+                            $dbCheckOutDateTime = explode(' ', $row2['check_out_time']);
+                            $dbCheckOutTime = end($dbCheckOutDateTime);
+                            if (($checkInTime <= $dbCheckOutTime) || ($checkInTime < $dbCheckInTime) || $dbCheckOutTime == '') {
+                                // error
+                                $Err = "* Track already present for this time range *";
+                                $flag = false;
+                            }
+                        }
+                    }
+                    if ($flag) {
+                        if ($date == date("Y-m-d") && $checkInTime <= date("H:i")) {
                             $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, NULL);
                             if ($result) {
                                 // echo "Success 1";
@@ -62,34 +71,62 @@ if (isset($_POST['submit'])) {
                                 header("Location: $desiredLocation");
                             } else echo "<br>Error occured while inserting into table";
                         } else {
-                            $checkOutTimeErr = "* Can not be empty for past tracks";
+                            // echo "Either you are only adding check-in time in past day without check-out time or check in time is greater than current time.";
+                            // $_SESSION['AddEmpTrackStatus'] = 'failure';
+                            if ($checkInTime < $checkOutTime) {
+                                $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, NULL);
+                                if ($result) {
+                                    // echo "Success 1";
+                                    $_SESSION['AddEmpTrackStatus'] = 'success';
+                                    header("Location: $desiredLocation");
+                                } else echo "<br>Error occured while inserting into table";
+                            } else {
+                                $checkOutTimeErr = "* Can not be empty for past tracks";
+                            }
                         }
                     }
                 } else {
-                    // checkout is not null -> filled
-                    if ($date == date("Y-m-d")) {
-                        // var_dump($checkOutTime < date("H:i"));
-                        if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
-                            $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, $checkOutTime);
-                            if ($result) {
-                                // echo "Success 2";
-                                $_SESSION['AddEmpTrackStatus'] = 'success';
-                                header("Location: $desiredLocation");
-                            } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
-                        } else {
-                            if ($checkOutTime > date("H:i")) {
-                                $checkOutTimeErr = '* You are checking-out in future!';
-                            } else $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                    // check out is filled
+                    $flag = true;
+                    // checking if there is already a track in between this time period
+                    if (mysqli_num_rows($trackResult) > 0) {
+                        while ($row2 = mysqli_fetch_assoc($trackResult)) {
+                            $dbCheckInDateTime = explode(' ', $row2['check_in_time']);
+                            $dbCheckInTime = end($dbCheckInDateTime);
+                            $dbCheckOutDateTime = explode(' ', $row2['check_out_time']);
+                            $dbCheckOutTime = end($dbCheckOutDateTime);
+                            if (($checkInTime < $dbCheckInTime && $checkOutTime >= $dbCheckInTime) || ($checkOutTime > $dbCheckOutTime && $checkInTime <= $dbCheckOutTime) || ($checkInTime >= $dbCheckInTime && $checkInTime <= $dbCheckOutTime) || ($checkOutTime <= $dbCheckOutTime && $checkOutTime >= $dbCheckInTime)) {
+                                // error
+                                $Err = "* Track already present for this time range *";
+                                $flag = false;
+                            }
                         }
-                    } else {
-                        if ($checkInTime < $checkOutTime) {
-                            $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, $checkOutTime);
-                            if ($result) {
-                                $_SESSION['AddEmpTrackStatus'] = 'success';
-                                header("Location: $desiredLocation");
-                            } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                    }
+                    if ($flag) {
+                        if ($date == date("Y-m-d")) {
+                            // var_dump($checkOutTime < date("H:i"));
+                            if ($checkInTime < $checkOutTime && $checkOutTime < date("H:i")) {
+                                $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, $checkOutTime);
+                                if ($result) {
+                                    // echo "Success 2";
+                                    $_SESSION['AddEmpTrackStatus'] = 'success';
+                                    header("Location: $desiredLocation");
+                                } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                            } else {
+                                if ($checkOutTime > date("H:i")) {
+                                    $checkOutTimeErr = '* You are checking-out in future!';
+                                } else $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                            }
                         } else {
-                            $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                            if ($checkInTime < $checkOutTime) {
+                                $result = $adminObject->addEmployeeTrackDetails($desiredUserId, $date, $checkInTime, $checkOutTime);
+                                if ($result) {
+                                    $_SESSION['AddEmpTrackStatus'] = 'success';
+                                    header("Location: $desiredLocation");
+                                } else echo "<br>Error occured while inserting into table : " . mysqli_error($conn);
+                            } else {
+                                $checkInTimeErr = 'Check-in time is greater than Check-out-time!';
+                            }
                         }
                     }
                 }
@@ -131,6 +168,7 @@ if (isset($_POST['submit'])) {
     <h2 class="text-center mt-2">New <span class='text-info'>Employee Track</span></h2>
     <div class="container mt-3">
         <div class="col-md-7">
+            <span class="fw-bold d-flex justify-content-center"><?php echo $Err; ?></span>
             <!-- toast after unsuccessful track added -->
             <?php if (isset($_SESSION['AddEmpTrackStatus']) && $_SESSION['AddEmpTrackStatus'] == 'failure') { ?>
                 <div class="toast show m-auto hide">
@@ -160,7 +198,6 @@ if (isset($_POST['submit'])) {
             unset($_SESSION['checkInTimeBigErrorStatus']) ?>
             <!-- toast ends -->
             <form action="" method="post" enctype="multipart/form-data">
-
                 <div class="mb-3">
                     <label class="col-form-label">Date<span>* <?php echo $dateErr ?></span></label>
                     <div class="mb-3">
