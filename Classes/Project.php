@@ -64,14 +64,14 @@ final class Project extends dbConnection
     public function showUnAddedProjectMembers($desiredProjectId)
     {
         $sql = "SELECT id, name
-        FROM users 
-        WHERE role = 'employee'
-        AND deleted_at IS NULL
+        FROM users
+        WHERE role = 'employee' AND deleted_at IS NULL
         AND NOT EXISTS (
             SELECT 1
             FROM employeesProjects
             WHERE users.id = employeesProjects.user_id
             AND employeesProjects.project_id = '$desiredProjectId'
+            AND employeesProjects.deleted_at is null
         )
         ORDER BY name;";
         $result = mysqli_query($this->conn, $sql);
