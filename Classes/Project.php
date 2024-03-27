@@ -122,4 +122,10 @@ final class Project extends dbConnection
         $result = mysqli_query($this->conn, $sql);
         return $result;
     }
+
+    public function deleteMember($desiredProjectId, $desiredUserId){
+        $sql = "UPDATE employeesProjects set deleted_at = now() where user_id = '$desiredUserId' and project_id ='$desiredProjectId';";
+        $result = mysqli_query($this->conn, $sql);
+        return $result;
+    }
 }
