@@ -59,8 +59,7 @@ if (isset($_POST['submit'])) {
       
         $flag = true;
         // checking if there is already a track in between this time period
-        if (mysqli_num_rows($trackResult) > 0) {
-           
+        if (mysqli_num_rows($trackResult) > 1) {
             while ($row2 = mysqli_fetch_assoc($trackResult)) {
                 $dbCheckInDateTime = explode(' ', $row2['check_in_time']);
                 $dbCheckInTime = end($dbCheckInDateTime);

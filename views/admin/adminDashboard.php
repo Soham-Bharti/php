@@ -104,10 +104,10 @@ if ($_SESSION['role'] !== 'admin') {
         <h2 class="text-center mt-5">Showing <span class='text-primary'>analytical</span> details</h2>
         <div class="my-5 d-flex justify-content-evenly">
             <div class="card" style="width: 17rem;">
-                <img class="card-img-top" src="../../Images/project.gif" alt="Card image cap">
+                <img class="card-img-top w-75" src="../../Images/project.gif" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-5">Total Projects: </p>
+                        <p class="card-title fs-6">Total Projects: </p>
                         <?php
                         $result = $projectObject->totalProjectsCount();
                         if (mysqli_num_rows($result) > 0) {
@@ -121,10 +121,10 @@ if ($_SESSION['role'] !== 'admin') {
                 </div>
             </div>
             <div class="card" style="width: 17rem;">
-                <img class="card-img-top p-4" src="../../Images/calendar.png" alt="Card image cap">
+                <img class="card-img-top p-4 w-75 m-auto" src="../../Images/calendar.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-5">Attendance: </p>
+                        <p class="card-title fs-6">Attendance: </p>
                         <?php
                         $result = $adminObject->totalEmployeesCount();
                         if (mysqli_num_rows($result) > 0) {
@@ -166,10 +166,82 @@ if ($_SESSION['role'] !== 'admin') {
                 </div>
             </div>
             <div class="card" style="width: 17rem;">
-                <img class="card-img-top" src="../../Images/management.gif" alt="Card image cap">
+                <img class="card-img-top p-3 w-75 m-auto" src="../../Images/working-time.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-5">Idle Employee/s: </p>
+                        <p class="card-title fs-6">Less Hour (<?php echo date('d-M');?>): </p>
+                        <?php
+                        $result = $adminObject->showEmployeesWithLessWorkingHoursYesterday();
+                        if (mysqli_num_rows($result) > 0) {
+                            $showEmployeesWithLessWorkingHoursYesterdayArray = [];
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                array_push($showEmployeesWithLessWorkingHoursYesterdayArray,  $row['name']);
+                            }
+                        }
+                        ?>
+                        <p class='fw-bold display-6'><?php echo sizeof($showEmployeesWithLessWorkingHoursYesterdayArray); ?></p>
+                    </div>
+                    <div class="accordion accordion-flush" id="showEmployeesWithLessWorkingHoursYesterday">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-showEmployeesWithLessWorkingHoursYesterday" aria-expanded="false" aria-controls="flush-showEmployeesWithLessWorkingHoursYesterday">
+                                    Show List
+                                </button>
+                            </h2>
+                            <div id="flush-showEmployeesWithLessWorkingHoursYesterday" class="accordion-collapse collapse" data-bs-parent="#showEmployeesWithLessWorkingHoursYesterday">
+                                <div class="accordion-body">
+                                    <?php
+                                    foreach ($showEmployeesWithLessWorkingHoursYesterdayArray as $name) {
+                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                            }
+                                                                                ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="width: 17rem;">
+                <img class="card-img-top w-75 m-auto" src="../../Images/pms.png" alt="Card image cap">
+                <div class="card-body">
+                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                        <p class="card-title fs-6">Missed PMS (<?php echo date('d-M');?>): </p>
+                        <?php
+                        $result = $projectObject->employeesWithNoPMSYesterday();
+                        if (mysqli_num_rows($result) > 0) {
+                            $employeesWithNoPMSYesterdayArray = [];
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                array_push($employeesWithNoPMSYesterdayArray,  $row['name']);
+                            }
+                        }
+                        ?>
+                        <p class='fw-bold display-6'><?php echo sizeof($employeesWithNoPMSYesterdayArray); ?></p>
+                    </div>
+                    <div class="accordion accordion-flush" id="employeesWithNoPMSYesterday">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-employeesWithNoPMSYesterday" aria-expanded="false" aria-controls="flush-employeesWithNoPMSYesterday">
+                                    Show List
+                                </button>
+                            </h2>
+                            <div id="flush-employeesWithNoPMSYesterday" class="accordion-collapse collapse" data-bs-parent="#employeesWithNoPMSYesterday">
+                                <div class="accordion-body">
+                                    <?php
+                                    foreach ($employeesWithNoPMSYesterdayArray as $name) {
+                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                            }
+                                                                                ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="width: 17rem;">
+                <img class="card-img-top w-75 m-auto" src="../../Images/management.gif" alt="Card image cap">
+                <div class="card-body">
+                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                        <p class="card-title fs-6">Idle Employee/s: </p>
                         <?php
                         $result = $adminObject->totalEmployeesWithNoProjects();
                         if (mysqli_num_rows($result) > 0) {
