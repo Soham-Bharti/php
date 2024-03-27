@@ -124,6 +124,51 @@ if ($_SESSION['role'] !== 'admin') {
                 <img class="card-img-top p-4" src="../../Images/calendar.png" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
+                        <p class="card-title fs-5">Attendance: </p>
+                        <?php
+                        $result = $adminObject->totalEmployeesCount();
+                        if (mysqli_num_rows($result) > 0) {
+                            $row = mysqli_fetch_assoc($result);
+                            $totalEmployeesCount =  $row['totalEmployeesCount'];
+                        }
+                        $result = $adminObject->totalCheckedInUsersToday();
+                        $totalCheckedInUsersTodayCount  = mysqli_num_rows($result);
+                        ?>
+                        <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
+                    </div>
+                    <?php
+                    $absentEmployees = [];
+                    $result = $adminObject->showTodaysAbsentEmployees();
+                    if (mysqli_num_rows($result) > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            array_push($absentEmployees,  $row['name']);
+                        }
+                    }
+                    ?>
+                    <div class="accordion accordion-flush" id="accordionAbsentees">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAbsentees" aria-expanded="false" aria-controls="flush-collapseAbsentees">
+                                    Show Absentees
+                                </button>
+                            </h2>
+                            <div id="flush-collapseAbsentees" class="accordion-collapse collapse" data-bs-parent="#accordionAbsentees">
+                                <div class="accordion-body">
+                                    <?php
+                                    // print_r($totalEmployeesWithNoProjectsArray);
+                                    foreach ($absentEmployees as $name) {
+                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                            } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="width: 17rem;">
+                <img class="card-img-top" src="../../Images/management.gif" alt="Card image cap">
+                <div class="card-body">
+                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
                         <p class="card-title fs-5">Idle Employee/s: </p>
                         <?php
                         $result = $adminObject->totalEmployeesWithNoProjects();
@@ -149,33 +194,14 @@ if ($_SESSION['role'] !== 'admin') {
                                 <div class="accordion-body">
                                     <?php
                                     // print_r($totalEmployeesWithNoProjectsArray);
-                                    foreach($totalEmployeesWithNoProjectsArray as $name){
-                                        ?><p class='m-0 p-0'><?php echo $name ?></p><?php
-                                    }
-                                    ?>
+                                    foreach ($totalEmployeesWithNoProjectsArray as $name) {
+                                    ?><p class='m-0 p-0'><?php echo $name ?></p><?php
+                                                                            }
+                                                                                ?>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card" style="width: 17rem;">
-                <img class="card-img-top" src="../../Images/management.gif" alt="Card image cap">
-                <div class="card-body">
-                    <div class='d-flex justify-content-around align-items-center p-0 m-0'>
-                        <p class="card-title fs-5">Attendance: </p>
-                        <?php
-                        $result = $adminObject->totalEmployeesCount();
-                        if (mysqli_num_rows($result) > 0) {
-                            $row = mysqli_fetch_assoc($result);
-                            $totalEmployeesCount =  $row['totalEmployeesCount'];
-                        }
-                        $result = $adminObject->totalCheckedInUsersToday();
-                        $totalCheckedInUsersTodayCount  = mysqli_num_rows($result);
-                        ?>
-                        <p class='fw-bold display-6'><span class="<?php echo $totalCheckedInUsersTodayCount >= 0.75 * $totalEmployeesCount ? "text-success" : "text-danger" ?>"><?php echo "$totalCheckedInUsersTodayCount"; ?></span>/<?php echo "$totalEmployeesCount"; ?></p>
-                    </div>
-                    <a href="viewAllEmployees.php" class="btn btn-dark w-100">Go to Employees</a>
                 </div>
             </div>
         </div>

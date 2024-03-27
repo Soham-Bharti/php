@@ -11,7 +11,15 @@ if ($_SESSION['role'] !== 'admin') {
 
 if (isset($_GET['id'])) $desiredProjectId = $_GET['id'];
 // echo $desiredUserId;
-
+if (isset($_GET['desiredUserDeletionId']) && isset($_GET['desiredProjectId'])) {
+    $desiredUserDeletionId = $_GET['desiredUserDeletionId'];
+    $desiredProjectId = $_GET['desiredProjectId'];
+    $result = $projectObject->deleteMember($desiredProjectId, $desiredUserDeletionId);
+    if ($result) {
+        // $_SESSION['DeleteStatus'] = 'success';
+    }
+    header('Location: viewAllProjects.php');
+}
 function test_input($data)
 {
     $data = trim($data);
@@ -76,6 +84,7 @@ function test_input($data)
                     <th>User Id</th>
                     <th>Name</th>
                     <th>Added on</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <?php
@@ -89,6 +98,7 @@ function test_input($data)
                         <td><?php echo $row["id"] ?></td>
                         <td><?php echo $row["name"] ?></td>
                         <td><?php echo date('d M Y', $time); ?></td>
+                        <td> <a onclick="return confirm('Are you sure you want to delete this Employee?')" href="?desiredUserDeletionId=<?php echo $row['id']; ?>&desiredProjectId=<?php echo $desiredProjectId; ?>" class="btn btn-danger btn-sm">Delete</a></td>
                     </tr>
                 <?php
                 }
