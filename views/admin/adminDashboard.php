@@ -104,7 +104,7 @@ if ($_SESSION['role'] !== 'admin') {
         <h2 class="text-center mt-5">Showing <span class='text-primary'>analytical</span> details</h2>
         <div class="my-5 d-flex justify-content-evenly">
             <div class="card" style="width: 17rem;">
-                <img class="card-img-top w-75" src="../../Images/project.gif" alt="Card image cap">
+                <img class="card-img-top w-75 m-auto" src="../../Images/project.gif" alt="Card image cap">
                 <div class="card-body">
                     <div class='d-flex justify-content-around align-items-center p-0 m-0'>
                         <p class="card-title fs-6">Total Projects: </p>
@@ -148,7 +148,7 @@ if ($_SESSION['role'] !== 'admin') {
                     <div class="accordion accordion-flush" id="accordionAbsentees">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAbsentees" aria-expanded="false" aria-controls="flush-collapseAbsentees">
+                                <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseAbsentees" aria-expanded="false" aria-controls="flush-collapseAbsentees">
                                     Show Absentees
                                 </button>
                             </h2>
@@ -184,7 +184,7 @@ if ($_SESSION['role'] !== 'admin') {
                     <div class="accordion accordion-flush" id="showEmployeesWithLessWorkingHoursYesterday">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-showEmployeesWithLessWorkingHoursYesterday" aria-expanded="false" aria-controls="flush-showEmployeesWithLessWorkingHoursYesterday">
+                                <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-showEmployeesWithLessWorkingHoursYesterday" aria-expanded="false" aria-controls="flush-showEmployeesWithLessWorkingHoursYesterday">
                                     Show List
                                 </button>
                             </h2>
@@ -220,8 +220,8 @@ if ($_SESSION['role'] !== 'admin') {
                     <div class="accordion accordion-flush" id="employeesWithNoPMSYesterday">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-employeesWithNoPMSYesterday" aria-expanded="false" aria-controls="flush-employeesWithNoPMSYesterday">
-                                    Show List
+                                <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-employeesWithNoPMSYesterday" aria-expanded="false" aria-controls="flush-employeesWithNoPMSYesterday">
+                                    Show Member
                                 </button>
                             </h2>
                             <div id="flush-employeesWithNoPMSYesterday" class="accordion-collapse collapse" data-bs-parent="#employeesWithNoPMSYesterday">
@@ -258,7 +258,7 @@ if ($_SESSION['role'] !== 'admin') {
                     <div class="accordion accordion-flush" id="accordionFlushExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                <button class="accordion-button collapsed text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                                     Show List
                                 </button>
                             </h2>
